@@ -6,13 +6,10 @@ using System.Threading.Tasks;
 
 namespace PawnShopLib
 {
-    internal enum TariffNames
+    public enum Tariffs
     {
-        Preferential,
-        Standart,
-        LowPenalty
-    }
-    internal class Tariff
-    {
+        Preferential = 120,
+        Standart = 100,
+        LowPenalty = 80
     }
 }

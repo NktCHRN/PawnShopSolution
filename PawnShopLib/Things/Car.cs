@@ -21,6 +21,5 @@ namespace PawnShopLib.Things
             else
                 throw new ArgumentException("Mileage can`t be negative", nameof(mileage));
         }
-        public override Thing GetDeepCopy() => new Car(Weight, Year, MarketPrice, Mileage);
     }
 }

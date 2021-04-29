@@ -21,6 +21,5 @@ namespace PawnShopLib.Things
             else
                 throw new ArgumentNullException("CompanyName can`t be null", nameof(companyName));
         }
-        public override Thing GetDeepCopy() => new Shares(Year, MarketPrice, CompanyName);
     }
 }

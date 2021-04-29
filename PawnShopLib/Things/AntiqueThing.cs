@@ -27,6 +27,5 @@ namespace PawnShopLib.Things
             else
                 throw new ArgumentException("Price can`t be negative", nameof(estimatedPrice));
         }
-        public override Thing GetDeepCopy() => new AntiqueThing(Weight, Year, Type, EstimatedPrice);
     }
 }

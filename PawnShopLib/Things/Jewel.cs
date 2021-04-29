@@ -105,6 +105,5 @@ namespace PawnShopLib.Things
             _diamondWeight = diamondWeight;
             _otherGemsWeight = otherGemsWeight;
         }
-        public override Thing GetDeepCopy() => new Jewel(Year, Type, _goldWeight, _goldContent, _silverWeight, _silverContent, _diamondWeight, _otherGemsWeight);
     }
 }

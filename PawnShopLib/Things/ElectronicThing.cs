@@ -21,6 +21,5 @@ namespace PawnShopLib.Things
         {
             Type = type;
         }
-        public override Thing GetDeepCopy() => new ElectronicThing(Weight, Year, Type);
     }
 }

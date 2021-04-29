@@ -42,7 +42,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Buyer.cs" />
-    <Compile Include="ThingHistory.cs" />
+    <Compile Include="Evaluator.cs" />
+    <Compile Include="Deal.cs" />
     <Compile Include="Customer.cs" />
     <Compile Include="CustomersBase.cs" />
     <Compile Include="CustomerStateHandler.cs" />
@@ -50,7 +51,7 @@
     <Compile Include="IPawnShop.cs" />
     <Compile Include="PawnShop.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Tariff.cs" />
+    <Compile Include="Tariffs.cs" />
     <Compile Include="Thing.cs" />
     <Compile Include="ThingsBase.cs" />
     <Compile Include="Things\AntiqueThing.cs" />

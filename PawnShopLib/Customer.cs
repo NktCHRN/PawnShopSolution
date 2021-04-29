@@ -9,27 +9,13 @@ namespace PawnShopLib
     public class Customer : IPerson
     {
         private static int _customersQuantity = 0;
-        private bool _isOnDeal;
-        public bool IsOnDeal { 
-            get 
-            {
-                return _isOnDeal;
-            }
-            internal set 
-            {
-                if (_isOnDeal == true)
-                    throw new ArgumentException("You can`t start a new deal while your customer is already on deal. Close deal using one of methods.");
-                else
-                    _isOnDeal = value;
-            }
-        }
-        public int SuccessfulDeals { get; private set; }
-        public int UnsuccessfulDeals { get; private set; }
+        public bool IsOnDeal { get; internal set; }
         public string FirstName { get; private set; }
         public string SecondName { get; private set; }
         public string Patronymic { get; private set; }
         public DateTime BirthDay { get; private set; }
         public string ID { get; private set; }
+        public List<Deal> Deals { get; private set; }
         public Customer(string firstName, string secondName, string patronymic, DateTime birthDay)
         {
             if (firstName != null)
@@ -60,25 +46,30 @@ namespace PawnShopLib
             }
             else
             {
-                throw new ArgumentNullException(nameof(birthDay));
+                throw new ArgumentNullException("Birthday can`t be null", nameof(birthDay));
             }
             _customersQuantity++;
             ID = String.Format("C{0:00000000}", _customersQuantity);
-            SuccessfulDeals = 0;
-            UnsuccessfulDeals = 0;
-            _isOnDeal = false;
+            IsOnDeal = false;
+            Deals = new List<Deal>();
         }
         public string GetFullName() => String.Format("{0} {1} {2}", FirstName, SecondName, Patronymic);
-        internal void AddSuccessFulDeal()
+        public int GetSuccessfulDealsQuantity()
         {
-            SuccessfulDeals++;
-            _isOnDeal = false;
+            int quantity = 0;
+            foreach(Deal deal in Deals)
+                if (deal.IsSuccessful)
+                    quantity += 1;
+            return quantity;
         }
-        internal void AddUnsuccessfulDeal()
+        public int GetUnsuccessfulDealsQuantity()
         {
-            UnsuccessfulDeals++;
-            _isOnDeal = false;
+            int quantity = 0;
+            foreach (Deal deal in Deals)
+                if (!deal.IsSuccessful)
+                    quantity += 1;
+            return quantity;
         }
-        //добавить поле и метод для CreditHistory!!!
+        public int GetDealsQuantity() => Deals.Count;
     }
 }
