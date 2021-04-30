@@ -8,11 +8,10 @@ namespace PawnShopLib.Things
 {
     public enum AntiqueTypes
     {
-        Watch,
+        Watches,
         Icon,
         Painting,
         AntiqueJewel,
-        Furniture,
         Medal
     }
     public class AntiqueThing : Thing

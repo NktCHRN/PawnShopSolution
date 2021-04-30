@@ -8,9 +8,10 @@ namespace PawnShopLib
 {
     public interface IPawnShop
     {
-        decimal EstimateThing(Thing myThing);
-        decimal BailThing(Thing myThing, DateTime period);
+        decimal EstimateThing(Customer customer, Thing myThing);
+        decimal BailThing(Customer customer, Thing myThing, int period);
         void RedeemThing(string thingID);
-        void Prolong(DateTime period);
+        void Prolong(Customer customer, int period);
+        void BuyThing(Buyer buyer, string thingID);
     }
 }

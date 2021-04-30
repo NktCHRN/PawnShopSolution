@@ -6,10 +6,9 @@ using System.Threading.Tasks;
 
 namespace PawnShopLib
 {
-    public class Customer : IPerson
+    public sealed class Customer : IPerson
     {
         private static int _customersQuantity = 0;
-        public bool IsOnDeal { get; internal set; }
         public string FirstName { get; private set; }
         public string SecondName { get; private set; }
         public string Patronymic { get; private set; }
@@ -50,7 +49,6 @@ namespace PawnShopLib
             }
             _customersQuantity++;
             ID = String.Format("C{0:00000000}", _customersQuantity);
-            IsOnDeal = false;
             Deals = new List<Deal>();
         }
         public string GetFullName() => String.Format("{0} {1} {2}", FirstName, SecondName, Patronymic);
@@ -66,10 +64,25 @@ namespace PawnShopLib
         {
             int quantity = 0;
             foreach (Deal deal in Deals)
-                if (!deal.IsSuccessful)
+                if (!deal.IsSuccessful && deal.IsClosed)
                     quantity += 1;
             return quantity;
         }
         public int GetDealsQuantity() => Deals.Count;
+        internal void AddDeal(Deal deal)
+        {
+            if (deal != null)
+            {
+                if (!IsOnDeal())
+                    Deals.Add(deal);
+                else
+                    throw new ArgumentException("Customer is already on deal. Close the last deal first");
+            }
+            else
+            {
+                throw new ArgumentNullException("Deal can`t be null", nameof(deal));
+            }
+        }
+        public bool IsOnDeal() => Deals[Deals.Count - 1].IsClosed;
     }
 }

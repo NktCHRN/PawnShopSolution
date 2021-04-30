@@ -6,14 +6,16 @@ using System.Threading.Tasks;
 
 namespace PawnShopLib
 {
-    public class PawnShop : IPawnShop
+    public sealed class PawnShop : IPawnShop
     {
-        private CustomersBase _customersBase;
+        public delegate decimal Evaluator(Thing thing, Tariffs tariff);
+        private Evaluator _evaluator;
+        //private CustomersBase _customersBase;
         public string Name { get; private set; }
         public decimal Balance { get; private set; }
         public decimal Revenue { get; private set; }
         public decimal Costs { get; private set; }
-        public PawnShop(string name, decimal initialBalance)
+        public PawnShop(string name, decimal initialBalance, Evaluator delToEvaluator)
         {
             if (name != null)
                 Name = name;
@@ -22,28 +24,40 @@ namespace PawnShopLib
             if (initialBalance >= 0)
                 Balance = initialBalance;
             else
-                throw new Exception("Balance can`t be less than zero");
-            _customersBase = new CustomersBase();
+                throw new ArgumentException("Balance can`t be less than zero", nameof(initialBalance));
+            //_customersBase = new CustomersBase();
+            if (delToEvaluator != null)
+                _evaluator = delToEvaluator;
+            else
+                throw new ArgumentNullException("Evaluator can`t be null", nameof(delToEvaluator));
             Revenue = 0;
             Costs = 0;
         }
-
-        public decimal EstimateThing(Thing myThing)
+        public decimal EstimateThing(Customer customer, Thing myThing) => _evaluator.Invoke(myThing, DefineTariff(customer));
+        private Tariffs DefineTariff(Customer customer)
+        {
+            if (customer.GetDealsQuantity() <= 6)
+                return Tariffs.Standart;
+            else if ((double)customer.GetSuccessfulDealsQuantity() / customer.GetUnsuccessfulDealsQuantity() >= 1.5)
+                return Tariffs.Preferential;
+            else if ((double)customer.GetSuccessfulDealsQuantity() / customer.GetUnsuccessfulDealsQuantity() <= 0.5)
+                return Tariffs.LowPenalty;
+            else
+                return Tariffs.Standart;
+        }
+        public decimal BailThing(Customer customer, Thing myThing, int period)
         {
             throw new NotImplementedException();
         }
-
-        public decimal BailThing(Thing myThing, DateTime period)
-        {
-            throw new NotImplementedException();
-        }
-
         public void RedeemThing(string thingID)
         {
             throw new NotImplementedException();
         }
-
-        public void Prolong(DateTime period)
+        public void Prolong(Customer customer, int period)
+        {
+            throw new NotImplementedException();
+        }
+        public void BuyThing(Buyer buyer, string thingID)
         {
             throw new NotImplementedException();
         }
