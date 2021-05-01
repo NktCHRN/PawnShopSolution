@@ -9,10 +9,45 @@ namespace PawnShopLib
     public sealed class PawnShop : IPawnShop
     {
         public delegate decimal Evaluator(Thing thing, Tariffs tariff);
-        private Evaluator _evaluator;
+        private readonly Evaluator _evaluator;
         private decimal _perDayCoefficient;
         private decimal _saleCoefficient;
-        public DealsBase Deals { get; private set; }
+        public decimal PerDayCoefficient 
+        {
+            get
+            {
+                return _perDayCoefficient;
+            }
+            set
+            {
+                if (value > 0)
+                    _perDayCoefficient = value;
+                else
+                    throw new ArgumentException("PerDayCoefficient can`t be negative", nameof(value));
+            }
+        }
+        private decimal SaleCoefficient
+        {
+            get
+            {
+                return _saleCoefficient;
+            }
+            set
+            {
+                if (value > 1)
+                    _saleCoefficient = value;
+                else
+                    throw new ArgumentException("SaleCoefficient can`t be lower than or equal 1", nameof(value));
+            }
+        }
+        private readonly DealsBase _deals;
+        public DealsBase Deals { 
+            get 
+            { 
+                UpdateDeals();
+                return _deals; 
+            }
+        }
         public string Name { get; private set; }
         public decimal Balance { get; private set; }
         public decimal Revenue { get; private set; }
@@ -27,17 +62,17 @@ namespace PawnShopLib
                 Balance = initialBalance;
             else
                 throw new ArgumentException("Balance can`t be less than zero", nameof(initialBalance));
-            Deals = new DealsBase();
+            _deals = new DealsBase();
             if (delToEvaluator != null)
                 _evaluator = delToEvaluator;
             else
                 _evaluator = StandartEvaluators.EvaluateThing;
             if (perDayCoefficient > 0)
-                _perDayCoefficient = perDayCoefficient;
+                PerDayCoefficient = perDayCoefficient;
             else
                 throw new ArgumentException("Coefficient can`t be less than zero", nameof(perDayCoefficient));
             if (saleCoefficient > 1)
-                _saleCoefficient = saleCoefficient;
+                SaleCoefficient = saleCoefficient;
             else
                 throw new ArgumentException("Coefficient can`t be less than zero", nameof(saleCoefficient));
             Revenue = 0;
@@ -47,7 +82,7 @@ namespace PawnShopLib
         public decimal GetRedemptionPrice(Customer customer, Thing myThing, int term)
         {
             decimal price = EstimateThing(customer, myThing);
-            price += price * _perDayCoefficient * term;
+            price += price * PerDayCoefficient * term;
             if (price < 0)
                 price = 0;
             return price;
@@ -75,8 +110,8 @@ namespace PawnShopLib
                         decimal price = _evaluator.Invoke(myThing, tariff);
                         if (Balance >= price)
                         {
-                            Deal newDeal = new Deal(customer, myThing, term, tariff, price, _perDayCoefficient, _saleCoefficient);
-                            Deals.AddDeal(newDeal);
+                            Deal newDeal = new Deal(customer, myThing, term, tariff, price, PerDayCoefficient, SaleCoefficient);
+                            _deals.AddDeal(newDeal);
                             Balance -= price;
                             Costs += price;
                             return price;
@@ -133,7 +168,7 @@ namespace PawnShopLib
             {
                 if (customer.IsOnDeal())
                 {
-                    return customer.Deals[customer.GetDealsQuantity() - 1].ProlongDeal(term, _perDayCoefficient);
+                    return customer.Deals[customer.GetDealsQuantity() - 1].ProlongDeal(term, PerDayCoefficient);
                 }
                 return false;
             }
@@ -147,11 +182,11 @@ namespace PawnShopLib
             UpdateDeals();
             if (buyer != null)
             {
-                if (Deals[thingID] != null && Deals[thingID].IsOnSale && buyer.Balance >= Deals[thingID].MarketPrice) {
-                    decimal price = Deals[thingID].MarketPrice;
+                if (_deals[thingID] != null && _deals[thingID].IsOnSale && buyer.Balance >= _deals[thingID].MarketPrice) {
+                    decimal price = _deals[thingID].MarketPrice;
                     buyer.SpendMoney(price);
                     Balance += price;
-                    Deals[thingID].SellThing();
+                    _deals[thingID].SellThing();
                     Revenue += price;
                     return true;
                 }
@@ -168,9 +203,9 @@ namespace PawnShopLib
         public void UpdateDeals()
         {
             DateTime currentTime = DateTime.Now;
-            for(int i = 0; i < Deals.GetDealsQuantity(); i++)
-                if (!Deals[i].IsClosed && (currentTime.Year - Deals[i].StartTime.Year) * 365 + (currentTime.Month - Deals[i].StartTime.Month) * 30 + currentTime.Day - Deals[i].StartTime.Day > Deals[i].Term)
-                    Deals[i].Close(true);
+            for(int i = 0; i < _deals.GetDealsQuantity(); i++)
+                if (!_deals[i].IsClosed && (currentTime.Year - _deals[i].StartTime.Year) * 365 + (currentTime.Month - _deals[i].StartTime.Month) * 30 + currentTime.Day - _deals[i].StartTime.Day > _deals[i].Term)
+                    _deals[i].Close(true);
         }
     }
 }

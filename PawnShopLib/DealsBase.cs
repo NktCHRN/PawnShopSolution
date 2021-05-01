@@ -14,9 +14,8 @@ namespace PawnShopLib
     }
     public class DealsBase
     {
-        private delegate bool Comparer(Deal left, Deal right);
         private readonly List<Deal> _deals;
-        public DealsBase()
+        internal DealsBase()
         {
             _deals = new List<Deal>();
         }
