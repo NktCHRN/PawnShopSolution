@@ -49,11 +49,9 @@ namespace PawnShopLib.Things
                     throw new ArgumentException("Type should be GoldIngot, SilverIngot, Diamond or AnotherGem in this constructor", nameof(solidJewelType));
             }
         }
-        public Jewel(int year, JewelTypes complicatedJewelType, double goldWeight, double silverWeight, double diamondWeight, double otherGemsWeight) : base(goldWeight + silverWeight + diamondWeight + otherGemsWeight, year)
+        public Jewel(int year, double goldWeight, double silverWeight, double diamondWeight, double otherGemsWeight) : base(goldWeight + silverWeight + diamondWeight + otherGemsWeight, year)
         {
-            if (complicatedJewelType != JewelTypes.ComplicatedJewel)
-                throw new ArgumentException("complicatedJewelType should be ComplicatedJewel in this constructor", nameof(complicatedJewelType));
-            Type = complicatedJewelType;
+            Type = JewelTypes.ComplicatedJewel;
             if (goldWeight >= 0)
                 GoldWeight = goldWeight;
             else throw new ArgumentException("Weight can`t be lower than zero", nameof(goldWeight));

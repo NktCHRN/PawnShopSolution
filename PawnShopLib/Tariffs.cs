@@ -8,7 +8,7 @@ namespace PawnShopLib
 {
     public enum Tariffs
     {
-        Preferential = 120,
+        Preferential = 110,
         Standart = 100,
         LowPenalty = 80
     }

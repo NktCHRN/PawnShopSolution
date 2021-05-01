@@ -6,11 +6,11 @@ using System.Threading.Tasks;
 
 namespace PawnShopLib
 {
-    public enum SortByTypes
+    public enum SortingTypes
     {
-        time,
-        priceAsceding,
-        priceDescending
+        ID,
+        PriceAsceding,
+        PriceDescending
     }
     public class DealsBase
     {
@@ -21,36 +21,44 @@ namespace PawnShopLib
             _deals = new List<Deal>();
         }
         public int GetDealsQuantity() => _deals.Count();
-        public List<Deal> GetFilteredOnSale(SortByTypes sortBy = SortByTypes.time)
+        public List<Deal> GetFilteredOnSale<T>(SortingTypes sortBy = SortingTypes.ID) where T : Thing
         {
             List<Deal> onSale = new List<Deal>();
             foreach(Deal deal in _deals)
             {
-                if (deal.IsOnSale)
+                if (deal.IsOnSale && deal.Thing is T)
                     onSale.Add(deal);
             }
-            if (sortBy == SortByTypes.priceAsceding)
+            if (sortBy == SortingTypes.PriceAsceding)
             {
-                QuickSort(onSale, 0, onSale.Count - 1, Deal.HasGreaterPrice);
+                onSale.Sort((left, right) => Deal.CompareDealsByPrice(left, right));
             }
-            else if (sortBy == SortByTypes.priceDescending)
+            else if (sortBy == SortingTypes.PriceDescending)
             {
-                QuickSort(onSale, 0, onSale.Count - 1, Deal.HasSmallerPrice);
+                onSale.Sort((left, right) => -Deal.CompareDealsByPrice(left, right));
+            }
+            else
+            {
+                onSale.Sort((left, right) => String.Compare(left.ID, right.ID));
             }
             return onSale;
         }
-        public List<Deal> GetFullList(SortByTypes sortBy = SortByTypes.time)
+        public List<Deal> GetFullList(SortingTypes sortBy = SortingTypes.ID)
         {
             List<Deal> FullDealsList = new List<Deal>();
             foreach (Deal deal in _deals)
                 FullDealsList.Add(deal);
-            if (sortBy == SortByTypes.priceAsceding)
+            if (sortBy == SortingTypes.PriceAsceding)
             {
-                QuickSort(FullDealsList, 0, FullDealsList.Count - 1, Deal.HasGreaterPrice);
+                FullDealsList.Sort((left, right) => Deal.CompareDealsByPrice(left, right));
             }
-            else if (sortBy == SortByTypes.priceDescending)
+            else if (sortBy == SortingTypes.PriceDescending)
             {
-                QuickSort(FullDealsList, 0, FullDealsList.Count - 1, Deal.HasSmallerPrice);
+                FullDealsList.Sort((left, right) => -Deal.CompareDealsByPrice(left, right));
+            }
+            else
+            {
+                FullDealsList.Sort((left, right) => String.Compare(left.ID, right.ID));
             }
             return FullDealsList;
         }
@@ -71,39 +79,39 @@ namespace PawnShopLib
                 }
             }
         }
-        internal void AddDeal(Deal newDeal)
+        public void AddDeal(Deal newDeal)//make internal!!!
         {
             if (newDeal != null)
                 _deals.Add(newDeal);
             else
                 throw new ArgumentNullException("New deal can`t be null", nameof(newDeal));
         }
-        private static void QuickSort(List<Deal> list, int start, int end, Comparer delToComparer) 
-        {
-            if (start < end) {
-                int middle = Partition(list, start, end, delToComparer);
-                QuickSort(list, start, middle - 1, delToComparer);
-                QuickSort(list, middle + 1, end, delToComparer);
-            }
-        }
-        private static int Partition(List<Deal> list, int start, int end, Comparer delToComparer)
-        {
-            Deal pivot = list[end];
-            int i = start - 1;
-            for (int j = start; j < end; j++)
-                if ((bool)delToComparer?.Invoke(list[j], pivot)) {
-                    i++;
-                    Swap(list, i, j);
-                }
-            Swap(list, i + 1, end);
-            return i + 1;
-        }
-        private static void Swap(List<Deal> list, int left, int right)
-        {
-            Deal temp;
-            temp = list[left];
-            list[left] = list[right];
-            list[right] = temp;
-        }
+        //private static void QuickSort(List<Deal> list, int start, int end, Comparer delToComparer) 
+        //{
+        //    if (start < end) {
+        //        int middle = Partition(list, start, end, delToComparer);
+        //        QuickSort(list, start, middle - 1, delToComparer);
+        //        QuickSort(list, middle + 1, end, delToComparer);
+        //    }
+        //}
+        //private static int Partition(List<Deal> list, int start, int end, Comparer delToComparer)
+        //{
+        //    Deal pivot = list[end];
+        //    int i = start - 1;
+        //    for (int j = start; j < end; j++)
+        //        if ((bool)delToComparer?.Invoke(list[j], pivot)) {
+        //            i++;
+        //            Swap(list, i, j);
+        //        }
+        //    Swap(list, i + 1, end);
+        //    return i + 1;
+        //}
+        //private static void Swap(List<Deal> list, int left, int right)
+        //{
+        //    Deal temp;
+        //    temp = list[left];
+        //    list[left] = list[right];
+        //    list[right] = temp;
+        //}
     }
 }

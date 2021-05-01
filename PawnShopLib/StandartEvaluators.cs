@@ -8,18 +8,21 @@ namespace PawnShopLib
 {
     public static class StandartEvaluators
     {
-        public static decimal EvaluateThing(Thing thing)
+        public static decimal EvaluateThing(Thing thing, Tariffs tariff)
         {
+            decimal price;
             if (thing is Things.AntiqueThing antiqueThing)
-                return antiqueThing.EstimatedPrice;
+                price =  antiqueThing.EstimatedPrice / 1.5m;
             else if (thing is Things.Car car)
-                return EvaluateCar(car);
+                price = EvaluateCar(car);
             else if (thing is Things.ElectronicThing electronicThing)
-                return EvaluateElectronicThing(electronicThing);
+                price = EvaluateElectronicThing(electronicThing);
             else if (thing is Things.Jewel jewel)
-                return EvaluateJewel(jewel);
+                price =  EvaluateJewel(jewel);
             else
-                return EvaluateShares(thing as Things.Shares);
+                price = EvaluateShares(thing as Things.Shares);
+            price *= (decimal)tariff / (decimal)100;
+            return price;
         }
         private static decimal EvaluateCar(Things.Car thing)
         {

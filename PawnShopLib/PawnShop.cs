@@ -10,7 +10,7 @@ namespace PawnShopLib
     {
         public delegate decimal Evaluator(Thing thing, Tariffs tariff);
         private Evaluator _evaluator;
-        //private CustomersBase _customersBase;
+        public DealsBase Deals { get; private set; }
         public string Name { get; private set; }
         public decimal Balance { get; private set; }
         public decimal Revenue { get; private set; }
@@ -25,7 +25,7 @@ namespace PawnShopLib
                 Balance = initialBalance;
             else
                 throw new ArgumentException("Balance can`t be less than zero", nameof(initialBalance));
-            //_customersBase = new CustomersBase();
+            Deals = new DealsBase();
             if (delToEvaluator != null)
                 _evaluator = delToEvaluator;
             else

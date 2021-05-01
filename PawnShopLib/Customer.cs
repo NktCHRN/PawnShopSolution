@@ -83,6 +83,12 @@ namespace PawnShopLib
                 throw new ArgumentNullException("Deal can`t be null", nameof(deal));
             }
         }
-        public bool IsOnDeal() => Deals[Deals.Count - 1].IsClosed;
+        public bool IsOnDeal()
+        {
+            if (Deals.Count > 0)
+                return !Deals[Deals.Count - 1].IsClosed;
+            else
+                return false;
+        }
     }
 }
