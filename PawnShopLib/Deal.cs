@@ -131,7 +131,8 @@ namespace PawnShopLib
             if (additionalTerm > 0 && RedemptionPrice + Price * perDayCoefficient * additionalTerm <= MarketPrice)
             {
                 Term += additionalTerm;
-                RedemptionPrice += Price * perDayCoefficient * additionalTerm;
+                RedemptionPrice += Price * perDayCoefficient * additionalTerm + Penalty;
+                Penalty = 0;
                 return true;
             }
             else
