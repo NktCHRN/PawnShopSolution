@@ -136,7 +136,7 @@ namespace PawnShopLib
                 throw new ArgumentNullException("Customer was null", nameof(customer));
             }
         }
-        public bool RedeemThing(Customer customer)
+        public void RedeemThing(Customer customer)
         {
             UpdateDeals();
             if (customer != null)
@@ -144,55 +144,68 @@ namespace PawnShopLib
                 if (customer.IsOnDeal())
                 {
                     decimal price = customer.Deals[customer.GetDealsQuantity() - 1].RedemptionPrice;
-                    if (customer.Balance >= price) 
+                    if (customer.Balance >= price)
                     {
                         customer.SpendMoney(price);
                         customer.Deals[customer.GetDealsQuantity() - 1].Close(false);
+                        customer.Deals[customer.GetDealsQuantity() - 1].PawnShopProfit = price - customer.Deals[customer.GetDealsQuantity() - 1].Price;
                         Balance += price;
                         Revenue += price;
-                        return true;
                     }
-                    return false;
+                    else
+                    {
+                        throw new ArgumentException($"Customer hasn`t got enought money: {customer.Balance:F3}; required: {price:F3}");
+                    }
                 }
-                return false;
+                else
+                {
+                    throw new BusyObjectException("Customer is not on deal.");
+                }
             }
             else
             {
                 throw new ArgumentNullException("Customer was null", nameof(customer));
             }
         }
-        public bool Prolong(Customer customer, int term)
+        public bool TryProlong(Customer customer, int term)
         {
             UpdateDeals();
             if (customer != null)
             {
                 if (customer.IsOnDeal())
                 {
-                    return customer.Deals[customer.GetDealsQuantity() - 1].ProlongDeal(term, PerDayCoefficient);
+                    return customer.Deals[customer.GetDealsQuantity() - 1].Prolong(term, PerDayCoefficient);
                 }
-                return false;
+                throw new BusyObjectException("Customer is not on deal.");
             }
             else
             {
                 throw new ArgumentNullException("Customer was null", nameof(customer));
             }
         }
-        public bool BuyThing(Buyer buyer, string thingID)
+        public void BuyThing(Buyer buyer, string thingID)
         {
             UpdateDeals();
             if (buyer != null)
             {
-                if (_deals[thingID] != null && _deals[thingID].IsOnSale && buyer.Balance >= _deals[thingID].MarketPrice) {
+                if (_deals[thingID] != null && _deals[thingID].IsOnSale) {
                     decimal price = _deals[thingID].MarketPrice;
-                    buyer.SpendMoney(price);
-                    Balance += price;
-                    _deals[thingID].SellThing();
-                    Revenue += price;
-                    return true;
+                    if (buyer.Balance >= price)
+                    {
+                        buyer.SpendMoney(price);
+                        Balance += price;
+                        _deals[thingID].SellThing();
+                        _deals[thingID].PawnShopProfit = price - _deals[thingID].Price;
+                        Revenue += price;
+                    }
+                    else
+                    {
+                        throw new ArgumentException($"Buyer hasn`t got enought money: {buyer.Balance:F3}; required: {price:F3}");
+                    }
                 }
                 else
                 {
-                    return false;
+                    throw new ArgumentNullException("Thing wasn`t found or not on sale", nameof(thingID));
                 }
             }
             else 
@@ -207,5 +220,6 @@ namespace PawnShopLib
                 if (!_deals[i].IsClosed && (currentTime.Year - _deals[i].StartTime.Year) * 365 + (currentTime.Month - _deals[i].StartTime.Month) * 30 + currentTime.Day - _deals[i].StartTime.Day > _deals[i].Term)
                     _deals[i].Close(true);
         }
+        public decimal GetNetProfit() => Revenue - Costs;
     }
 }

@@ -19,6 +19,7 @@ namespace PawnShopLib
         public bool IsClosed { get; private set; }
         public bool IsOnSale { get; private set; }
         public bool IsSuccessful { get; private set; }
+        public decimal PawnShopProfit { get; internal set; }
         public string ID { get; private set; }
         public static int DealsCount { get; private set; }
         static Deal()
@@ -80,6 +81,7 @@ namespace PawnShopLib
             if (RedemptionPrice > MarketPrice)
                 RedemptionPrice = MarketPrice;
             StartTime = DateTime.Now;
+            PawnShopProfit = 0;
             DealsCount++;
             ID = String.Format("D{0:00000000}", DealsCount);
         }
@@ -109,7 +111,7 @@ namespace PawnShopLib
                 }
             }
         }
-        internal bool ProlongDeal(int additionalTerm, decimal perDayCoefficient)
+        internal bool Prolong(int additionalTerm, decimal perDayCoefficient)
         {
             if (additionalTerm > 0 && RedemptionPrice + Price * perDayCoefficient * additionalTerm <= MarketPrice)
             {

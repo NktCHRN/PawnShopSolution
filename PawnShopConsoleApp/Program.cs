@@ -19,7 +19,7 @@ namespace PawnShopConsoleApp
             Customer c2 = new Customer("Ferod", "Fedorov", "Sydorovych", new DateTime(1994, 4, 25));
             Customer c3 = new Customer("Nikolay", "Nikolenko", "Sydorovych", new DateTime(1999, 4, 25));
             Customer c4 = new Customer("Sergey", "Nikolenko", "Sydorovych", new DateTime(1979, 4, 25));
-            Buyer b1 = new Buyer(100000000m);
+            Buyer b1 = new Buyer(10000000m);
             Thing t1 = new Car(2000000, 2007, 700000, 200000, "Honda");
             Thing t2 = new AntiqueThing(700, 1960, AntiqueTypes.Watches, 200000);
             Thing t3 = new Jewel(2007, 15, 0, 1, 0);
@@ -59,11 +59,12 @@ namespace PawnShopConsoleApp
             Console.WriteLine(DateTime.Now);
             Console.ReadKey();
             c1.EarnMoney(1000000);
-            //p1.RedeemThing(c1);
-            p1.Prolong(c1, 90);
+            p1.RedeemThing(c1);
+            //p1.Prolong(c1, 30);
             Console.WriteLine(DateTime.Now);
             p1.BuyThing(b1, "D00000001");
             //p1.Deals.GetFullList();
+            Console.WriteLine(p1.GetNetProfit());
             Console.Read();
         }
     }
