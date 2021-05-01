@@ -10,12 +10,14 @@ namespace PawnShopLib
     {
         public delegate decimal Evaluator(Thing thing, Tariffs tariff);
         private Evaluator _evaluator;
+        private decimal _perDayCoefficient;
+        private decimal _saleCoefficient;
         public DealsBase Deals { get; private set; }
         public string Name { get; private set; }
         public decimal Balance { get; private set; }
         public decimal Revenue { get; private set; }
         public decimal Costs { get; private set; }
-        public PawnShop(string name, decimal initialBalance, Evaluator delToEvaluator)
+        public PawnShop(string name, decimal initialBalance, Evaluator delToEvaluator = null, decimal perDayCoefficient = 0.1m, decimal saleCoefficient = 1.5m)
         {
             if (name != null)
                 Name = name;
@@ -29,11 +31,27 @@ namespace PawnShopLib
             if (delToEvaluator != null)
                 _evaluator = delToEvaluator;
             else
-                throw new ArgumentNullException("Evaluator can`t be null", nameof(delToEvaluator));
+                _evaluator = StandartEvaluators.EvaluateThing;
+            if (perDayCoefficient > 0)
+                _perDayCoefficient = perDayCoefficient;
+            else
+                throw new ArgumentException("Coefficient can`t be less than zero", nameof(perDayCoefficient));
+            if (saleCoefficient > 1)
+                _saleCoefficient = saleCoefficient;
+            else
+                throw new ArgumentException("Coefficient can`t be less than zero", nameof(saleCoefficient));
             Revenue = 0;
             Costs = 0;
         }
-        public decimal EstimateThing(Customer customer, Thing myThing) => _evaluator.Invoke(myThing, DefineTariff(customer));
+        public decimal EstimateThing(Customer customer, Thing myThing) => (decimal)_evaluator?.Invoke(myThing, DefineTariff(customer));
+        public decimal GetRedemptionPrice(Customer customer, Thing myThing, int term)
+        {
+            decimal price = EstimateThing(customer, myThing);
+            price += price * _perDayCoefficient * term;
+            if (price < 0)
+                price = 0;
+            return price;
+        }
         private Tariffs DefineTariff(Customer customer)
         {
             if (customer.GetDealsQuantity() <= 6)
@@ -45,21 +63,111 @@ namespace PawnShopLib
             else
                 return Tariffs.Standart;
         }
-        public decimal BailThing(Customer customer, Thing myThing, int period)
+        public decimal BailThing(Customer customer, Thing myThing, int term)
         {
-            throw new NotImplementedException();
+            if (customer != null)
+            {
+                if (!customer.IsOnDeal())
+                {
+                    if (myThing != null)
+                    {
+                        Tariffs tariff = DefineTariff(customer);
+                        decimal price = _evaluator.Invoke(myThing, tariff);
+                        if (Balance >= price)
+                        {
+                            Deal newDeal = new Deal(customer, myThing, term, tariff, price, _perDayCoefficient, _saleCoefficient);
+                            Deals.AddDeal(newDeal);
+                            Balance -= price;
+                            Costs += price;
+                            return price;
+                        }
+                        else
+                        {
+                            throw new ArgumentException("PawnShop hasn`t got enough money for this deal");
+                        }
+                    }
+                    else
+                    {
+                        throw new ArgumentNullException("Your thing was null", nameof(myThing));
+                    }
+                }
+                else
+                {
+                    throw new ArgumentException("You can`t start a new deal while customer is already on deal");//переделать со своим exception!!!
+                }
+            }
+            else
+            {
+                throw new ArgumentNullException("Customer was null", nameof(customer));
+            }
         }
-        public void RedeemThing(string thingID)
+        public bool RedeemThing(Customer customer)
         {
-            throw new NotImplementedException();
+            UpdateDeals();
+            if (customer != null)
+            {
+                if (customer.IsOnDeal())
+                {
+                    decimal price = customer.Deals[customer.GetDealsQuantity() - 1].RedemptionPrice;
+                    if (customer.Balance >= price) 
+                    {
+                        customer.SpendMoney(price);
+                        customer.Deals[customer.GetDealsQuantity() - 1].Close(false);
+                        Balance += price;
+                        Revenue += price;
+                    }
+                    return false;
+                }
+                return false;
+            }
+            else
+            {
+                throw new ArgumentNullException("Customer was null", nameof(customer));
+            }
         }
-        public void Prolong(Customer customer, int period)
+        public bool Prolong(Customer customer, int term)
         {
-            throw new NotImplementedException();
+            UpdateDeals();
+            if (customer != null)
+            {
+                if (customer.IsOnDeal())
+                {
+                    return customer.Deals[customer.GetDealsQuantity() - 1].ProlongDeal(term, _perDayCoefficient);
+                }
+                return false;
+            }
+            else
+            {
+                throw new ArgumentNullException("Customer was null", nameof(customer));
+            }
         }
-        public void BuyThing(Buyer buyer, string thingID)
+        public bool BuyThing(Buyer buyer, string thingID)
         {
-            throw new NotImplementedException();
+            UpdateDeals();
+            if (buyer != null)
+            {
+                if ((bool)Deals[thingID]?.IsOnSale && buyer.Balance >= Deals[thingID].MarketPrice)
+                {
+                    decimal price = Deals[thingID].MarketPrice;
+                    buyer.SpendMoney(price);
+                    Balance += price;
+                    Deals[thingID].SellThing();
+                    Revenue += price;
+                    return true;
+                }
+                return false;
+            }
+            else 
+            {
+                throw new ArgumentNullException("Buyer was null", nameof(buyer));
+            }
+        }
+        public void UpdateDeals()
+        {
+            DateTime currentTime = DateTime.Now;
+            for(int i = 0; i < Deals.GetDealsQuantity(); i++)
+                if (!Deals[i].IsClosed && (currentTime.Year - Deals[i].StartTime.Year) * 365 + (currentTime.Month - Deals[i].StartTime.Month) * 30 + currentTime.Day - Deals[i].StartTime.Day > Deals[i].Term)
+                    Deals[i].Close(true);
         }
     }
 }

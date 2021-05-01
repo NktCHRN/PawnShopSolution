@@ -21,5 +21,6 @@ namespace PawnShopLib
             else
                 throw new ArgumentException("Year can`t be greater than year now", nameof(year));
         }
+        public abstract override string ToString();
     }
 }

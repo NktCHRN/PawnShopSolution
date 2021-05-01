@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace PawnShopLib
 {
-    public sealed class Customer : IPerson
+    public sealed class Customer : IPerson, IBuyer
     {
         private static int _customersQuantity = 0;
         public string FirstName { get; private set; }
@@ -15,7 +15,8 @@ namespace PawnShopLib
         public DateTime BirthDay { get; private set; }
         public string ID { get; private set; }
         public List<Deal> Deals { get; private set; }
-        public Customer(string firstName, string secondName, string patronymic, DateTime birthDay)
+        public decimal Balance { get; private set; }
+        public Customer(string firstName, string secondName, string patronymic, DateTime birthDay, decimal balance = 0)
         {
             if (firstName != null)
                 FirstName = firstName;
@@ -50,6 +51,10 @@ namespace PawnShopLib
             _customersQuantity++;
             ID = String.Format("C{0:00000000}", _customersQuantity);
             Deals = new List<Deal>();
+            if (balance >= 0)
+                Balance = balance;
+            else
+                throw new ArgumentException("Balance can`t be negative", nameof(balance));
         }
         public string GetFullName() => String.Format("{0} {1} {2}", FirstName, SecondName, Patronymic);
         public int GetSuccessfulDealsQuantity()
@@ -89,6 +94,20 @@ namespace PawnShopLib
                 return !Deals[Deals.Count - 1].IsClosed;
             else
                 return false;
+        }
+        public void SpendMoney(decimal sum)
+        {
+            if (sum <= Balance)
+                Balance -= sum;
+            else
+                throw new ArgumentException("Sum to spend can`t be greater than balance", nameof(sum));
+        }
+        public void EarnMoney(decimal sum)
+        {
+            if (sum >= 0)
+                Balance += sum;
+            else
+                throw new ArgumentException("Sum can`t be negative", nameof(sum));
         }
     }
 }

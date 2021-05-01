@@ -21,5 +21,9 @@ namespace PawnShopLib.Things
             else
                 throw new ArgumentNullException("CompanyName can`t be null", nameof(companyName));
         }
+        public override string ToString()
+        {
+            return $"Shares: {CompanyName}; {MarketPrice} hrn";
+        }
     }
 }

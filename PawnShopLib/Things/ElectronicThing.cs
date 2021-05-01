@@ -21,5 +21,9 @@ namespace PawnShopLib.Things
         {
             Type = type;
         }
+        public override string ToString()
+        {
+            return $"{Type.ToString()}: {Year}; {Weight:F3} g";
+        }
     }
 }

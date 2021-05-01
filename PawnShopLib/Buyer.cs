@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace PawnShopLib
 {
-    public class Buyer
+    public class Buyer : IBuyer
     {
         public decimal Balance { get; private set; }
         public Buyer(decimal balance)
@@ -21,7 +21,7 @@ namespace PawnShopLib
             if (sum <= Balance)
                 Balance -= sum;
             else
-                throw new ArgumentException("Sum to spend can`t be greater than balance", nameof(sum));//мб переделать со своим Exception
+                throw new ArgumentException("Sum to spend can`t be greater than balance", nameof(sum));
         }
         public void EarnMoney(decimal sum)
         {

@@ -79,6 +79,20 @@ namespace PawnShopLib
                 }
             }
         }
+        public Deal this[int id]
+        {
+            get
+            {
+                if (id >= 0 && id < _deals.Count)
+                {
+                    return _deals[id];
+                }
+                else
+                {
+                    throw new IndexOutOfRangeException($"{nameof(id)} was not in bounds of the Base (should be from 0 to {_deals.Count - 1})");
+                }
+            }
+        }
         public void AddDeal(Deal newDeal)//make internal!!!
         {
             if (newDeal != null)

@@ -26,5 +26,11 @@ namespace PawnShopLib.Things
             else
                 throw new ArgumentException("Price can`t be negative", nameof(estimatedPrice));
         }
+        public override string ToString()
+        {
+            string antiqueThingDescription = (Type != AntiqueTypes.AntiqueJewel) ? Type.ToString() : "Antique jewel";
+            antiqueThingDescription += $": {Year}; {Weight:F3} g";
+            return antiqueThingDescription;
+        }
     }
 }

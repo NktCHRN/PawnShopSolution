@@ -65,5 +65,37 @@ namespace PawnShopLib.Things
                 OtherGemsWeight = otherGemsWeight;
             else throw new ArgumentException("Weight can`t be lower than zero", nameof(otherGemsWeight));
         }
+        public override string ToString()
+        {
+            string jewelDescription = "";
+            switch (Type)
+            {
+                case JewelTypes.GoldIngot:
+                    jewelDescription += $"Gold ingot: {GoldWeight:F3} g";
+                    break;
+                case JewelTypes.SilverIngot:
+                    jewelDescription += $"Silver ingot: {SilverWeight:F3} g";
+                    break;
+                case JewelTypes.Diamond:
+                    jewelDescription += $"{Type.ToString()}: {DiamondWeight:F3} g";
+                    break;
+                case JewelTypes.AnotherGem:
+                    jewelDescription += $"Precious gem: {OtherGemsWeight:F3} g";
+                    break;
+                default:
+                    jewelDescription += "Jewel: ";
+                    if (GoldWeight > 0)
+                        jewelDescription += $"gold {GoldWeight:F3} g; ";
+                    if (SilverWeight > 0)
+                        jewelDescription += $"silver {SilverWeight:F3} g; ";
+                    if (DiamondWeight > 0)
+                        jewelDescription += $"diamond {DiamondWeight:F3} g; ";
+                    if (OtherGemsWeight > 0)
+                        jewelDescription += $"other gems {OtherGemsWeight:F3} g; ";
+                    jewelDescription = jewelDescription.Remove(jewelDescription.Length - 2, 2);
+                    break;
+            }
+            return jewelDescription;
+        }
     }
 }

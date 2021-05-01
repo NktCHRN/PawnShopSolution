@@ -8,7 +8,6 @@ namespace PawnShopLib
 {
     public class Deal
     {
-        //public delegate decimal Evaluator(Thing thing, Tariffs tariff);ПЕРЕНЕСТИ В PawnShop!!!
         public Customer Customer { get; private set; }
         public Thing Thing { get; private set; }
         public decimal Price { get; private set; }
@@ -26,7 +25,7 @@ namespace PawnShopLib
         {
             DealsCount = 0;
         }
-        public Deal(Customer customer, Thing thing, int term, Tariffs tariff, decimal price, decimal coefficient = 1.5m)//сделать internal!!!
+        internal Deal(Customer customer, Thing thing, int term, Tariffs tariff, decimal price, decimal perDayCoefficient, decimal saleCoefficient)//сделать internal!!!
         {
             if (customer != null) {
                 if (!customer.IsOnDeal())
@@ -46,19 +45,24 @@ namespace PawnShopLib
             if (term >= 0)
             {
                 Term = term;
-                IsClosed = IsOnSale = IsSuccessful = term == 0 && (thing is Things.Car || thing is Things.ElectronicThing || thing is Things.Jewel);
-                //if (term == 0 && (thing is Things.Car || thing is Things.ElectronicThing || thing is Things.Jewel))
-                //{
-                //    IsClosed = true;
-                //    IsOnSale = true;
-                //    IsSuccessful = true;
-                //}
-                //else
-                //{
-                //    IsClosed = false;
-                //    IsOnSale = false;
-                //    IsSuccessful = false;
-                //}
+                if (term > 0)
+                {
+                    Term = term;
+                    IsClosed = false;
+                    IsOnSale = false;
+                    IsSuccessful = false;
+                }
+                else if (term == 0 && (thing is Things.Car || thing is Things.ElectronicThing || thing is Things.Jewel))
+                {
+                    Term = 0;
+                    IsClosed = true;
+                    IsOnSale = true;
+                    IsSuccessful = true;
+                }
+                else
+                {
+                    throw new ArgumentException("This type of thing can`t be sold immediately", nameof(thing));//переделать со своим exception
+                }
             }
             else
             {
@@ -69,10 +73,12 @@ namespace PawnShopLib
                 Price = price;
             else
                 throw new ArgumentException("Price can`t be negative or equal 0", nameof(price));
-            if (coefficient < 1)
-                coefficient = 1.5m;
-            RedemptionPrice = price + price * 0.1m * term;
-            MarketPrice = price * coefficient;
+            if (saleCoefficient < 1)
+                saleCoefficient = 1.5m;
+            RedemptionPrice = price + price * perDayCoefficient * term;
+            MarketPrice = price * saleCoefficient;
+            if (RedemptionPrice > MarketPrice)
+                RedemptionPrice = MarketPrice;
             //ВСЕ ПРОВЕРКИ СДЕЛАТЬ В PawnShop!!!
             //if (Customer.GetDealsQuantity() <= 6)
             //    Tariff = Tariffs.Standart;
@@ -132,7 +138,7 @@ namespace PawnShopLib
             else
                 return -1;
         }
-        public void CloseDeal(bool toSale)//make internal!!!
+        internal void Close(bool toSale)//make internal!!!
         {
             if (!IsClosed)
             {
@@ -149,18 +155,22 @@ namespace PawnShopLib
                 }
             }
         }
-        public bool ProlongDeal(int additionalTerm)//make internal!!!
+        internal bool ProlongDeal(int additionalTerm, decimal perDayCoefficient)//make internal!!!//to pawnshop
         {
-            if (additionalTerm > 0 && RedemptionPrice + Price * 0.1m * additionalTerm <= MarketPrice)
+            if (additionalTerm > 0 && RedemptionPrice + Price * perDayCoefficient * additionalTerm <= MarketPrice)
             {
                 Term += additionalTerm;
-                RedemptionPrice += Price * 0.1m * additionalTerm;
+                RedemptionPrice += Price * perDayCoefficient * additionalTerm;
                 return true;
             }
             else
             {
                 return false;
             }
+        }
+        internal void SellThing()//make internal
+        {
+            IsOnSale = false;
         }
     }
 }
