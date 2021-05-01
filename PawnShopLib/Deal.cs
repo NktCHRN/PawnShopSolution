@@ -15,6 +15,18 @@ namespace PawnShopLib
         public decimal MarketPrice { get; private set; }
         public DateTime StartTime { get; private set; }
         public int Term { get; private set; }   // in days
+        public int PenaltyMaxTerm { get; private set; }
+        private decimal _penalty;
+        public decimal Penalty { 
+            get { return _penalty; } 
+            internal set 
+            {
+                if (value >= 0)
+                    _penalty = value;
+                else
+                    throw new ArgumentException("Penalty can`t be negative", nameof(value));
+            } 
+        }
         public Tariffs Tariff { get; private set; }
         public bool IsClosed { get; private set; }
         public bool IsOnSale { get; private set; }
@@ -46,9 +58,10 @@ namespace PawnShopLib
             if (term >= 0)
             {
                 Term = term;
-                if (term > 0)
+                if (term > 4)
                 {
                     Term = term;
+                    PenaltyMaxTerm = 5;
                     IsClosed = false;
                     IsOnSale = false;
                     IsSuccessful = false;
@@ -56,13 +69,14 @@ namespace PawnShopLib
                 else if (term == 0 && (thing is Things.Car || thing is Things.ElectronicThing || thing is Things.Jewel))
                 {
                     Term = 0;
+                    PenaltyMaxTerm = 0;
                     IsClosed = true;
                     IsOnSale = true;
                     IsSuccessful = true;
                 }
                 else
                 {
-                    throw new ArgumentException("This type of thing can`t be sold immediately", nameof(thing));
+                    throw new ArgumentException("This type of thing can`t be sold immediately or term was between 1 and 4 days", nameof(thing));
                 }
             }
             else
@@ -79,9 +93,10 @@ namespace PawnShopLib
             RedemptionPrice = price + price * perDayCoefficient * term;
             MarketPrice = price * saleCoefficient;
             if (RedemptionPrice > MarketPrice)
-                RedemptionPrice = MarketPrice;
+                MarketPrice = RedemptionPrice;
             StartTime = DateTime.Now;
             PawnShopProfit = 0;
+            _penalty = 0;
             DealsCount++;
             ID = String.Format("D{0:00000000}", DealsCount);
         }
@@ -107,7 +122,7 @@ namespace PawnShopLib
                 else
                 {
                     IsOnSale = false;
-                    IsSuccessful = true;
+                    IsSuccessful = Penalty == 0m;
                 }
             }
         }

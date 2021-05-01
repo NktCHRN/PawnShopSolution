@@ -143,7 +143,7 @@ namespace PawnShopLib
             {
                 if (customer.IsOnDeal())
                 {
-                    decimal price = customer.Deals[customer.GetDealsQuantity() - 1].RedemptionPrice;
+                    decimal price = customer.Deals[customer.GetDealsQuantity() - 1].RedemptionPrice + customer.Deals[customer.GetDealsQuantity() - 1].Penalty;
                     if (customer.Balance >= price)
                     {
                         customer.SpendMoney(price);
@@ -216,10 +216,23 @@ namespace PawnShopLib
         public void UpdateDeals()
         {
             DateTime currentTime = DateTime.Now;
-            for(int i = 0; i < _deals.GetDealsQuantity(); i++)
-                if (!_deals[i].IsClosed && (currentTime.Year - _deals[i].StartTime.Year) * 365 + (currentTime.Month - _deals[i].StartTime.Month) * 30 + currentTime.Day - _deals[i].StartTime.Day > _deals[i].Term)
-                    _deals[i].Close(true);
+            for (int i = 0; i < _deals.GetDealsQuantity(); i++)
+            {
+                if (!_deals[i].IsClosed)
+                {
+                    if (DateTimeToDays(currentTime) - DateTimeToDays(_deals[i].StartTime) > _deals[i].Term + _deals[i].PenaltyMaxTerm)
+                        _deals[i].Close(true);//+ в логинг
+                    else if (DateTimeToDays(currentTime) - DateTimeToDays(_deals[i].StartTime) > _deals[i].Term)
+                    {
+                        _deals[i].Penalty = (DateTimeToDays(DateTime.Now) - DateTimeToDays(_deals[i].StartTime) - _deals[i].Term) * PerDayCoefficient * 2m * _deals[i].Price;
+                    }
+                }
+            }
         }
         public decimal GetNetProfit() => Revenue - Costs;
+        private int DateTimeToDays(DateTime time)
+        {
+            return time.Year * 365 + time.Month * 30 + time.Day;
+        }
     }
 }

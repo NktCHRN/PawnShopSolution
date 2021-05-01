@@ -62,7 +62,7 @@ namespace PawnShopConsoleApp
             p1.RedeemThing(c1);
             //p1.Prolong(c1, 30);
             Console.WriteLine(DateTime.Now);
-            p1.BuyThing(b1, "D00000001");
+            //p1.BuyThing(b1, "D00000001");
             //p1.Deals.GetFullList();
             Console.WriteLine(p1.GetNetProfit());
             Console.Read();
