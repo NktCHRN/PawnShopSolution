@@ -93,39 +93,12 @@ namespace PawnShopLib
                 }
             }
         }
-        public void AddDeal(Deal newDeal)//make internal!!!
+        internal void AddDeal(Deal newDeal)
         {
             if (newDeal != null)
                 _deals.Add(newDeal);
             else
                 throw new ArgumentNullException("New deal can`t be null", nameof(newDeal));
         }
-        //private static void QuickSort(List<Deal> list, int start, int end, Comparer delToComparer) 
-        //{
-        //    if (start < end) {
-        //        int middle = Partition(list, start, end, delToComparer);
-        //        QuickSort(list, start, middle - 1, delToComparer);
-        //        QuickSort(list, middle + 1, end, delToComparer);
-        //    }
-        //}
-        //private static int Partition(List<Deal> list, int start, int end, Comparer delToComparer)
-        //{
-        //    Deal pivot = list[end];
-        //    int i = start - 1;
-        //    for (int j = start; j < end; j++)
-        //        if ((bool)delToComparer?.Invoke(list[j], pivot)) {
-        //            i++;
-        //            Swap(list, i, j);
-        //        }
-        //    Swap(list, i + 1, end);
-        //    return i + 1;
-        //}
-        //private static void Swap(List<Deal> list, int left, int right)
-        //{
-        //    Deal temp;
-        //    temp = list[left];
-        //    list[left] = list[right];
-        //    list[right] = temp;
-        //}
     }
 }

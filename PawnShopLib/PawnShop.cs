@@ -17,7 +17,7 @@ namespace PawnShopLib
         public decimal Balance { get; private set; }
         public decimal Revenue { get; private set; }
         public decimal Costs { get; private set; }
-        public PawnShop(string name, decimal initialBalance, Evaluator delToEvaluator = null, decimal perDayCoefficient = 0.1m, decimal saleCoefficient = 1.5m)
+        public PawnShop(string name, decimal initialBalance, Evaluator delToEvaluator = null, decimal perDayCoefficient = 0.005m, decimal saleCoefficient = 1.5m)
         {
             if (name != null)
                 Name = name;
@@ -93,7 +93,7 @@ namespace PawnShopLib
                 }
                 else
                 {
-                    throw new ArgumentException("You can`t start a new deal while customer is already on deal");//переделать со своим exception!!!
+                    throw new BusyObjectException("Customer is already on deal. Close the last deal first");
                 }
             }
             else
@@ -115,6 +115,7 @@ namespace PawnShopLib
                         customer.Deals[customer.GetDealsQuantity() - 1].Close(false);
                         Balance += price;
                         Revenue += price;
+                        return true;
                     }
                     return false;
                 }
@@ -146,8 +147,7 @@ namespace PawnShopLib
             UpdateDeals();
             if (buyer != null)
             {
-                if ((bool)Deals[thingID]?.IsOnSale && buyer.Balance >= Deals[thingID].MarketPrice)
-                {
+                if (Deals[thingID] != null && Deals[thingID].IsOnSale && buyer.Balance >= Deals[thingID].MarketPrice) {
                     decimal price = Deals[thingID].MarketPrice;
                     buyer.SpendMoney(price);
                     Balance += price;
@@ -155,7 +155,10 @@ namespace PawnShopLib
                     Revenue += price;
                     return true;
                 }
-                return false;
+                else
+                {
+                    return false;
+                }
             }
             else 
             {

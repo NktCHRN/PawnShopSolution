@@ -25,7 +25,7 @@ namespace PawnShopLib
         {
             DealsCount = 0;
         }
-        internal Deal(Customer customer, Thing thing, int term, Tariffs tariff, decimal price, decimal perDayCoefficient, decimal saleCoefficient)//сделать internal!!!
+        internal Deal(Customer customer, Thing thing, int term, Tariffs tariff, decimal price, decimal perDayCoefficient, decimal saleCoefficient)
         {
             if (customer != null) {
                 if (!customer.IsOnDeal())
@@ -34,7 +34,7 @@ namespace PawnShopLib
                     Customer.AddDeal(this);
                 }
                 else
-                    throw new ArgumentException("You can`t start a new deal while customer is already on deal");//переделать со своим exception!!!
+                    throw new BusyObjectException("Customer is already on deal. Close the last deal first");
             }
             else
                 throw new ArgumentNullException("Customer can`t be null", nameof(customer));
@@ -61,7 +61,7 @@ namespace PawnShopLib
                 }
                 else
                 {
-                    throw new ArgumentException("This type of thing can`t be sold immediately", nameof(thing));//переделать со своим exception
+                    throw new ArgumentException("This type of thing can`t be sold immediately", nameof(thing));
                 }
             }
             else
@@ -79,56 +79,10 @@ namespace PawnShopLib
             MarketPrice = price * saleCoefficient;
             if (RedemptionPrice > MarketPrice)
                 RedemptionPrice = MarketPrice;
-            //ВСЕ ПРОВЕРКИ СДЕЛАТЬ В PawnShop!!!
-            //if (Customer.GetDealsQuantity() <= 6)
-            //    Tariff = Tariffs.Standart;
-            //else if ((double)Customer.GetSuccessfulDealsQuantity() / Customer.GetUnsuccessfulDealsQuantity() >= 1.5)
-            //    Tariff = Tariffs.Preferential;
-            //else if ((double)Customer.GetSuccessfulDealsQuantity() / Customer.GetUnsuccessfulDealsQuantity() <= 0.5)
-            //    Tariff = Tariffs.LowPenalty;
-            //else
-            //    Tariff = Tariffs.Standart;
-            //if (term >= 0 && term <= 365)
-            //{
-            //    if (term > 7) 
-            //    {
-            //        Term = term;
-            //        IsClosed = false;
-            //        IsOnSale = false;
-            //        IsSuccessful = false;
-            //    }
-            //    else if (term == 0 && (thing is Things.Car || thing is Things.ElectronicThing || thing is Things.Jewel))
-            //    {
-            //        Term = 0;
-            //        IsClosed = true;
-            //        IsOnSale = true;
-            //        IsSuccessful = true;
-            //    }
-            //    else
-            //    {
-            //        throw new ArgumentException("Term should be sevel or more days or (go on sale immediately (0 days) and have such a type as Car, ElectronicThing or Jewel)", nameof(term));
-            //    }
-            //}
-            //else
-            //{
-            //    throw new ArgumentException("Term can`t be negative or greater than a year", nameof(term));
-            //}
-            //if (delToEvaluator != null)
-            //{
-            //    Price = delToEvaluator.Invoke(Thing, Tariff);
-            //    MarketPrice = Price * 1.5m;
-            //}
-            //else
-            //{
-            //    Price = StandartEvaluators.EvaluateThing(Thing, Tariff);
-            //    MarketPrice = Price * 1.5m;
-            //}
             StartTime = DateTime.Now;
             DealsCount++;
             ID = String.Format("D{0:00000000}", DealsCount);
         }
-        //public static bool HasGreaterPrice(Deal left, Deal right) => left.MarketPrice > right.MarketPrice;
-        //public static bool HasSmallerPrice(Deal left, Deal right) => left.MarketPrice < right.MarketPrice;
         public static int CompareDealsByPrice(Deal left, Deal right)
         {
             if (left.MarketPrice > right.MarketPrice)
@@ -138,7 +92,7 @@ namespace PawnShopLib
             else
                 return -1;
         }
-        internal void Close(bool toSale)//make internal!!!
+        internal void Close(bool toSale)
         {
             if (!IsClosed)
             {
@@ -155,7 +109,7 @@ namespace PawnShopLib
                 }
             }
         }
-        internal bool ProlongDeal(int additionalTerm, decimal perDayCoefficient)//make internal!!!//to pawnshop
+        internal bool ProlongDeal(int additionalTerm, decimal perDayCoefficient)
         {
             if (additionalTerm > 0 && RedemptionPrice + Price * perDayCoefficient * additionalTerm <= MarketPrice)
             {
@@ -168,7 +122,7 @@ namespace PawnShopLib
                 return false;
             }
         }
-        internal void SellThing()//make internal
+        internal void SellThing()
         {
             IsOnSale = false;
         }

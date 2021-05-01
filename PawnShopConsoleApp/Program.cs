@@ -14,11 +14,12 @@ namespace PawnShopConsoleApp
         static void Main(string[] args)
         {
             Console.Title = "PAWN SHOP";
-            PawnShop p1 = new PawnShop("PS", 10000000m, StandartEvaluators.EvaluateThing, 0.1m, 1.5m);
+            PawnShop p1 = new PawnShop("PS", 10000000m, StandartEvaluators.EvaluateThing, 0.005m, 1.5m);
             Customer c1 = new Customer("Sydor", "Sydorenko", "Sydorovych", new DateTime(2003, 4, 25));
             Customer c2 = new Customer("Ferod", "Fedorov", "Sydorovych", new DateTime(1994, 4, 25));
             Customer c3 = new Customer("Nikolay", "Nikolenko", "Sydorovych", new DateTime(1999, 4, 25));
             Customer c4 = new Customer("Sergey", "Nikolenko", "Sydorovych", new DateTime(1979, 4, 25));
+            Buyer b1 = new Buyer(100000000m);
             Thing t1 = new Car(2000000, 2007, 700000, 200000, "Honda");
             Thing t2 = new AntiqueThing(700, 1960, AntiqueTypes.Watches, 200000);
             Thing t3 = new Jewel(2007, 15, 0, 1, 0);
@@ -26,6 +27,8 @@ namespace PawnShopConsoleApp
             Thing t5 = new Car(1700000, 2010, 5000000, 300000, "Porshe");
             Thing t6 = new Shares(2007, 30000, "Amazon");
             Thing t7 = new Jewel(2007, 10, JewelTypes.GoldIngot);
+            decimal money = p1.BailThing(c1, t1, 30);
+            //money = p1.BailThing(c2, t2, 0);
             //Console.WriteLine(t2);
             //Console.WriteLine(t1);
             //Console.WriteLine(t4);
@@ -55,7 +58,11 @@ namespace PawnShopConsoleApp
             //db1.GetFilteredOnSale<Car>(SortingTypes.PriceAsceding);
             Console.WriteLine(DateTime.Now);
             Console.ReadKey();
+            c1.EarnMoney(1000000);
+            //p1.RedeemThing(c1);
+            p1.Prolong(c1, 90);
             Console.WriteLine(DateTime.Now);
+            p1.BuyThing(b1, "D00000001");
             Console.Read();
         }
     }

@@ -81,7 +81,7 @@ namespace PawnShopLib
                 if (!IsOnDeal())
                     Deals.Add(deal);
                 else
-                    throw new ArgumentException("Customer is already on deal. Close the last deal first");
+                    throw new BusyObjectException("Customer is already on deal. Close the last deal first");
             }
             else
             {
