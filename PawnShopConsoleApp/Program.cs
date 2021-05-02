@@ -15,10 +15,10 @@ namespace PawnShopConsoleApp
         {
             Console.Title = "PAWN SHOP";
             PawnShop p1 = new PawnShop("PS", 10000000m, StandartEvaluators.EvaluateThing, 0.005m);
-            Customer c1 = new Customer("Sydor", "Sydorenko", "Sydorovych", new DateTime(2003, 4, 25));
-            Customer c2 = new Customer("Ferod", "Fedorov", "Sydorovych", new DateTime(1994, 4, 25));
-            Customer c3 = new Customer("Nikolay", "Nikolenko", "Sydorovych", new DateTime(1999, 4, 25));
-            Customer c4 = new Customer("Sergey", "Nikolenko", "Sydorovych", new DateTime(1979, 4, 25));
+            Customer c1 = p1.AddCustomer("Sydor", "Sydorenko", "Sydorovych", new DateTime(2003, 4, 25));
+            Customer c2 = p1.AddCustomer("Ferod", "Fedorov", "Sydorovych", new DateTime(1994, 4, 25));
+            Customer c3 = p1.AddCustomer("Nikolay", "Nikolenko", "Sydorovych", new DateTime(1999, 4, 25));
+            Customer c4 = p1.AddCustomer("Sergey", "Nikolenko", "Sydorovych", new DateTime(1979, 4, 25));
             Buyer b1 = new Buyer(10000000m);
             Thing t1 = new Car(2000000, 2007, 700000, 200000, "Honda");
             Thing t2 = new AntiqueThing(700, 1960, AntiqueTypes.Watches, 200000);

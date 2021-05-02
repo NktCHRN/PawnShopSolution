@@ -16,7 +16,7 @@ namespace PawnShopLib
         public string ID { get; private set; }
         public DealsBase Deals { get; private set; }
         public decimal Balance { get; private set; }
-        public Customer(string firstName, string secondName, string patronymic, DateTime birthDay, decimal balance = 0)
+        internal Customer(string firstName, string secondName, string patronymic, DateTime birthDay, decimal balance = 0)
         {
             if (firstName != null)
                 FirstName = firstName;

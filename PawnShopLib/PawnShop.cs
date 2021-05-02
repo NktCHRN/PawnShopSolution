@@ -27,6 +27,7 @@ namespace PawnShopLib
             }
         }
         private readonly DealsBase _deals;
+        private readonly List<Customer> _customers;
         public DealsBase Deals { 
             get 
             { 
@@ -63,6 +64,29 @@ namespace PawnShopLib
                 throw new ArgumentException("MaxTerm can`t be smaller than or equal zero", nameof(maxTerm));
             Revenue = 0;
             Costs = 0;
+            _customers = new List<Customer>();
+        }
+        public Customer AddCustomer(string firstName, string secondName, string patronymic, DateTime birthDay, decimal balance = 0)
+        {
+            Customer newCustomer = new Customer(firstName, secondName, patronymic, birthDay, balance);
+            _customers.Add(newCustomer);
+            return newCustomer;
+        }
+        public Customer FindCustomer(string id)
+        {
+            if (id != null)
+            {
+                foreach(Customer customer in _customers)
+                {
+                    if (customer.ID == id)
+                        return customer;
+                }
+                return null;
+            }
+            else
+            {
+                throw new ArgumentNullException("ID can`t be null", nameof(id));
+            }
         }
         public decimal EstimateThing(Customer customer, Thing myThing) => (decimal)_evaluator?.Invoke(myThing, DefineTariff(customer));
         public decimal GetRedemptionPrice(Customer customer, Thing myThing, int term)
