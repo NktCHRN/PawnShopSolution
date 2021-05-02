@@ -19,13 +19,6 @@ namespace PawnShopLib
         private decimal _penalty;
         public decimal Penalty { 
             get { return _penalty; } 
-            //internal set 
-            //{
-            //    if (value >= 0)
-            //        _penalty = value;
-            //    else
-            //        throw new ArgumentException("Penalty can`t be negative", nameof(value));
-            //} 
         }
         public Tariffs Tariff { get; private set; }
         public bool IsClosed { get; private set; }

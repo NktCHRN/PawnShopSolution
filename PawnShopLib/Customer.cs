@@ -14,7 +14,7 @@ namespace PawnShopLib
         public string Patronymic { get; private set; }
         public DateTime BirthDay { get; private set; }
         public string ID { get; private set; }
-        public List<Deal> Deals { get; private set; }
+        public DealsBase Deals { get; private set; }
         public decimal Balance { get; private set; }
         public Customer(string firstName, string secondName, string patronymic, DateTime birthDay, decimal balance = 0)
         {
@@ -50,7 +50,7 @@ namespace PawnShopLib
             }
             _customersQuantity++;
             ID = String.Format("C{0:00000000}", _customersQuantity);
-            Deals = new List<Deal>();
+            Deals = new DealsBase();
             if (balance >= 0)
                 Balance = balance;
             else
@@ -73,7 +73,7 @@ namespace PawnShopLib
                     quantity += 1;
             return quantity;
         }
-        public int GetDealsQuantity() => Deals.Count;
+        public int GetDealsQuantity() => Deals.GetDealsQuantity();
         internal void AddDeal(Deal deal)
         {
             if (deal != null)
@@ -90,8 +90,8 @@ namespace PawnShopLib
         }
         public bool IsOnDeal()
         {
-            if (Deals.Count > 0)
-                return !Deals[Deals.Count - 1].IsClosed;
+            if (Deals.GetDealsQuantity() > 0)
+                return !Deals[Deals.GetDealsQuantity() - 1].IsClosed;
             else
                 return false;
         }

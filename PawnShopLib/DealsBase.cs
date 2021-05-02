@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -12,9 +13,10 @@ namespace PawnShopLib
         PriceAsceding,
         PriceDescending
     }
-    public class DealsBase
+    public class DealsBase : IEnumerator, IEnumerable
     {
         private readonly List<Deal> _deals;
+        private int _position = 0;
         internal DealsBase()
         {
             _deals = new List<Deal>();
@@ -92,12 +94,32 @@ namespace PawnShopLib
                 }
             }
         }
-        internal void AddDeal(Deal newDeal)
+        internal void Add(Deal newDeal)
         {
             if (newDeal != null)
                 _deals.Add(newDeal);
             else
                 throw new ArgumentNullException("New deal can`t be null", nameof(newDeal));
+        }
+        public IEnumerator GetEnumerator()
+        {
+            return (IEnumerator)this;
+        }
+        //IEnumerator
+        public bool MoveNext()
+        {
+            _position++;
+            return (_position < _deals.Count);
+        }
+        //IEnumerable
+        public void Reset()
+        {
+            _position = 0;
+        }
+        //IEnumerable
+        public object Current
+        {
+            get { return _deals[_position]; }
         }
     }
 }

@@ -11,7 +11,6 @@ namespace PawnShopLib
         public delegate decimal Evaluator(Thing thing, Tariffs tariff);
         private readonly Evaluator _evaluator;
         private decimal _perDayCoefficient;
-        //private decimal _saleCoefficient;
         public int MaxTerm { get; private set; }
         public decimal PerDayCoefficient 
         {
@@ -27,20 +26,6 @@ namespace PawnShopLib
                     throw new ArgumentException("PerDayCoefficient can`t be negative", nameof(value));
             }
         }
-        //private decimal SaleCoefficient
-        //{
-        //    get
-        //    {
-        //        return _saleCoefficient;
-        //    }
-        //    set
-        //    {
-        //        if (value > 1)
-        //            _saleCoefficient = value;
-        //        else
-        //            throw new ArgumentException("SaleCoefficient can`t be lower than or equal 1", nameof(value));
-        //    }
-        //}
         private readonly DealsBase _deals;
         public DealsBase Deals { 
             get 
@@ -114,7 +99,7 @@ namespace PawnShopLib
                             if (term >= 0 && term <= MaxTerm)
                             {
                                 Deal newDeal = new Deal(customer, myThing, term, tariff, price, PerDayCoefficient, MaxTerm);
-                                _deals.AddDeal(newDeal);
+                                _deals.Add(newDeal);
                                 Balance -= price;
                                 Costs += price;
                                 return price;
