@@ -11,7 +11,8 @@ namespace PawnShopLib
         public delegate decimal Evaluator(Thing thing, Tariffs tariff);
         private readonly Evaluator _evaluator;
         private decimal _perDayCoefficient;
-        private decimal _saleCoefficient;
+        //private decimal _saleCoefficient;
+        public int MaxTerm { get; private set; }
         public decimal PerDayCoefficient 
         {
             get
@@ -26,20 +27,20 @@ namespace PawnShopLib
                     throw new ArgumentException("PerDayCoefficient can`t be negative", nameof(value));
             }
         }
-        private decimal SaleCoefficient
-        {
-            get
-            {
-                return _saleCoefficient;
-            }
-            set
-            {
-                if (value > 1)
-                    _saleCoefficient = value;
-                else
-                    throw new ArgumentException("SaleCoefficient can`t be lower than or equal 1", nameof(value));
-            }
-        }
+        //private decimal SaleCoefficient
+        //{
+        //    get
+        //    {
+        //        return _saleCoefficient;
+        //    }
+        //    set
+        //    {
+        //        if (value > 1)
+        //            _saleCoefficient = value;
+        //        else
+        //            throw new ArgumentException("SaleCoefficient can`t be lower than or equal 1", nameof(value));
+        //    }
+        //}
         private readonly DealsBase _deals;
         public DealsBase Deals { 
             get 
@@ -52,7 +53,7 @@ namespace PawnShopLib
         public decimal Balance { get; private set; }
         public decimal Revenue { get; private set; }
         public decimal Costs { get; private set; }
-        public PawnShop(string name, decimal initialBalance, Evaluator delToEvaluator = null, decimal perDayCoefficient = 0.005m, decimal saleCoefficient = 1.5m)
+        public PawnShop(string name, decimal initialBalance, Evaluator delToEvaluator = null, decimal perDayCoefficient = 0.005m, int maxTerm = 365)
         {
             if (name != null)
                 Name = name;
@@ -71,10 +72,10 @@ namespace PawnShopLib
                 PerDayCoefficient = perDayCoefficient;
             else
                 throw new ArgumentException("Coefficient can`t be less than zero", nameof(perDayCoefficient));
-            if (saleCoefficient > 1)
-                SaleCoefficient = saleCoefficient;
+            if (maxTerm > 0)
+                MaxTerm = maxTerm;
             else
-                throw new ArgumentException("Coefficient can`t be less than zero", nameof(saleCoefficient));
+                throw new ArgumentException("MaxTerm can`t be smaller than or equal zero", nameof(maxTerm));
             Revenue = 0;
             Costs = 0;
         }
@@ -110,11 +111,18 @@ namespace PawnShopLib
                         decimal price = _evaluator.Invoke(myThing, tariff);
                         if (Balance >= price)
                         {
-                            Deal newDeal = new Deal(customer, myThing, term, tariff, price, PerDayCoefficient, SaleCoefficient);
-                            _deals.AddDeal(newDeal);
-                            Balance -= price;
-                            Costs += price;
-                            return price;
+                            if (term >= 0 && term <= MaxTerm)
+                            {
+                                Deal newDeal = new Deal(customer, myThing, term, tariff, price, PerDayCoefficient, MaxTerm);
+                                _deals.AddDeal(newDeal);
+                                Balance -= price;
+                                Costs += price;
+                                return price;
+                            }
+                            else
+                            {
+                                throw new ArgumentException($"Term is negative or too big (MaxTerm: {MaxTerm})", nameof(term));
+                            }
                         }
                         else
                         {
@@ -224,13 +232,13 @@ namespace PawnShopLib
                         _deals[i].Close(true);//+ в логинг
                     else if (DateTimeToDays(currentTime) - DateTimeToDays(_deals[i].StartTime) > _deals[i].Term)
                     {
-                        _deals[i].Penalty = (DateTimeToDays(DateTime.Now) - DateTimeToDays(_deals[i].StartTime) - _deals[i].Term) * PerDayCoefficient * 2m * _deals[i].Price;
+                        _deals[i].SetPenalty(PerDayCoefficient, (DateTimeToDays(DateTime.Now) - DateTimeToDays(_deals[i].StartTime) - _deals[i].Term));
                     }
                 }
             }
         }
         public decimal GetNetProfit() => Revenue - Costs;
-        private int DateTimeToDays(DateTime time)
+        internal static int DateTimeToDays(DateTime time)
         {
             return time.Year * 365 + time.Month * 30 + time.Day;
         }

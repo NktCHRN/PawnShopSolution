@@ -19,13 +19,13 @@ namespace PawnShopLib
         private decimal _penalty;
         public decimal Penalty { 
             get { return _penalty; } 
-            internal set 
-            {
-                if (value >= 0)
-                    _penalty = value;
-                else
-                    throw new ArgumentException("Penalty can`t be negative", nameof(value));
-            } 
+            //internal set 
+            //{
+            //    if (value >= 0)
+            //        _penalty = value;
+            //    else
+            //        throw new ArgumentException("Penalty can`t be negative", nameof(value));
+            //} 
         }
         public Tariffs Tariff { get; private set; }
         public bool IsClosed { get; private set; }
@@ -38,7 +38,7 @@ namespace PawnShopLib
         {
             DealsCount = 0;
         }
-        internal Deal(Customer customer, Thing thing, int term, Tariffs tariff, decimal price, decimal perDayCoefficient, decimal saleCoefficient)
+        internal Deal(Customer customer, Thing thing, int term, Tariffs tariff, decimal price, decimal perDayCoefficient, int maxTerm)
         {
             if (customer != null) {
                 if (!customer.IsOnDeal())
@@ -88,10 +88,8 @@ namespace PawnShopLib
                 Price = price;
             else
                 throw new ArgumentException("Price can`t be negative or equal 0", nameof(price));
-            if (saleCoefficient < 1)
-                saleCoefficient = 1.5m;
             RedemptionPrice = price + price * perDayCoefficient * term;
-            MarketPrice = price * saleCoefficient;
+            MarketPrice = price + price * perDayCoefficient * maxTerm;
             if (RedemptionPrice > MarketPrice)
                 MarketPrice = RedemptionPrice;
             StartTime = DateTime.Now;
@@ -130,9 +128,18 @@ namespace PawnShopLib
         {
             if (additionalTerm > 0 && RedemptionPrice + Price * perDayCoefficient * additionalTerm <= MarketPrice)
             {
+                if (Penalty > 0 && additionalTerm < PawnShop.DateTimeToDays(DateTime.Now) - PawnShop.DateTimeToDays(StartTime) - Term)
+                {
+                    decimal oldPenalty = CalculatePenalty(perDayCoefficient, additionalTerm);
+                    RedemptionPrice += Price * perDayCoefficient * additionalTerm + oldPenalty;
+                    SetPenalty(perDayCoefficient, PawnShop.DateTimeToDays(DateTime.Now) - PawnShop.DateTimeToDays(StartTime) - Term - additionalTerm);
+                }
+                else
+                {
+                    RedemptionPrice += Price * perDayCoefficient * additionalTerm + Penalty;
+                    _penalty = 0;
+                }
                 Term += additionalTerm;
-                RedemptionPrice += Price * perDayCoefficient * additionalTerm + Penalty;
-                Penalty = 0;
                 return true;
             }
             else
@@ -143,6 +150,27 @@ namespace PawnShopLib
         internal void SellThing()
         {
             IsOnSale = false;
+        }
+        private decimal CalculatePenalty(decimal perDayCoefficient, int days)
+        {
+            if (days >= 0)
+                return days * perDayCoefficient * 2m * Price;
+            else
+                return 0;
+        }
+        internal void SetPenalty(decimal perDayCoefficient, int days)
+        {
+            if (perDayCoefficient > 0)
+            {
+                if (days >= 0 && days <= PenaltyMaxTerm)
+                    _penalty = CalculatePenalty(perDayCoefficient, days);
+                else
+                    throw new ArgumentException("Too big or small penatly term", nameof(days));
+            }
+            else
+            {
+                throw new ArgumentException("PerFayCoefficient should be bugger than zero", nameof(perDayCoefficient));
+            }
         }
     }
 }

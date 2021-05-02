@@ -14,7 +14,7 @@ namespace PawnShopConsoleApp
         static void Main(string[] args)
         {
             Console.Title = "PAWN SHOP";
-            PawnShop p1 = new PawnShop("PS", 10000000m, StandartEvaluators.EvaluateThing, 0.005m, 1.5m);
+            PawnShop p1 = new PawnShop("PS", 10000000m, StandartEvaluators.EvaluateThing, 0.005m);
             Customer c1 = new Customer("Sydor", "Sydorenko", "Sydorovych", new DateTime(2003, 4, 25));
             Customer c2 = new Customer("Ferod", "Fedorov", "Sydorovych", new DateTime(1994, 4, 25));
             Customer c3 = new Customer("Nikolay", "Nikolenko", "Sydorovych", new DateTime(1999, 4, 25));
@@ -58,6 +58,8 @@ namespace PawnShopConsoleApp
             //db1.GetFilteredOnSale<Car>(SortingTypes.PriceAsceding);
             Console.WriteLine(DateTime.Now);
             Console.ReadKey();
+            p1.TryProlong(c1, 10);
+            p1.UpdateDeals();
             c1.EarnMoney(1000000);
             p1.RedeemThing(c1);
             //p1.Prolong(c1, 30);
