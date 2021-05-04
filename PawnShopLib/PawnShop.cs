@@ -8,7 +8,7 @@ namespace PawnShopLib
 {
     public sealed class PawnShop : IPawnShop
     {
-        public delegate decimal Evaluator(Thing thing, Tariffs tariff);
+        public delegate decimal Evaluator(Thing thing, Tariff tariff);
         private readonly Evaluator _evaluator;
         private decimal _perDayCoefficient;
         public int MaxTerm { get; private set; }
@@ -97,16 +97,16 @@ namespace PawnShopLib
                 price = 0;
             return price;
         }
-        private Tariffs DefineTariff(Customer customer)
+        private Tariff DefineTariff(Customer customer)
         {
             if (customer.GetDealsQuantity() <= 6)
-                return Tariffs.Standart;
+                return Tariff.Standart;
             else if ((double)customer.GetSuccessfulDealsQuantity() / customer.GetUnsuccessfulDealsQuantity() >= 1.5)
-                return Tariffs.Preferential;
+                return Tariff.Preferential;
             else if ((double)customer.GetSuccessfulDealsQuantity() / customer.GetUnsuccessfulDealsQuantity() <= 0.5)
-                return Tariffs.LowPenalty;
+                return Tariff.LowPenalty;
             else
-                return Tariffs.Standart;
+                return Tariff.Standart;
         }
         public decimal BailThing(Customer customer, Thing myThing, int term)
         {
@@ -116,7 +116,7 @@ namespace PawnShopLib
                 {
                     if (myThing != null)
                     {
-                        Tariffs tariff = DefineTariff(customer);
+                        Tariff tariff = DefineTariff(customer);
                         decimal price = _evaluator.Invoke(myThing, tariff);
                         if (Balance >= price)
                         {

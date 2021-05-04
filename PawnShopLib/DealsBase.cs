@@ -16,7 +16,7 @@ namespace PawnShopLib
     public class DealsBase : IEnumerator, IEnumerable
     {
         private readonly List<Deal> _deals;
-        private int _position = 0;
+        private int _position = -1;
         internal DealsBase()
         {
             _deals = new List<Deal>();
@@ -108,18 +108,28 @@ namespace PawnShopLib
         //IEnumerator
         public bool MoveNext()
         {
-            _position++;
-            return (_position < _deals.Count);
+            if (_position < _deals.Count() - 1)
+            {
+                _position++;
+                return true;
+            }
+            else
+                return false;
         }
         //IEnumerable
         public void Reset()
         {
-            _position = 0;
+            _position = -1;
         }
         //IEnumerable
         public object Current
         {
-            get { return _deals[_position]; }
+            get { 
+                if (_position == -1 || _position >= _deals.Count())
+                    throw new InvalidOperationException();
+                else
+                    return _deals[_position];
+            }
         }
     }
 }

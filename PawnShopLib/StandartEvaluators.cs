@@ -8,7 +8,7 @@ namespace PawnShopLib
 {
     public static class StandartEvaluators
     {
-        public static decimal EvaluateThing(Thing thing, Tariffs tariff)
+        public static decimal EvaluateThing(Thing thing, Tariff tariff)
         {
             decimal price;
             if (thing is Things.AntiqueThing antiqueThing)

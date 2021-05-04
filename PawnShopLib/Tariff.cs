@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace PawnShopLib
 {
-    public enum Tariffs
+    public enum Tariff
     {
         Preferential = 110,
         Standart = 100,

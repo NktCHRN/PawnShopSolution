@@ -20,7 +20,7 @@ namespace PawnShopLib
         public decimal Penalty { 
             get { return _penalty; } 
         }
-        public Tariffs Tariff { get; private set; }
+        public Tariff Tariff { get; private set; }
         public bool IsClosed { get; private set; }
         public bool IsOnSale { get; private set; }
         public bool IsSuccessful { get; private set; }
@@ -31,7 +31,7 @@ namespace PawnShopLib
         {
             DealsCount = 0;
         }
-        internal Deal(Customer customer, Thing thing, int term, Tariffs tariff, decimal price, decimal perDayCoefficient, int maxTerm)
+        internal Deal(Customer customer, Thing thing, int term, Tariff tariff, decimal price, decimal perDayCoefficient, int maxTerm)
         {
             if (customer != null) {
                 if (!customer.IsOnDeal())
