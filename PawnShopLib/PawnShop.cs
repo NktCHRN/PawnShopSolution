@@ -20,6 +20,7 @@ namespace PawnShopLib
             }
             set
             {
+                UpdateDeals();
                 if (value > 0)
                     _perDayCoefficient = value;
                 else
@@ -32,6 +33,7 @@ namespace PawnShopLib
         {
             get
             {
+                UpdateDeals();
                 List<Customer> newList = new List<Customer>();
                 foreach (Customer customer in _customers)
                     newList.Add(customer);
@@ -85,6 +87,7 @@ namespace PawnShopLib
         }
         public Customer FindCustomer(string id)
         {
+            UpdateDeals();
             if (id != null)
             {
                 foreach(Customer customer in _customers)
@@ -102,6 +105,7 @@ namespace PawnShopLib
         public decimal EstimateThing(Customer customer, Thing myThing) => (decimal)_evaluator?.Invoke(myThing, DefineTariff(customer));
         public decimal GetRedemptionPrice(Customer customer, Thing myThing, int term)
         {
+            UpdateDeals();
             decimal price = EstimateThing(customer, myThing);
             price += price * PerDayCoefficient * term;
             if (price < 0)
@@ -121,6 +125,7 @@ namespace PawnShopLib
         }
         public decimal BailThing(Customer customer, Thing myThing, int term)
         {
+            UpdateDeals();
             if (customer != null)
             {
                 if (!customer.IsOnDeal())

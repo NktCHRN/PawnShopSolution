@@ -72,7 +72,7 @@ namespace PawnShopLib
             else
                 throw new ArgumentException("Balance can`t be negative", nameof(balance));
         }
-        public string GetFullName() => String.Format("{0} {1} {2}", FirstName, SecondName, Patronymic);
+        public string GetFullName() => String.Format("{0} {1} {2}", SecondName, FirstName, Patronymic);
         public int GetSuccessfulDealsQuantity()
         {
             int quantity = 0;
