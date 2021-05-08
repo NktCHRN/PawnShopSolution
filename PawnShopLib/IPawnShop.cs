@@ -12,6 +12,6 @@ namespace PawnShopLib
         decimal BailThing(Customer customer, Thing myThing, int term);
         void RedeemThing(Customer customer);
         bool TryProlong(Customer customer, int term);
-        void BuyThing(Buyer buyer, string thingID);
+        void BuyThing(IBuyer buyer, string thingID);
     }
 }

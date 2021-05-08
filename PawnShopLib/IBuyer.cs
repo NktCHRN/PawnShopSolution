@@ -8,6 +8,7 @@ namespace PawnShopLib
 {
     public interface IBuyer
     {
+        decimal Balance { get; }
         void SpendMoney(decimal sum);
         void EarnMoney(decimal sum);
     }

@@ -216,7 +216,7 @@ namespace PawnShopLib
                 throw new ArgumentNullException("Customer can`t be null", nameof(customer));
             }
         }
-        public void BuyThing(Buyer buyer, string thingID)
+        public void BuyThing(IBuyer buyer, string thingID)
         {
             UpdateDeals();
             if (buyer != null)

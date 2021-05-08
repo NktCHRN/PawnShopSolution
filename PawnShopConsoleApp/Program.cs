@@ -67,6 +67,8 @@ namespace PawnShopConsoleApp
             p1.BailThing(c1, new Car(1999, 7, 1000000, 200000, "BMW E39"), 0);
             p1.BailThing(c2, new Jewel(1999, 7, 1, 2, 3), 0);
             c1.EarnMoney(21000000);
+            //Buyer b1 = new Buyer(10000000);
+            //p1.BuyThing(b1, "D00000001");
             //p1.RedeemThing(c1);
             //
             MainMenu.PrintMainMenu(p1);
