@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace PawnShopLib
 {
-    public enum SortingTypes
+    public enum DealSortingTypes
     {
         ID,
         PriceAsceding,
@@ -22,7 +22,7 @@ namespace PawnShopLib
             _deals = new List<Deal>();
         }
         public int GetDealsQuantity() => _deals.Count();
-        public List<Deal> GetFilteredOnSale<T>(SortingTypes sortBy = SortingTypes.ID) where T : Thing
+        public IReadOnlyList<Deal> GetFilteredOnSale<T>(DealSortingTypes sortBy = DealSortingTypes.ID) where T : Thing
         {
             List<Deal> onSale = new List<Deal>();
             foreach(Deal deal in _deals)
@@ -30,11 +30,11 @@ namespace PawnShopLib
                 if (deal.IsOnSale && deal.Thing is T)
                     onSale.Add(deal);
             }
-            if (sortBy == SortingTypes.PriceAsceding)
+            if (sortBy == DealSortingTypes.PriceAsceding)
             {
                 onSale.Sort((left, right) => Deal.CompareDealsByPrice(left, right));
             }
-            else if (sortBy == SortingTypes.PriceDescending)
+            else if (sortBy == DealSortingTypes.PriceDescending)
             {
                 onSale.Sort((left, right) => -Deal.CompareDealsByPrice(left, right));
             }
@@ -44,16 +44,16 @@ namespace PawnShopLib
             }
             return onSale;
         }
-        public List<Deal> GetFullList(SortingTypes sortBy = SortingTypes.ID)
+        public IReadOnlyList<Deal> GetFullList(DealSortingTypes sortBy = DealSortingTypes.ID)
         {
             List<Deal> FullDealsList = new List<Deal>();
             foreach (Deal deal in _deals)
                 FullDealsList.Add(deal);
-            if (sortBy == SortingTypes.PriceAsceding)
+            if (sortBy == DealSortingTypes.PriceAsceding)
             {
                 FullDealsList.Sort((left, right) => Deal.CompareDealsByPrice(left, right));
             }
-            else if (sortBy == SortingTypes.PriceDescending)
+            else if (sortBy == DealSortingTypes.PriceDescending)
             {
                 FullDealsList.Sort((left, right) => -Deal.CompareDealsByPrice(left, right));
             }

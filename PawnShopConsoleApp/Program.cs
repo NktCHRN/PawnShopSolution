@@ -15,8 +15,8 @@ namespace PawnShopConsoleApp
         static void Main(string[] args)
         {
             Console.Title = "PAWN SHOP";
-            WindowHeight = 30;
-            WindowWidth = 120;
+            WindowHeight = 35;
+            WindowWidth = 140;
             SetSize();
             PrintHeader();
             Evaluator _evaluator = StandartEvaluators.EvaluateThing;
@@ -61,7 +61,21 @@ namespace PawnShopConsoleApp
                 };
             }
             PawnShop p1 = new PawnShop(name, initialBalance, _evaluator, perDayCoefficient, maxTerm);
-            //MainMenu.PrintMainMenu();
+            //
+            Customer c1 = p1.AddCustomer("Sergey", "Nikonov", "Nikolayevich", new DateTime(2000, 11, 01));
+            Customer c2 = p1.AddCustomer("Nikolay", "Nikonov", "Nikolayevich", new DateTime(1991, 1, 21));
+            p1.BailThing(c1, new Shares(2000, 70000, "Amazon"), 30);
+            p1.BailThing(c2, new Jewel(1999, 7, 1, 2, 3), 60);
+            c1.EarnMoney(21000000);
+            p1.RedeemThing(c1);
+            //
+            MainMenu.PrintMainMenu(p1);
+            Console.Clear();
+            Console.ForegroundColor = ConsoleColor.DarkGreen;
+            Console.WriteLine("by Nikita Chernikov");
+            Console.WriteLine("Group IS-02, FICT, KPI");
+            Console.WriteLine("\nPress [ENTER] to quit");
+            Console.Read();
         }
         public static void SetSize()
         {
@@ -79,9 +93,13 @@ namespace PawnShopConsoleApp
         public static string CutZeros(decimal number)
         {
             string cut = number.ToString();
-            if (Math.Abs(number - (int)number) > 0)
+            if (cut.Contains(","))
+            {
                 while (cut[cut.Length - 1] != ',' && cut[cut.Length - 1] == '0')
                     cut = cut.Remove(cut.Length - 1);
+                if (cut[cut.Length - 1] == ',')
+                    cut = cut.Remove(cut.Length - 1);
+            }
             return cut;
         }
     }

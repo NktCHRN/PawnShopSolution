@@ -32,7 +32,11 @@ namespace PawnShopLib
         {
             get
             {
-                return _customers;
+                List<Customer> newList = new List<Customer>();
+                foreach (Customer customer in _customers)
+                    newList.Add(customer);
+                newList.Sort((left, right) => String.Compare(left.ID, right.ID));
+                return newList;
             }
         }
         public DealsBase Deals { 

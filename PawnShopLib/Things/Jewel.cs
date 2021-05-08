@@ -85,13 +85,13 @@ namespace PawnShopLib.Things
                 default:
                     jewelDescription += "Jewel: ";
                     if (GoldWeight > 0)
-                        jewelDescription += $"gold {GoldWeight:F3} g; ";
+                        jewelDescription += $"gold {GoldWeight:F1}g; ";
                     if (SilverWeight > 0)
-                        jewelDescription += $"silver {SilverWeight:F3} g; ";
+                        jewelDescription += $"silv {SilverWeight:F1}g; ";
                     if (DiamondWeight > 0)
-                        jewelDescription += $"diamond {DiamondWeight:F3} g; ";
+                        jewelDescription += $"diam {DiamondWeight:F1}g; ";
                     if (OtherGemsWeight > 0)
-                        jewelDescription += $"other gems {OtherGemsWeight:F3} g; ";
+                        jewelDescription += $"gems {OtherGemsWeight:F1}g; ";
                     jewelDescription = jewelDescription.Remove(jewelDescription.Length - 2, 2);
                     break;
             }

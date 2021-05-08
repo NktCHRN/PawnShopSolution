@@ -55,6 +55,8 @@ namespace PawnShopLib
                     int age = DateTime.Now.Year - birthDay.Year;
                     if (birthDay.Month > DateTime.Now.Month || (birthDay.Month == DateTime.Now.Month && birthDay.Day >= DateTime.Now.Day))
                         age--;
+                    if (age < 0)
+                        age = 0;
                     throw new TooYoungPersonException(18, age);
                 }
             }

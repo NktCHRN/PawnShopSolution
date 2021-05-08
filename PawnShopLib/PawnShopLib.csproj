@@ -41,7 +41,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BusyObjectException.cs" />
+    <Compile Include="Exceptions\BusyObjectException.cs" />
     <Compile Include="Buyer.cs" />
     <Compile Include="DealsBase.cs" />
     <Compile Include="IBuyer.cs" />
@@ -60,7 +60,7 @@
     <Compile Include="Things\ElectronicThing.cs" />
     <Compile Include="Things\Jewel.cs" />
     <Compile Include="Things\Shares.cs" />
-    <Compile Include="TooYoungPersonException.cs" />
+    <Compile Include="Exceptions\TooYoungPersonException.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
