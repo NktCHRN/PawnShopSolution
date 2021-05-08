@@ -162,7 +162,7 @@ namespace PawnShopLib
             }
             else
             {
-                throw new ArgumentException("PerFayCoefficient should be bugger than zero", nameof(perDayCoefficient));
+                throw new ArgumentException("PerDayCoefficient can`t be negative", nameof(perDayCoefficient));
             }
         }
     }

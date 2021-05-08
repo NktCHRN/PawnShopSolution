@@ -19,17 +19,31 @@ namespace PawnShopLib
         internal Customer(string firstName, string secondName, string patronymic, DateTime birthDay, decimal balance = 0)
         {
             if (firstName != null)
-                FirstName = firstName;
+            {
+                if (!string.IsNullOrWhiteSpace(firstName))
+                    FirstName = firstName;
+                else
+                    throw new ArgumentException("First name can`t be empty or contain only spaces", nameof(firstName));
+            }
             else
-                throw new ArgumentNullException(nameof(firstName));
+            {
+                throw new ArgumentNullException("First name can`t be null", nameof(firstName));
+            }
             if (secondName != null)
-                SecondName = secondName;
+            {
+                if (!string.IsNullOrWhiteSpace(secondName))
+                    SecondName = secondName;
+                else
+                    throw new ArgumentException("Second name can`t be empty or contain only spaces", nameof(secondName));
+            }
             else
-                throw new ArgumentNullException(nameof(secondName));
+            {
+                throw new ArgumentNullException("Second name can`t be null", nameof(secondName));
+            }
             if (patronymic != null)
                 Patronymic = patronymic;
             else
-                throw new ArgumentNullException(nameof(patronymic));
+                throw new ArgumentNullException("Patronymic can`t be null", nameof(patronymic));
             if (birthDay != null)
             {
                 if (DateTime.Now.Year - birthDay.Year > 18 || (DateTime.Now.Year - birthDay.Year == 18 && (birthDay.Month < DateTime.Now.Month || (birthDay.Month == DateTime.Now.Month && birthDay.Day < DateTime.Now.Day))))
@@ -120,6 +134,13 @@ namespace PawnShopLib
             {
                 throw new ArgumentException("Customer is not on deal");
             }
+        }
+        public Deal GetLastDeal()
+        {
+            if (Deals.GetDealsQuantity() > 0)
+                return Deals[Deals.GetDealsQuantity() - 1];
+            else
+                return null;
         }
         public void SpendMoney(decimal sum)
         {

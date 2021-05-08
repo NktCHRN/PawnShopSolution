@@ -147,7 +147,7 @@ namespace PawnShopLib
                     }
                     else
                     {
-                        throw new ArgumentNullException("Your thing was null", nameof(myThing));
+                        throw new ArgumentNullException("Thing can`t be null", nameof(myThing));
                     }
                 }
                 else
@@ -157,7 +157,7 @@ namespace PawnShopLib
             }
             else
             {
-                throw new ArgumentNullException("Customer was null", nameof(customer));
+                throw new ArgumentNullException("Customer can`t be null", nameof(customer));
             }
         }
         public void RedeemThing(Customer customer)
@@ -188,7 +188,7 @@ namespace PawnShopLib
             }
             else
             {
-                throw new ArgumentNullException("Customer was null", nameof(customer));
+                throw new ArgumentNullException("Customer can`t be null", nameof(customer));
             }
         }
         public bool TryProlong(Customer customer, int term)
@@ -204,7 +204,7 @@ namespace PawnShopLib
             }
             else
             {
-                throw new ArgumentNullException("Customer was null", nameof(customer));
+                throw new ArgumentNullException("Customer can`t be null", nameof(customer));
             }
         }
         public void BuyThing(Buyer buyer, string thingID)
@@ -234,7 +234,7 @@ namespace PawnShopLib
             }
             else 
             {
-                throw new ArgumentNullException("Buyer was null", nameof(buyer));
+                throw new ArgumentNullException("Buyer can`t be null", nameof(buyer));
             }
         }
         public void UpdateDeals()
