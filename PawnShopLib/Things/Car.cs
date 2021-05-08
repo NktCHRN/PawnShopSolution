@@ -8,10 +8,10 @@ namespace PawnShopLib.Things
 {
     public class Car : Thing
     {
-        public int MarketPrice { get; private set; }
+        public decimal MarketPrice { get; private set; }
         public int Mileage { get; private set; }
         public string BrandName { get; private set; }
-        public Car(double weight, int year, int marketPrice, int mileage, string brandName) : base(weight, year)
+        public Car(double weight, int year, decimal marketPrice, int mileage, string brandName) : base(weight, year)
         {
             if (marketPrice >= 0)
                 MarketPrice = marketPrice;

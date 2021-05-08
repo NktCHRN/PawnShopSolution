@@ -64,10 +64,10 @@ namespace PawnShopConsoleApp
             //
             Customer c1 = p1.AddCustomer("Sergey", "Nikonov", "Nikolayevich", new DateTime(2000, 11, 01));
             Customer c2 = p1.AddCustomer("Nikolay", "Nikonov", "Nikolayevich", new DateTime(1991, 1, 21));
-            p1.BailThing(c1, new Shares(2000, 70000, "Amazon"), 30);
-            p1.BailThing(c2, new Jewel(1999, 7, 1, 2, 3), 60);
+            p1.BailThing(c1, new Car(1999, 7, 1000000, 200000, "BMW E39"), 0);
+            p1.BailThing(c2, new Jewel(1999, 7, 1, 2, 3), 0);
             c1.EarnMoney(21000000);
-            p1.RedeemThing(c1);
+            //p1.RedeemThing(c1);
             //
             MainMenu.PrintMainMenu(p1);
             Console.Clear();
@@ -92,7 +92,7 @@ namespace PawnShopConsoleApp
         }
         public static string CutZeros(decimal number)
         {
-            string cut = number.ToString();
+            string cut = $"{number:F3}";
             if (cut.Contains(","))
             {
                 while (cut[cut.Length - 1] != ',' && cut[cut.Length - 1] == '0')

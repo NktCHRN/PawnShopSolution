@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using PawnShopLib;
+using PawnShopLib.Things;
 
 namespace PawnShopConsoleApp
 {
@@ -32,6 +33,7 @@ namespace PawnShopConsoleApp
                 switch (choice)
                 {
                     case 1:
+                        PrintOnSale(pawnShop);
                         break;
                     case 2:
                         PrintAllDeals(pawnShop);
@@ -62,6 +64,71 @@ namespace PawnShopConsoleApp
                     PrintHelp();
                 }
             } while (choice != 10);
+        }
+        public static void PrintOnSale(PawnShop pawnShop)
+        {
+            int filter = 0;
+            int sortBy = 1;
+            string entered;
+            do
+            {
+                Console.Clear();
+                Program.PrintHeader();
+                Console.ForegroundColor = ConsoleColor.DarkGreen;
+                Console.WriteLine("Things on sale: ");
+                Console.WriteLine($"Filter: f{filter}; Sort by s{sortBy}");
+                Console.WriteLine("[Filters: f0 - All; f1 - Antique things; f2 - Cars; f3 - Electronic things; f4 - Jewel; f5 - Shares]");
+                Console.WriteLine("[Sorting types: s1 - Price ascending; s2 - Price descending]");
+                Console.WriteLine("[0 - quit]");
+                Console.WriteLine($"{"Number",-8}{"Price",-15}{"Thing"}");
+                Console.ForegroundColor = ConsoleColor.Green;
+                IReadOnlyList<Deal> onSale;
+                DealSortingTypes type;
+                if (sortBy == 2)
+                    type = DealSortingTypes.PriceDescending;
+                else
+                    type = DealSortingTypes.PriceAsceding;
+                switch (filter)
+                {
+                    case 1:
+                        onSale = pawnShop.Deals.GetFilteredOnSale<AntiqueThing>(type);
+                        break;
+                    case 2:
+                        onSale = pawnShop.Deals.GetFilteredOnSale<Car>(type);
+                        break;
+                    case 3:
+                        onSale = pawnShop.Deals.GetFilteredOnSale<ElectronicThing>(type);
+                        break;
+                    case 4:
+                        onSale = pawnShop.Deals.GetFilteredOnSale<Jewel>(type);
+                        break;
+                    case 5:
+                        onSale = pawnShop.Deals.GetFilteredOnSale<Shares>(type);
+                        break;
+                    default:
+                        onSale = pawnShop.Deals.GetFilteredOnSale<Thing>(type);
+                        break;
+                }
+                for (int i = 0; i < onSale.Count(); i++)
+                {
+                    Console.WriteLine($"{i + 1,-8}{Program.CutZeros(onSale[i].MarketPrice),-15}{onSale[i].Thing}");
+                }
+                Console.ForegroundColor = ConsoleColor.DarkGreen;
+                Console.WriteLine("\nEnter any filter or sorting type. 0 - quit");
+                entered = Console.ReadLine().Trim();
+                if (entered.Length > 1 && char.IsDigit(entered[1]))
+                {
+                    if (entered[0] == 's' && entered[1] >= '1' && entered[1] <= '2')
+                    {
+                        sortBy = entered[1] - '0';
+                    }
+                    else if (entered[0] == 'f' && entered[1] >= '0' && entered[1] <= '5')
+                    {
+                        filter = entered[1] - '0';
+                    }
+                }
+            } while (entered != "0");
+            Console.ResetColor();
         }
         public static void PrintAllDeals(PawnShop pawnShop)
         {
@@ -227,7 +294,7 @@ namespace PawnShopConsoleApp
             Console.WriteLine("8. Switch to buyer mode");
             Console.WriteLine("9. Print help");
             Console.ForegroundColor = ConsoleColor.Red;
-            Console.WriteLine("10. Exit");
+            Console.WriteLine("10. Quit");
             Console.ResetColor();
         }
     }
