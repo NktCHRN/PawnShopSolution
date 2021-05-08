@@ -8,7 +8,7 @@ using PawnShopLib.Things;
 
 namespace PawnShopConsoleApp
 {
-    class Program
+    static class Program
     {
         public static int WindowWidth { get; private set; }
         public static int WindowHeight {get; private set;}
@@ -19,7 +19,7 @@ namespace PawnShopConsoleApp
             WindowWidth = 120;
             SetSize();
             PrintHeader();
-            PawnShop.Evaluator _evaluator = StandartEvaluators.EvaluateThing;
+            Evaluator _evaluator = StandartEvaluators.EvaluateThing;
             Console.WriteLine("Enter the name of your pawn shop: ");
             string name = Console.ReadLine();
             bool parsed;
@@ -37,7 +37,7 @@ namespace PawnShopConsoleApp
             string entered;
             do
             {
-                Console.WriteLine("Do you to change coefficient per day (now: {perDayCoefficient}) and max term (now : {maxTerm})? [Y/n]");
+                Console.WriteLine("Do you to change coefficient per day (now: " + CutZeros(perDayCoefficient * 100m) + $"%) and max term (now : {maxTerm} days)? [Y/n]");
                 entered = Console.ReadLine().Trim() + " ";
             } while (entered.ToLower()[0] != 'n' && entered.ToLower()[0] != 'y');
             if (entered.ToLower()[0] == 'y')
@@ -51,7 +51,7 @@ namespace PawnShopConsoleApp
                     parsed = decimal.TryParse(Console.ReadLine().Replace('.', ','), out perDayCoefficient);
                 };
                 perDayCoefficient /= 100;
-                Console.WriteLine("Enter the max term: ");
+                Console.WriteLine("Enter the max term (days): ");
                 parsed = int.TryParse(Console.ReadLine().Replace('.', ','), out maxTerm);
                 while (!parsed || maxTerm <= 0)
                 {
@@ -61,7 +61,7 @@ namespace PawnShopConsoleApp
                 };
             }
             PawnShop p1 = new PawnShop(name, initialBalance, _evaluator, perDayCoefficient, maxTerm);
-            Console.Read();//удалить!!!
+            //MainMenu.PrintMainMenu();
         }
         public static void SetSize()
         {
@@ -75,6 +75,14 @@ namespace PawnShopConsoleApp
             const string name = "PAWN SHOP";
             Console.WriteLine('\n' + name.PadLeft(WindowWidth / 2 + name.Length / 2) + '\n');
             Console.ResetColor();
+        }
+        public static string CutZeros(decimal number)
+        {
+            string cut = number.ToString();
+            if (Math.Abs(number - (int)number) > 0)
+                while (cut[cut.Length - 1] != ',' && cut[cut.Length - 1] == '0')
+                    cut = cut.Remove(cut.Length - 1);
+            return cut;
         }
     }
 }

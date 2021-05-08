@@ -12,15 +12,17 @@ namespace PawnShopLib
         {
             decimal price;
             if (thing is Things.AntiqueThing antiqueThing)
-                price =  antiqueThing.EstimatedPrice / 1.5m;
+                price = antiqueThing.EstimatedPrice / 1.5m;
             else if (thing is Things.Car car)
                 price = EvaluateCar(car);
             else if (thing is Things.ElectronicThing electronicThing)
                 price = EvaluateElectronicThing(electronicThing);
             else if (thing is Things.Jewel jewel)
-                price =  EvaluateJewel(jewel);
+                price = EvaluateJewel(jewel);
+            else if (thing is Things.Shares share)
+                price = EvaluateShares(share);
             else
-                price = EvaluateShares(thing as Things.Shares);
+                price = 0;
             price *= (decimal)tariff / (decimal)100;
             return price;
         }

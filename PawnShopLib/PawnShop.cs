@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace PawnShopLib
 {
+    public delegate decimal Evaluator(Thing thing, Tariff tariff);
     public sealed class PawnShop : IPawnShop
     {
-        public delegate decimal Evaluator(Thing thing, Tariff tariff);
         private readonly Evaluator _evaluator;
         private decimal _perDayCoefficient;
         public int MaxTerm { get; private set; }
@@ -28,6 +28,13 @@ namespace PawnShopLib
         }
         private readonly DealsBase _deals;
         private readonly List<Customer> _customers;
+        public IReadOnlyList<Customer> CustomersList
+        {
+            get
+            {
+                return _customers;
+            }
+        }
         public DealsBase Deals { 
             get 
             { 
