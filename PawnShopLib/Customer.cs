@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace PawnShopLib
 {
-    public sealed class Customer : IPerson, IBuyer
+    public sealed class Customer : IBuyer
     {
         private static int _customersQuantity = 0;
         public string FirstName { get; private set; }
@@ -110,20 +110,6 @@ namespace PawnShopLib
                 return !Deals[Deals.GetDealsQuantity() - 1].IsClosed;
             else
                 return false;
-        }
-        public int GetLastNonPenaltyTerm()
-        {
-            if (IsOnDeal())
-                return Deals[Deals.GetDealsQuantity() - 1].GetLastNonPenaltyTerm();
-            else
-                throw new ArgumentException("Customer is not on deal");
-        }
-        public int GetLastTerm()
-        {
-            if (IsOnDeal())
-                return Deals[Deals.GetDealsQuantity() - 1].GetLastTerm();
-            else
-                throw new ArgumentException("Customer is not on deal");
         }
         public Deal GetLastDeal()
         {
