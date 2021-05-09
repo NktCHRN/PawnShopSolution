@@ -64,8 +64,10 @@ namespace PawnShopConsoleApp
             //
             Customer c1 = p1.AddCustomer("Sergey", "Nikonov", "Nikolayevich", new DateTime(2000, 11, 01));
             Customer c2 = p1.AddCustomer("Nikolay", "Nikonov", "Nikolayevich", new DateTime(1991, 1, 21));
+            Customer c3 = p1.AddCustomer("Ihor", "Nikonov", "Nikolayevich", new DateTime(1997, 3, 22));
             p1.BailThing(c1, new Car(1999, 7, 1000000, 200000, "BMW E39"), 30);
             p1.BailThing(c2, new Jewel(1999, 7, 1, 2, 3), 0);
+            p1.BailThing(c3, new Shares(2000, 80000.65m, "Amazon"), 60);
             c1.EarnMoney(21000000);
             //Buyer b1 = new Buyer(10000000);
             //p1.BuyThing(b1, "D00000001");

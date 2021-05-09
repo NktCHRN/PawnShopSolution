@@ -8,9 +8,9 @@ namespace PawnShopLib.Things
 {
     public class Shares : Thing
     {
-        public int MarketPrice { get; private set; }
+        public decimal MarketPrice { get; private set; }
         public string CompanyName { get; private set; }
-        public Shares(int year, int marketPrice, string companyName) : base(1, year)
+        public Shares(int year, decimal marketPrice, string companyName) : base(1, year)
         {
             if (marketPrice >= 0)
                 MarketPrice = marketPrice;
@@ -23,7 +23,7 @@ namespace PawnShopLib.Things
         }
         public override string ToString()
         {
-            return $"Shares: {CompanyName}; {MarketPrice} hrn";
+            return $"Shares: {CompanyName}; {MarketPrice:F2} hrn";
         }
     }
 }
