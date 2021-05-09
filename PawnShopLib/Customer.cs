@@ -114,28 +114,16 @@ namespace PawnShopLib
         public int GetLastNonPenaltyTerm()
         {
             if (IsOnDeal())
-            {
-                DateTime currentTime = DateTime.Now;
-                int daysLast = Deals[Deals.GetDealsQuantity() - 1].Term - (PawnShop.DateTimeToDays(currentTime) - PawnShop.DateTimeToDays(Deals[Deals.GetDealsQuantity() - 1].StartTime));
-                return (daysLast >= 0) ? daysLast : 0;
-            }
+                return Deals[Deals.GetDealsQuantity() - 1].GetLastNonPenaltyTerm();
             else
-            {
                 throw new ArgumentException("Customer is not on deal");
-            }
         }
         public int GetLastTerm()
         {
             if (IsOnDeal())
-            {
-                DateTime currentTime = DateTime.Now;
-                int daysLast = Deals[Deals.GetDealsQuantity() - 1].Term + Deals[Deals.GetDealsQuantity() - 1].PenaltyMaxTerm - (PawnShop.DateTimeToDays(currentTime) - PawnShop.DateTimeToDays(Deals[Deals.GetDealsQuantity() - 1].StartTime));
-                return (daysLast >= 0) ? daysLast : 0;
-            }
+                return Deals[Deals.GetDealsQuantity() - 1].GetLastTerm();
             else
-            {
                 throw new ArgumentException("Customer is not on deal");
-            }
         }
         public Deal GetLastDeal()
         {

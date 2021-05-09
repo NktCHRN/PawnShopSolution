@@ -91,6 +91,28 @@ namespace PawnShopLib
             DealsCount++;
             ID = String.Format("D{0:00000000}", DealsCount);
         }
+        public DateTime GetLastNonPenaltyDate()
+        {
+            int tempTerm = Term + PawnShop.DateTimeToDays(StartTime);
+            return PawnShop.DaysToDateTime(tempTerm);
+        }
+        public DateTime GetLastDate()
+        {
+            int tempTerm = Term + PenaltyMaxTerm + PawnShop.DateTimeToDays(StartTime);
+            return PawnShop.DaysToDateTime(tempTerm);
+        }
+        public int GetLastNonPenaltyTerm()
+        {
+                DateTime currentTime = DateTime.Now;
+                int daysLast = Term - (PawnShop.DateTimeToDays(currentTime) - PawnShop.DateTimeToDays(StartTime));
+                return (daysLast >= 0) ? daysLast : 0;
+        }
+        public int GetLastTerm()
+        {
+                DateTime currentTime = DateTime.Now;
+                int daysLast = Term + PenaltyMaxTerm - (PawnShop.DateTimeToDays(currentTime) - PawnShop.DateTimeToDays(StartTime));
+                return (daysLast >= 0) ? daysLast : 0;
+        }
         public static int CompareDealsByPrice(Deal left, Deal right)
         {
             if (left.MarketPrice > right.MarketPrice)

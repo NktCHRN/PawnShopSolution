@@ -181,6 +181,41 @@ namespace PawnShopConsoleApp
             Console.ReadLine();
             Console.ResetColor();
         }
+        public static void PrintDeal(PawnShop pawnShop, Deal deal)
+        {
+                Console.Clear();
+                Program.PrintHeader();
+                Console.ForegroundColor = ConsoleColor.DarkGreen;
+                Console.WriteLine($"Information about the deal: ");
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.WriteLine($"ID: {deal.ID}");
+                Console.WriteLine($"Name: {deal.Customer.GetFullName()}");
+                Console.WriteLine($"Thing: {deal.Thing}");
+                Console.WriteLine($"Start time: {deal.StartTime.Day + "." + deal.StartTime.Month + "." + deal.StartTime.Year}");
+                Console.WriteLine($"Term: {deal.Term}");
+                Console.WriteLine($"Last non-penalty: {deal.GetLastNonPenaltyDate().Day + "." + deal.GetLastNonPenaltyDate().Month + "." + deal.GetLastNonPenaltyDate().Year}");
+                Console.WriteLine($"Penalty term (max): {deal.PenaltyMaxTerm}");
+                Console.WriteLine($"Last with penalty: {deal.GetLastDate().Day + "." + deal.GetLastDate().Month + "." + deal.GetLastDate().Year}");
+                Console.WriteLine($"Status: {(deal.IsClosed ? "Closed" : "Not closed")}");
+                if (deal.IsClosed)
+                {
+                    Console.WriteLine($"Is successful? {(deal.IsSuccessful ? "Yes" : "No")}");
+                    Console.WriteLine($"Is on sale? {(deal.IsOnSale ? "Yes" : "No")}");
+                }
+                Console.WriteLine($"Tariff: {deal.Tariff}");
+                Console.WriteLine($"Initial price: {Program.CutZeros(deal.Price)}");
+                Console.WriteLine($"Redemption price: {Program.CutZeros(deal.RedemptionPrice)}");
+                if (deal.Penalty > 0)
+                    Console.WriteLine($"Penalty: {Program.CutZeros(deal.Penalty)}");
+                if (deal.IsOnSale)
+                    Console.WriteLine($"Market price: {Program.CutZeros(deal.MarketPrice)}");
+                if (deal.IsClosed)
+                    Console.WriteLine($"Pawn shop profit: {Program.CutZeros(deal.PawnShopProfit)}");
+                Console.ForegroundColor = ConsoleColor.DarkGreen;
+                Console.WriteLine("\nPress [ENTER] to go back to main menu");
+                Console.ReadLine();
+                Console.ResetColor();
+        }
         public static void PrintDeal(PawnShop pawnShop)
         {
             Console.Clear();
@@ -201,36 +236,38 @@ namespace PawnShopConsoleApp
             };
             if (id.Trim() != "0")
             {
-                Console.Clear();
-                Program.PrintHeader();
-                Console.ForegroundColor = ConsoleColor.DarkGreen;
-                Console.WriteLine($"Information about the deal {id}: ");
-                Console.ForegroundColor = ConsoleColor.Green;
-                Console.WriteLine($"ID: {deal.ID}");
-                Console.WriteLine($"Name: {deal.Customer.GetFullName()}");
-                Console.WriteLine($"Thing: {deal.Thing}");
-                Console.WriteLine($"Start time: {deal.StartTime.Day + "." + deal.StartTime.Month + "." + deal.StartTime.Year}");
-                Console.WriteLine($"Term: {deal.Term}");
-                Console.WriteLine($"Penalty term (max): {deal.PenaltyMaxTerm}");
-                Console.WriteLine($"Status: {(deal.IsClosed ? "Closed" : "Not closed")}");
-                Console.WriteLine($"Is successful? {(deal.IsSuccessful ? "Yes" : "No")}");
-                Console.WriteLine($"Is on sale? {(deal.IsOnSale ? "Yes" : "No")}");
-                Console.WriteLine($"Initial price: {Program.CutZeros(deal.Price)}");
-                Console.WriteLine($"Redemption price: {Program.CutZeros(deal.RedemptionPrice)}");
-                Console.WriteLine($"Penalty: {Program.CutZeros(deal.Penalty)}");
-                if (deal.IsOnSale)
-                    Console.WriteLine($"Market price: {Program.CutZeros(deal.MarketPrice)}");
-                if (deal.IsClosed)
-                    Console.WriteLine($"Pawn shop profit: {Program.CutZeros(deal.PawnShopProfit)}");
-                Console.ForegroundColor = ConsoleColor.DarkGreen;
-                Console.WriteLine("\nPress [ENTER] to go back to main menu");
-                Console.ReadLine();
-                Console.ResetColor();
+                PrintDeal(pawnShop, deal);
             }
             else
             {
                 Console.ResetColor();
             }
+        }
+        public static void PrintCustomer(PawnShop pawnShop, Customer customer)
+        {
+                Console.Clear();
+                Program.PrintHeader();
+                Console.ForegroundColor = ConsoleColor.DarkGreen;
+                Console.WriteLine($"Information about the customer: ");
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.WriteLine($"ID: {customer.ID}");
+                Console.WriteLine($"Name: {customer.GetFullName()}");
+                Console.WriteLine($"Birthday: {customer.BirthDay.Day + "." + customer.BirthDay.Month + "." + customer.BirthDay.Year}");
+                Console.WriteLine($"Successful deals: {customer.GetSuccessfulDealsQuantity()}");
+                Console.WriteLine($"Unsuccessful deals: {customer.GetUnsuccessfulDealsQuantity()}");
+                Console.WriteLine($"Status: {(customer.IsOnDeal() ? "On deal" : "Not on deal")}");
+                Console.WriteLine("Balance: " + Program.CutZeros(customer.Balance) + " hrn");
+                Console.ForegroundColor = ConsoleColor.DarkGreen;
+                Console.WriteLine("\nCustomer`s deals: ");
+                Console.WriteLine($"{"ID",-10}{"Thing",-55}{"Start time",-11}{"Term(w/o fine)",-15}{"Status",-10}");
+                Console.ForegroundColor = ConsoleColor.Green;
+                IReadOnlyList<Deal> allDeals = customer.Deals.GetFullList();
+                foreach (Deal deal in allDeals)
+                    Console.WriteLine($"{deal.ID,-10}{deal.Thing,-55}{deal.StartTime.Day + "." + deal.StartTime.Month + "." + deal.StartTime.Year,-11}{deal.Term,-15}{(deal.IsClosed ? "Closed" : "Not closed"),-10}");
+                Console.ForegroundColor = ConsoleColor.DarkGreen;
+                Console.WriteLine("\nPress [ENTER] to go back to main menu");
+                Console.ReadLine();
+                Console.ResetColor();
         }
         public static void PrintCustomer(PawnShop pawnShop)
         {
@@ -252,29 +289,7 @@ namespace PawnShopConsoleApp
             };
             if (id.Trim() != "0")
             {
-                Console.Clear();
-                Program.PrintHeader();
-                Console.ForegroundColor = ConsoleColor.DarkGreen;
-                Console.WriteLine($"Information about the customer {id}: ");
-                Console.ForegroundColor = ConsoleColor.Green;
-                Console.WriteLine($"ID: {customer.ID}");
-                Console.WriteLine($"Name: {customer.GetFullName()}");
-                Console.WriteLine($"Birthday: {customer.BirthDay.Day + "." + customer.BirthDay.Month + "." + customer.BirthDay.Year}");
-                Console.WriteLine($"Successful deals: {customer.GetSuccessfulDealsQuantity()}");
-                Console.WriteLine($"Unsuccessful deals: {customer.GetUnsuccessfulDealsQuantity()}");
-                Console.WriteLine($"Status: {(customer.IsOnDeal() ? "On deal" : "Not on deal")}");
-                Console.WriteLine("Balance: " + Program.CutZeros(customer.Balance) + " hrn");
-                Console.ForegroundColor = ConsoleColor.DarkGreen;
-                Console.WriteLine("\nCustomer`s deals: ");
-                Console.WriteLine($"{"ID",-10}{"Thing",-55}{"Start time",-11}{"Term(w/o fine)",-15}{"Status",-10}");
-                Console.ForegroundColor = ConsoleColor.Green;
-                IReadOnlyList<Deal> allDeals = customer.Deals.GetFullList();
-                foreach (Deal deal in allDeals)
-                    Console.WriteLine($"{deal.ID,-10}{deal.Thing,-55}{deal.StartTime.Day + "." + deal.StartTime.Month + "." + deal.StartTime.Year,-11}{deal.Term,-15}{(deal.IsClosed ? "Closed" : "Not closed"),-10}");
-                Console.ForegroundColor = ConsoleColor.DarkGreen;
-                Console.WriteLine("\nPress [ENTER] to go back to main menu");
-                Console.ReadLine();
-                Console.ResetColor();
+                PrintCustomer(pawnShop, customer);
             }
             else
             {
