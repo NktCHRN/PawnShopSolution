@@ -266,7 +266,7 @@ namespace PawnShopLib
         internal static int DateTimeToDays(DateTime time)
         {
             int days = 0;
-            days += 365;
+            days += 366;
             for (int i = 1; i < time.Year; i++)
             {
                 if (DateTime.IsLeapYear(i))
@@ -285,7 +285,7 @@ namespace PawnShopLib
         {
             int year = 1;
             int month = 1;
-            days -= 365;
+            days -= 366;
             for (int i = 1; days > (DateTime.IsLeapYear(i + 1) ? 366 : 365); i++)
             {
                 if (DateTime.IsLeapYear(i))
