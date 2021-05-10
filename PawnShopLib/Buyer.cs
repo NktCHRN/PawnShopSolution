@@ -14,21 +14,21 @@ namespace PawnShopLib
             if (balance >= 0)
                 Balance = balance;
             else
-                throw new ArgumentException("Balance can`t be negative", nameof(balance));
+                throw new ArgumentOutOfRangeException(nameof(balance), "Balance cannot be negative");
         }
         public void SpendMoney(decimal sum)
         {
             if (sum <= Balance)
                 Balance -= sum;
             else
-                throw new ArgumentException("Sum to spend can`t be greater than balance", nameof(sum));
+                throw new ArgumentOutOfRangeException(nameof(sum), "Sum to spend cannot be greater than balance");
         }
         public void EarnMoney(decimal sum)
         {
             if (sum >= 0)
                 Balance += sum;
             else
-                throw new ArgumentException("Sum can`t be negative", nameof(sum));
+                throw new ArgumentOutOfRangeException(nameof(sum), "Sum cannot be negative");
         }
     }
 }

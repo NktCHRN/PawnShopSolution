@@ -76,7 +76,7 @@ namespace PawnShopLib
                 }
                 else
                 {
-                    throw new ArgumentNullException("Deal`s ID can`t be null", nameof(id));
+                    throw new ArgumentNullException("Deal`s ID cannot be null", nameof(id));
                 }
             }
         }
@@ -99,7 +99,7 @@ namespace PawnShopLib
             if (newDeal != null)
                 _deals.Add(newDeal);
             else
-                throw new ArgumentNullException("New deal can`t be null", nameof(newDeal));
+                throw new ArgumentNullException("New deal cannot be null", nameof(newDeal));
         }
         public IEnumerator GetEnumerator()
         {

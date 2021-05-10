@@ -24,7 +24,7 @@ namespace PawnShopLib
                 if (value > 0)
                     _perDayCoefficient = value;
                 else
-                    throw new ArgumentException("PerDayCoefficient can`t be negative", nameof(value));
+                    throw new ArgumentException("PerDayCoefficient cannot be negative", nameof(value));
             }
         }
         private readonly DealsBase _deals;
@@ -61,7 +61,7 @@ namespace PawnShopLib
             if (initialBalance >= 0)
                 Balance = initialBalance;
             else
-                throw new ArgumentException("Balance can`t be less than zero", nameof(initialBalance));
+                throw new ArgumentOutOfRangeException(nameof(initialBalance), "Balance cannot be smaller than zero");
             _deals = new DealsBase();
             if (delToEvaluator != null)
                 _evaluator = delToEvaluator;
@@ -70,11 +70,11 @@ namespace PawnShopLib
             if (perDayCoefficient > 0)
                 PerDayCoefficient = perDayCoefficient;
             else
-                throw new ArgumentException("Coefficient can`t be less than zero", nameof(perDayCoefficient));
-            if (maxTerm > 0)
+                throw new ArgumentOutOfRangeException(nameof(perDayCoefficient), "Coefficient cannot be smaller than zero");
+            if (maxTerm > 4)
                 MaxTerm = maxTerm;
             else
-                throw new ArgumentException("MaxTerm can`t be smaller than or equal zero", nameof(maxTerm));
+                throw new ArgumentOutOfRangeException(nameof(maxTerm), "MaxTerm cannot be smaller than five");
             Revenue = 0;
             Costs = 0;
             _customers = new List<Customer>();
@@ -99,7 +99,7 @@ namespace PawnShopLib
             }
             else
             {
-                throw new ArgumentNullException("ID can`t be null", nameof(id));
+                throw new ArgumentNullException("ID cannot be null", nameof(id));
             }
         }
         public decimal EstimateThing(Customer customer, Thing myThing) => (decimal)_evaluator?.Invoke(myThing, DefineTariff(customer));
@@ -146,17 +146,17 @@ namespace PawnShopLib
                             }
                             else
                             {
-                                throw new ArgumentException($"Term is negative or too big (MaxTerm: {MaxTerm})", nameof(term));
+                                throw new ArgumentOutOfRangeException(nameof(term), $"Term is negative or too big (MaxTerm: {MaxTerm})");
                             }
                         }
                         else
                         {
-                            throw new ArgumentException("PawnShop hasn`t got enough money for this deal");
+                            throw new ArgumentException("PawnShop has not got enough money for this deal");
                         }
                     }
                     else
                     {
-                        throw new ArgumentNullException("Thing can`t be null", nameof(myThing));
+                        throw new ArgumentNullException("Thing cannot be null", nameof(myThing));
                     }
                 }
                 else
@@ -166,7 +166,7 @@ namespace PawnShopLib
             }
             else
             {
-                throw new ArgumentNullException("Customer can`t be null", nameof(customer));
+                throw new ArgumentNullException("Customer cannot be null", nameof(customer));
             }
         }
         public void RedeemThing(Customer customer)
@@ -187,7 +187,7 @@ namespace PawnShopLib
                     }
                     else
                     {
-                        throw new ArgumentException($"Customer hasn`t got enought money: {customer.Balance:F3}; required: {price:F3}");
+                        throw new ArgumentException($"Customer has not got enought money: {customer.Balance:F3}; required: {price:F3}");
                     }
                 }
                 else
@@ -197,7 +197,7 @@ namespace PawnShopLib
             }
             else
             {
-                throw new ArgumentNullException("Customer can`t be null", nameof(customer));
+                throw new ArgumentNullException("Customer cannot be null", nameof(customer));
             }
         }
         public bool TryProlong(Customer customer, int term)
@@ -213,7 +213,7 @@ namespace PawnShopLib
             }
             else
             {
-                throw new ArgumentNullException("Customer can`t be null", nameof(customer));
+                throw new ArgumentNullException("Customer cannot be null", nameof(customer));
             }
         }
         public void BuyThing(IBuyer buyer, string thingID)
@@ -233,17 +233,17 @@ namespace PawnShopLib
                     }
                     else
                     {
-                        throw new ArgumentException($"Buyer hasn`t got enought money: {buyer.Balance:F3}; required: {price:F3}");
+                        throw new ArgumentException($"Buyer has not got enought money: {buyer.Balance:F3}; required: {price:F3}");
                     }
                 }
                 else
                 {
-                    throw new ArgumentNullException("Thing wasn`t found or not on sale", nameof(thingID));
+                    throw new ArgumentNullException("Thing was not found or not on sale", nameof(thingID));
                 }
             }
             else 
             {
-                throw new ArgumentNullException("Buyer can`t be null", nameof(buyer));
+                throw new ArgumentNullException("Buyer cannot be null", nameof(buyer));
             }
         }
         public void UpdateDeals()

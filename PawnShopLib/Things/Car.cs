@@ -16,15 +16,15 @@ namespace PawnShopLib.Things
             if (marketPrice >= 0)
                 MarketPrice = marketPrice;
             else
-                throw new ArgumentException("Price can`t be negative", nameof(marketPrice));
+                throw new ArgumentOutOfRangeException(nameof(marketPrice), "Price cannot be negative");
             if (mileage >= 0)
                 Mileage = mileage;
             else
-                throw new ArgumentException("Mileage can`t be negative", nameof(mileage));
+                throw new ArgumentOutOfRangeException(nameof(mileage), "Mileage cannot be negative");
             if (brandName != null)
                 BrandName = brandName;
             else
-                throw new ArgumentException("Car`s brandname can`t be null", nameof(brandName));
+                throw new ArgumentNullException("Car`s brandname cannot be null", nameof(brandName));
         }
         public override string ToString()
         {

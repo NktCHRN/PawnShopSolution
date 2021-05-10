@@ -43,11 +43,11 @@ namespace PawnShopLib
                     throw new BusyObjectException("Customer is already on deal. Close the last deal first");
             }
             else
-                throw new ArgumentNullException("Customer can`t be null", nameof(customer));
+                throw new ArgumentNullException("Customer cannot be null", nameof(customer));
             if (thing != null)
                 Thing = thing;
             else
-                throw new ArgumentNullException("Thing can`t be null", nameof(thing));
+                throw new ArgumentNullException("Thing cannot be null", nameof(thing));
             if (term >= 0)
             {
                 Term = term;
@@ -69,18 +69,18 @@ namespace PawnShopLib
                 }
                 else
                 {
-                    throw new ArgumentException("This type of thing can`t be sold immediately or term was between 1 and 4 days", nameof(thing));
+                    throw new ArgumentException("This type of thing cannot be sold immediately or term was between 1 and 4 days", nameof(thing));
                 }
             }
             else
             {
-                throw new ArgumentException("Term can`t be negative", nameof(term));
+                throw new ArgumentOutOfRangeException(nameof(term), "Term cannot be negative");
             }
             Tariff = tariff;
             if (price > 0)
                 Price = price;
             else
-                throw new ArgumentException("Price can`t be negative or equal 0", nameof(price));
+                throw new ArgumentOutOfRangeException(nameof(price), "Price cannot be negative or equal 0");
             RedemptionPrice = price + price * perDayCoefficient * term;
             MarketPrice = price + price * perDayCoefficient * maxTerm;
             if (RedemptionPrice > MarketPrice)
@@ -180,11 +180,11 @@ namespace PawnShopLib
                 if (days >= 0 && days <= PenaltyMaxTerm)
                     _penalty = CalculatePenalty(perDayCoefficient, days);
                 else
-                    throw new ArgumentException("Too big or small penatly term", nameof(days));
+                    throw new ArgumentOutOfRangeException(nameof(days), "Too big or small penatly term");
             }
             else
             {
-                throw new ArgumentException("PerDayCoefficient can`t be negative", nameof(perDayCoefficient));
+                throw new ArgumentOutOfRangeException(nameof(perDayCoefficient), "PerDayCoefficient cannot be negative");
             }
         }
     }

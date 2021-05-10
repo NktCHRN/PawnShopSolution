@@ -15,11 +15,11 @@ namespace PawnShopLib.Things
             if (marketPrice >= 0)
                 MarketPrice = marketPrice;
             else
-                throw new ArgumentException("Price can`t be negative", nameof(marketPrice));
+                throw new ArgumentOutOfRangeException(nameof(marketPrice), "Price cannot be negative");
             if (companyName != null)
                 CompanyName = companyName;
             else
-                throw new ArgumentNullException("CompanyName can`t be null", nameof(companyName));
+                throw new ArgumentNullException("CompanyName cannot be null", nameof(companyName));
         }
         public override string ToString()
         {

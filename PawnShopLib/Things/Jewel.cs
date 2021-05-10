@@ -54,16 +54,16 @@ namespace PawnShopLib.Things
             Type = JewelTypes.ComplicatedJewel;
             if (goldWeight >= 0)
                 GoldWeight = goldWeight;
-            else throw new ArgumentException("Weight can`t be lower than zero", nameof(goldWeight));
+            else throw new ArgumentOutOfRangeException(nameof(goldWeight), "Weight cannot be lower than zero");
             if (silverWeight >= 0)
                 SilverWeight = silverWeight;
-            else throw new ArgumentException("Weight can`t be lower than zero", nameof(silverWeight));
+            else throw new ArgumentOutOfRangeException(nameof(silverWeight), "Weight cannot be lower than zero");
             if (diamondWeight >= 0)
                 DiamondWeight = diamondWeight;
-            else throw new ArgumentException("Weight can`t be lower than zero", nameof(diamondWeight));
+            else throw new ArgumentOutOfRangeException(nameof(diamondWeight), "Weight cannot be lower than zero");
             if (otherGemsWeight >= 0)
                 OtherGemsWeight = otherGemsWeight;
-            else throw new ArgumentException("Weight can`t be lower than zero", nameof(otherGemsWeight));
+            else throw new ArgumentOutOfRangeException(nameof(otherGemsWeight), "Weight cannot be lower than zero");
         }
         public override string ToString()
         {

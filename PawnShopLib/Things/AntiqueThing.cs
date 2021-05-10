@@ -24,7 +24,7 @@ namespace PawnShopLib.Things
             if (estimatedPrice >= 0)
                 EstimatedPrice = estimatedPrice;
             else
-                throw new ArgumentException("Price can`t be negative", nameof(estimatedPrice));
+                throw new ArgumentOutOfRangeException(nameof(estimatedPrice), "Price cannot be negative");
         }
         public override string ToString()
         {

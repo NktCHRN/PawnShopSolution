@@ -28,6 +28,7 @@ namespace PawnShopConsoleApp
                 if (!parsed || choice < minPoint || choice > maxPoint)
                 {
                     Console.WriteLine($"Error: you entered not a number or number was smaller than {minPoint} or bigger than {maxPoint}.");
+                    Console.WriteLine($"Help - {maxPoint - 1}");
                     choice = minPoint - 1;
                 }
                 switch (choice)
@@ -51,6 +52,7 @@ namespace PawnShopConsoleApp
                         PrintCustomer(pawnShop);
                         break;
                     case 7:
+                        CustomerMenu.LoginCustomer(pawnShop);
                         break;
                     case 8:
                         break;
@@ -63,7 +65,7 @@ namespace PawnShopConsoleApp
                     Console.WriteLine("What do you want to do?");
                     PrintHelp();
                 }
-            } while (choice != 10);
+            } while (choice != maxPoint);
         }
         public static void PrintOnSale(PawnShop pawnShop)
         {
@@ -217,7 +219,7 @@ namespace PawnShopConsoleApp
             if (deal.IsClosed)
                 Console.WriteLine($"Pawn shop profit: {Program.CutZeros(deal.PawnShopProfit)}");
             Console.ForegroundColor = ConsoleColor.DarkGreen;
-            Console.WriteLine("\nPress [ENTER] to go back to main menu");
+            Console.WriteLine("\nPress [ENTER] to go back to menu");
             Console.ReadLine();
             Console.ResetColor();
         }
@@ -270,7 +272,7 @@ namespace PawnShopConsoleApp
                 foreach (Deal deal in allDeals)
                     Console.WriteLine($"{deal.ID,-10}{deal.Thing,-55}{deal.StartTime.Day + "." + deal.StartTime.Month + "." + deal.StartTime.Year,-11}{deal.Term,-15}{(deal.IsClosed ? "Closed" : "Not closed"),-10}");
                 Console.ForegroundColor = ConsoleColor.DarkGreen;
-                Console.WriteLine("\nPress [ENTER] to go back to main menu");
+                Console.WriteLine("\nPress [ENTER] to go back to menu");
                 Console.ReadLine();
                 Console.ResetColor();
         }

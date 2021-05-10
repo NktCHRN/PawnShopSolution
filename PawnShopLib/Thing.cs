@@ -15,11 +15,11 @@ namespace PawnShopLib
             if (weight > 0)
                 Weight = weight;
             else
-                throw new ArgumentException("Weight can`t be negative or equal zero", nameof(weight));
+                throw new ArgumentOutOfRangeException(nameof(weight), "Weight cannot be negative or equal zero");
             if (year <= DateTime.Now.Year)
                 Year = year;
             else
-                throw new ArgumentException("Year can`t be greater than year now", nameof(year));
+                throw new ArgumentOutOfRangeException(nameof(year), "Year cannot be greater than year now");
         }
         public abstract override string ToString();
     }
