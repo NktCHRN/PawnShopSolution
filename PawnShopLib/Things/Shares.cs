@@ -17,9 +17,16 @@ namespace PawnShopLib.Things
             else
                 throw new ArgumentOutOfRangeException(nameof(marketPrice), "Price cannot be negative");
             if (companyName != null)
-                CompanyName = companyName;
+            {
+                if (!string.IsNullOrWhiteSpace(companyName))
+                    CompanyName = companyName;
+                else
+                    throw new ArgumentException("Company name cannot be empty or contain only spaces", nameof(companyName));
+            }
             else
+            {
                 throw new ArgumentNullException("CompanyName cannot be null", nameof(companyName));
+            }
         }
         public override string ToString()
         {

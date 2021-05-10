@@ -22,7 +22,12 @@ namespace PawnShopLib.Things
             else
                 throw new ArgumentOutOfRangeException(nameof(mileage), "Mileage cannot be negative");
             if (brandName != null)
-                BrandName = brandName;
+            {
+                if (!string.IsNullOrWhiteSpace(brandName))
+                    BrandName = brandName;
+                else
+                    throw new ArgumentException("Car`s brand name cannot be empty or contain only spaces", nameof(brandName));
+            }
             else
                 throw new ArgumentNullException("Car`s brandname cannot be null", nameof(brandName));
         }
