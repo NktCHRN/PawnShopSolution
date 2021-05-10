@@ -10,8 +10,8 @@ namespace PawnShopLib
     {
         decimal EstimateThing(Customer customer, Thing myThing);
         decimal BailThing(Customer customer, Thing myThing, int term);
-        void RedeemThing(Customer customer);
+        Thing RedeemThing(Customer customer);
         bool TryProlong(Customer customer, int term);
-        void BuyThing(IBuyer buyer, string thingID);
+        Thing BuyThing(IBuyer buyer, string thingID);
     }
 }

@@ -169,7 +169,7 @@ namespace PawnShopLib
                 throw new ArgumentNullException("Customer cannot be null", nameof(customer));
             }
         }
-        public void RedeemThing(Customer customer)
+        public Thing RedeemThing(Customer customer)
         {
             UpdateDeals();
             if (customer != null)
@@ -184,6 +184,7 @@ namespace PawnShopLib
                         customer.Deals[customer.GetDealsQuantity() - 1].PawnShopProfit = price - customer.Deals[customer.GetDealsQuantity() - 1].Price;
                         Balance += price;
                         Revenue += price;
+                        return customer.Deals[customer.GetDealsQuantity() - 1].Thing;
                     }
                     else
                     {
@@ -216,7 +217,7 @@ namespace PawnShopLib
                 throw new ArgumentNullException("Customer cannot be null", nameof(customer));
             }
         }
-        public void BuyThing(IBuyer buyer, string thingID)
+        public Thing BuyThing(IBuyer buyer, string thingID)
         {
             UpdateDeals();
             if (buyer != null)
@@ -230,6 +231,7 @@ namespace PawnShopLib
                         _deals[thingID].SellThing();
                         _deals[thingID].PawnShopProfit = price - _deals[thingID].Price;
                         Revenue += price;
+                        return _deals[thingID].Thing;
                     }
                     else
                     {
