@@ -59,6 +59,9 @@ namespace PawnShopLib
                     throw new TooYoungException(minimalAge, age);
                 }
             _customersQuantity++;
+            const int maxCustomers = 99999999;
+            if (_customersQuantity > maxCustomers)
+                throw new OverflowException("Too many customers. Unable to create an ID");
             ID = String.Format("C{0:00000000}", _customersQuantity);
             Deals = new DealsBase();
             if (balance >= 0)

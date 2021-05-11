@@ -89,6 +89,9 @@ namespace PawnShopLib
             PawnShopProfit = 0;
             _penalty = 0;
             DealsCount++;
+            const int maxDealsCount = 99999999;
+            if (DealsCount > maxDealsCount)
+                throw new OverflowException("Too many deals. Unable to create an ID");
             ID = String.Format("D{0:00000000}", DealsCount);
         }
         public DateTime GetLastNonPenaltyDate()

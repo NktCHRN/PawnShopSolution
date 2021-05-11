@@ -107,6 +107,15 @@ namespace PawnShopConsoleApp
                     Console.ReadLine();
                     parsed = true;
                 }
+                catch (OverflowException exc)
+                {
+                    Console.WriteLine("Denied due to technical problems");
+                    Console.WriteLine(exc.Message);
+                    Console.ForegroundColor = ConsoleColor.DarkGreen;
+                    Console.WriteLine("\nPress [ENTER] to go back to main menu");
+                    Console.ReadLine();
+                    parsed = true;
+                }
             } while (!parsed);
             return customer;
         }
