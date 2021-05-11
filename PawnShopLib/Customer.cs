@@ -44,7 +44,8 @@ namespace PawnShopLib
                 Patronymic = patronymic;
             else
                 throw new ArgumentNullException("Patronymic cannot be null", nameof(patronymic));
-                if (DateTime.Now.Year - birthDay.Year > 18 || (DateTime.Now.Year - birthDay.Year == 18 && (birthDay.Month < DateTime.Now.Month || (birthDay.Month == DateTime.Now.Month && birthDay.Day < DateTime.Now.Day))))
+            const int minimalAge = 18;
+                if (DateTime.Now.Year - birthDay.Year > minimalAge || (DateTime.Now.Year - birthDay.Year == 18 && (birthDay.Month < DateTime.Now.Month || (birthDay.Month == DateTime.Now.Month && birthDay.Day < DateTime.Now.Day))))
                 {
                     BirthDay = new DateTime(birthDay.Year, birthDay.Month, birthDay.Day);
                 }
@@ -55,7 +56,7 @@ namespace PawnShopLib
                         age--;
                     if (age < 0)
                         age = 0;
-                    throw new TooYoungException(18, age);
+                    throw new TooYoungException(minimalAge, age);
                 }
             _customersQuantity++;
             ID = String.Format("C{0:00000000}", _customersQuantity);

@@ -21,8 +21,9 @@ namespace PawnShopLib.Things
         public AntiqueThing(double weight, int year, AntiqueTypes type, decimal estimatedPrice) : base(weight, year)
         {
             Type = type;
-            if (DateTime.Now.Year - year < 30)
-                throw new TooYoungException($"If thing is an antique one, it should be at least 30 years old. It was {DateTime.Now.Year - year} years old");
+            const int minimalAge = 30;
+            if (DateTime.Now.Year - year < minimalAge)
+                throw new TooYoungException($"If thing is an antique one, it should be at least {minimalAge} years old. It was {DateTime.Now.Year - year} years old");
             if (estimatedPrice >= 0)
                 EstimatedPrice = estimatedPrice;
             else
