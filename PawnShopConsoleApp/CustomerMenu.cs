@@ -225,10 +225,16 @@ namespace PawnShopConsoleApp
                             PrintNoHangingDealsError();
                         break;
                     case 5:
-
+                        if (customer.IsOnDeal())
+                            RedeemThing(pawnShop, customer);
+                        else
+                            PrintNoHangingDealsError();
                         break;
                     case 6:
-
+                        if (customer.IsOnDeal())
+                            Prolong(pawnShop, customer);
+                        else
+                            PrintNoHangingDealsError();
                         break;
                 }
                 if (choice >= minPoint && choice < maxPoint)
@@ -649,6 +655,137 @@ namespace PawnShopConsoleApp
                 Console.WriteLine(exc.Message);
                 return 0;
             }
+        }
+        public static void RedeemThing(PawnShop pawnShop, Customer customer)
+        {
+            Console.Clear();
+            Program.PrintHeader();
+            Console.ForegroundColor = ConsoleColor.DarkGreen;
+            if (customer.IsOnDeal())
+            {
+                Console.WriteLine($"Your current balance: {Program.CutZeros(customer.Balance)} hrn");
+                Console.WriteLine($"Redemption of {customer.GetLastDeal().Thing} will cost you {Program.CutZeros(customer.GetLastDeal().RedemptionPrice)} hrn");
+                string entered;
+                Console.WriteLine("\nDo you want to redeem it? [Y/n]");
+                entered = Console.ReadLine().Trim() + " ";
+                while (entered.ToLower()[0] != 'n' && entered.ToLower()[0] != 'y')
+                {
+                    Console.WriteLine("Error. Please, enter Y on n once more");
+                    Console.WriteLine("\nDo you want to redeem your thing? [Y/n]");
+                    entered = Console.ReadLine().Trim() + " ";
+                }
+                if (entered.ToLower()[0] == 'y')
+                {
+                    decimal earned;
+                    bool parsed;
+                    Console.WriteLine("\nEnter how many money do you have:");
+                    parsed = decimal.TryParse(Console.ReadLine().Replace('.', ','), out earned);
+                    while (!parsed || earned < 0)
+                    {
+                        Console.WriteLine("You entered the wrong sum");
+                        Console.WriteLine("Enter how many money do you have once more:");
+                        parsed = decimal.TryParse(Console.ReadLine().Replace('.', ','), out earned);
+                    }
+                    customer.EarnMoney(earned);
+                    Thing thing = null;
+                    Console.WriteLine();
+                    try
+                    {
+                        thing = pawnShop.RedeemThing(customer);
+                        Console.ForegroundColor = ConsoleColor.Green;
+                        Console.WriteLine("Congratulations!");
+                        Console.WriteLine($"Dear customer, you have just redeemed {thing}");
+                        Console.ForegroundColor = ConsoleColor.DarkGreen;
+                        if (customer.Balance != 0)
+                        {
+                            decimal toReturn = customer.Balance;
+                            customer.SpendMoney(toReturn);
+                            Console.WriteLine($"Money returned: {Program.CutZeros(toReturn)} hrn");
+                        }
+                    }
+                    catch (ArgumentException exc)
+                    {
+                        Console.WriteLine(exc.Message.Replace("Customer has", "You have"));
+                        Console.WriteLine("Do you want to keep money on your balance? [Y/n]");
+                        entered = Console.ReadLine().Trim() + " ";
+                        while (entered.ToLower()[0] != 'n' && entered.ToLower()[0] != 'y')
+                        {
+                            Console.WriteLine("Error. Please, enter Y on n once more");
+                            Console.WriteLine("Do you want to keep money on your balance? [Y/n]");
+                            entered = Console.ReadLine().Trim() + " ";
+                        }
+                        if (entered.ToLower()[0] == 'n')
+                        {
+                            customer.SpendMoney(earned);
+                            Console.WriteLine($"Money returned: {Program.CutZeros(earned)} hrn");
+                        }
+                    }
+                    Console.WriteLine($"\nYour current balance: {Program.CutZeros(customer.Balance)} hrn");
+                }
+            }
+            Console.WriteLine("\nPress [ENTER] to go back to customer`s menu");
+            Console.ReadLine();
+            Console.ResetColor();
+        }
+        public static void Prolong(PawnShop pawnShop, Customer customer)
+        {
+            Console.Clear();
+            Program.PrintHeader();
+            Console.ForegroundColor = ConsoleColor.DarkGreen;
+            if (customer.IsOnDeal())
+            {
+                const int minTerm = 1;
+                int maxTerm = customer.GetLastDeal().GetMaxProlongationTerm();
+                Console.WriteLine($"For your deal ({customer.GetLastDeal().Thing}) maximum prolongation term is {maxTerm} days");
+                bool parsed;
+                int term;
+                Console.WriteLine("Enter the term:");
+                parsed = int.TryParse(Console.ReadLine(), out term);
+                while (!parsed || term < minTerm || term > maxTerm)
+                {
+                    Console.WriteLine("You entered the wrong term");
+                    Console.WriteLine("Enter the term once more: ");
+                    parsed = int.TryParse(Console.ReadLine(), out term);
+                }
+                Console.WriteLine($"\nYour new redemption price will be {Program.CutZeros(customer.GetLastDeal().RedemptionPrice + customer.GetLastDeal().Price * pawnShop.PerDayCoefficient * term)} hrn");
+                string entered;
+                Console.WriteLine("\nDo you really want to prolong the deal? [Y/n]");
+                entered = Console.ReadLine().Trim() + " ";
+                while (entered.ToLower()[0] != 'n' && entered.ToLower()[0] != 'y')
+                {
+                    Console.WriteLine("Error. Please, enter Y on n once more");
+                    Console.WriteLine("\nDo you really want to prolong the deal? [Y/n]");
+                    entered = Console.ReadLine().Trim() + " ";
+                }
+                if (entered.ToLower()[0] == 'y')
+                {
+                    Console.WriteLine();
+                    try
+                    {
+                        bool prolongated = pawnShop.TryProlong(customer, term);
+                        if (prolongated)
+                        {
+                            Console.ForegroundColor = ConsoleColor.Green;
+                            Console.WriteLine("Congratulations!");
+                            Console.WriteLine($"Dear customer, you successfully prolongated the term for your last deal ({customer.GetLastDeal().Thing}) for {term} days");
+                            Console.WriteLine($"New redemption price: {Program.CutZeros(customer.GetLastDeal().RedemptionPrice)} hrn");
+                            Console.ForegroundColor = ConsoleColor.DarkGreen;
+                        }
+                        else
+                        {
+                            Console.WriteLine("Denied. Maybe, the coefficient per day has been changed");
+                            Console.WriteLine("Try to enter the smaller term");
+                        }
+                    }
+                    catch (BusyObjectException exc)
+                    {
+                        Console.WriteLine($"{exc.Message}");
+                    }
+                }
+            }
+            Console.WriteLine("\nPress [ENTER] to go back to customer`s menu");
+            Console.ReadLine();
+            Console.ResetColor();
         }
         public static void PrintNoHangingDealsError()
         {

@@ -16,10 +16,7 @@ namespace PawnShopLib
         public DateTime StartTime { get; private set; }
         public int Term { get; private set; }   // in days
         public int PenaltyMaxTerm { get; private set; }
-        private decimal _penalty;
-        public decimal Penalty { 
-            get { return _penalty; } 
-        }
+        public decimal Penalty { get; private set; }
         public Tariff Tariff { get; private set; }
         public bool IsClosed { get; private set; }
         public bool IsOnSale { get; private set; }
@@ -27,6 +24,8 @@ namespace PawnShopLib
         public decimal PawnShopProfit { get; internal set; }
         public string ID { get; private set; }
         public static int DealsCount { get; private set; }
+        private int _minTerm;
+        private int _maxTerm;
         static Deal()
         {
             DealsCount = 0;
@@ -48,10 +47,14 @@ namespace PawnShopLib
                 Thing = thing;
             else
                 throw new ArgumentNullException(nameof(thing), "Thing cannot be null");
+            _minTerm = 5;
+            if (maxTerm < 5)
+                throw new ArgumentOutOfRangeException(nameof(maxTerm), $"Max term should be at least {_minTerm} days");
+            _maxTerm = maxTerm;
             if (term >= 0)
             {
                 Term = term;
-                if (term > 4)
+                if (term >= _minTerm && term <= maxTerm)
                 {
                     Term = term;
                     PenaltyMaxTerm = 5;
@@ -69,7 +72,7 @@ namespace PawnShopLib
                 }
                 else
                 {
-                    throw new ArgumentException("This type of thing cannot be sold immediately or term was between 1 and 4 days", nameof(thing));
+                    throw new ArgumentException($"This type of thing cannot be sold immediately or term was between 1 and 4 days or bigger than {maxTerm} days", nameof(thing));
                 }
             }
             else
@@ -82,12 +85,12 @@ namespace PawnShopLib
             else
                 throw new ArgumentOutOfRangeException(nameof(price), "Price cannot be negative or equal 0");
             RedemptionPrice = price + price * perDayCoefficient * term;
-            MarketPrice = price + price * perDayCoefficient * maxTerm;
+            MarketPrice = price + price * perDayCoefficient * (maxTerm + _minTerm);
             if (RedemptionPrice > MarketPrice)
                 MarketPrice = RedemptionPrice;
             StartTime = DateTime.Now;
             PawnShopProfit = 0;
-            _penalty = 0;
+            Penalty = 0;
             DealsCount++;
             const int maxDealsCount = 99999999;
             if (DealsCount > maxDealsCount)
@@ -155,7 +158,7 @@ namespace PawnShopLib
                 else
                 {
                     RedemptionPrice += Price * perDayCoefficient * additionalTerm + Penalty;
-                    _penalty = 0;
+                    Penalty = 0;
                 }
                 Term += additionalTerm;
                 return true;
@@ -181,7 +184,7 @@ namespace PawnShopLib
             if (perDayCoefficient > 0)
             {
                 if (days >= 0 && days <= PenaltyMaxTerm)
-                    _penalty = CalculatePenalty(perDayCoefficient, days);
+                    Penalty = CalculatePenalty(perDayCoefficient, days);
                 else
                     throw new ArgumentOutOfRangeException(nameof(days), "Too big or small penatly term");
             }
@@ -190,5 +193,6 @@ namespace PawnShopLib
                 throw new ArgumentOutOfRangeException(nameof(perDayCoefficient), "PerDayCoefficient cannot be negative");
             }
         }
+        public int GetMaxProlongationTerm() => _maxTerm + _minTerm - Term;
     }
 }

@@ -190,7 +190,7 @@ namespace PawnShopLib
                     }
                     else
                     {
-                        throw new ArgumentException($"Customer has not got enought money: {customer.Balance:F3}; required: {price:F3}");
+                        throw new ArgumentException($"Customer has not got enought money: {customer.Balance:F3} hrn; required: {price:F3} hrn");
                     }
                 }
                 else

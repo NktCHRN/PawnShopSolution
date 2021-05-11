@@ -20,10 +20,6 @@ namespace PawnShopLib
         private decimal _perDayCoefficient;
         public decimal PerDayCoefficient
         {
-            get
-            {
-                return _perDayCoefficient;
-            }
             set
             {
                 Update();
@@ -68,7 +64,7 @@ namespace PawnShopLib
         public DealsBase GetFilteredByCustomer(Customer customer)
         {
             Update();
-            DealsBase customerDeals = new DealsBase(PerDayCoefficient);
+            DealsBase customerDeals = new DealsBase(_perDayCoefficient);
             foreach (Deal deal in _deals)
             {
                 if (deal.Customer == customer)
@@ -178,7 +174,7 @@ namespace PawnShopLib
                         _deals[i].Close(true);//+ в логинг
                     else if (PawnShop.DateTimeToDays(currentTime) - PawnShop.DateTimeToDays(_deals[i].StartTime) > _deals[i].Term)
                     {
-                        _deals[i].SetPenalty(PerDayCoefficient, (PawnShop.DateTimeToDays(DateTime.Now) - PawnShop.DateTimeToDays(_deals[i].StartTime) - _deals[i].Term));
+                        _deals[i].SetPenalty(_perDayCoefficient, (PawnShop.DateTimeToDays(DateTime.Now) - PawnShop.DateTimeToDays(_deals[i].StartTime) - _deals[i].Term));
                     }
                 }
             }

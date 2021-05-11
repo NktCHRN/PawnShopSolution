@@ -78,7 +78,7 @@ namespace PawnShopConsoleApp
             pawnShop.BailThing(c2, new Jewel(1999, 7, 1, 2, 3), 0);
             pawnShop.BailThing(c3, new Shares(2000, 80000.65m, "Amazon"), 60);
             Thing t1 = new AntiqueThing(7, 1990, AntiqueTypes.AntiqueJewel, 70000);
-            c1.EarnMoney(21000000);
+            //c1.EarnMoney(21000000);
             //Buyer b1 = new Buyer(10000000);
             //p1.BuyThing(b1, "D00000001");
             //p1.RedeemThing(c1);
