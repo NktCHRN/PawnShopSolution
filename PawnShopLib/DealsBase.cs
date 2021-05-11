@@ -17,13 +17,34 @@ namespace PawnShopLib
     {
         private readonly List<Deal> _deals;
         private int _position = -1;
-        internal DealsBase()
+        private decimal _perDayCoefficient;
+        public decimal PerDayCoefficient
+        {
+            get
+            {
+                return _perDayCoefficient;
+            }
+            set
+            {
+                Update();
+                if (value > 0)
+                    _perDayCoefficient = value;
+                else
+                    throw new ArgumentException("PerDayCoefficient cannot be negative", nameof(value));
+            }
+        }
+        internal DealsBase(decimal perDayCoefficient)
         {
             _deals = new List<Deal>();
+            if (perDayCoefficient > 0)
+                PerDayCoefficient = perDayCoefficient;
+            else
+                throw new ArgumentOutOfRangeException(nameof(perDayCoefficient), "Coefficient cannot be smaller than zero");
         }
-        public int GetDealsQuantity() => _deals.Count();
+        public int GetLength() => _deals.Count();
         public IReadOnlyList<Deal> GetFilteredOnSale<T>(DealSortingTypes sortBy = DealSortingTypes.ID) where T : Thing
         {
+            Update();
             List<Deal> onSale = new List<Deal>();
             foreach(Deal deal in _deals)
             {
@@ -44,8 +65,20 @@ namespace PawnShopLib
             }
             return onSale;
         }
+        public DealsBase GetFilteredByCustomer(Customer customer)
+        {
+            Update();
+            DealsBase customerDeals = new DealsBase(PerDayCoefficient);
+            foreach (Deal deal in _deals)
+            {
+                if (deal.Customer == customer)
+                    customerDeals.Add(deal);
+            }
+            return customerDeals;
+        }
         public IReadOnlyList<Deal> GetFullList(DealSortingTypes sortBy = DealSortingTypes.ID)
         {
+            Update();
             List<Deal> FullDealsList = new List<Deal>();
             foreach (Deal deal in _deals)
                 FullDealsList.Add(deal);
@@ -67,6 +100,7 @@ namespace PawnShopLib
         {
             get
             {
+                Update();
                 if (id != null)
                 {
                     foreach (Deal deal in _deals)
@@ -84,6 +118,7 @@ namespace PawnShopLib
         {
             get
             {
+                Update();
                 if (id >= 0 && id < _deals.Count)
                 {
                     return _deals[id];
@@ -103,6 +138,7 @@ namespace PawnShopLib
         }
         public IEnumerator GetEnumerator()
         {
+            Reset();
             return (IEnumerator)this;
         }
         //IEnumerator
@@ -124,11 +160,27 @@ namespace PawnShopLib
         //IEnumerable
         public object Current
         {
-            get { 
+            get
+            {
                 if (_position == -1 || _position >= _deals.Count())
                     throw new InvalidOperationException();
-                else
-                    return _deals[_position];
+                return _deals[_position];
+            }
+        }
+        public void Update()
+        {
+            DateTime currentTime = DateTime.Now;
+            for (int i = 0; i < _deals.Count(); i++)
+            {
+                if (!_deals[i].IsClosed)
+                {
+                    if (PawnShop.DateTimeToDays(currentTime) - PawnShop.DateTimeToDays(_deals[i].StartTime) > _deals[i].Term + _deals[i].PenaltyMaxTerm)
+                        _deals[i].Close(true);//+ в логинг
+                    else if (PawnShop.DateTimeToDays(currentTime) - PawnShop.DateTimeToDays(_deals[i].StartTime) > _deals[i].Term)
+                    {
+                        _deals[i].SetPenalty(PerDayCoefficient, (PawnShop.DateTimeToDays(DateTime.Now) - PawnShop.DateTimeToDays(_deals[i].StartTime) - _deals[i].Term));
+                    }
+                }
             }
         }
     }

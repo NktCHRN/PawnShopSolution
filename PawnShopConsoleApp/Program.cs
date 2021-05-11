@@ -39,7 +39,7 @@ namespace PawnShopConsoleApp
             string entered;
             do
             {
-                Console.WriteLine("Do you to change coefficient per day (now: " + CutZeros(perDayCoefficient * 100m) + $"%) and max term (now : {maxTerm} days)? [Y/n]");
+                Console.WriteLine("Do you want to change coefficient per day (now: " + CutZeros(perDayCoefficient * 100m) + $"%) and max term (now : {maxTerm} days)? [Y/n]");
                 entered = Console.ReadLine().Trim() + " ";
             } while (entered.ToLower()[0] != 'n' && entered.ToLower()[0] != 'y');
             if (entered.ToLower()[0] == 'y')

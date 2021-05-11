@@ -25,7 +25,7 @@ namespace PawnShopLib.Things
             }
             else
             {
-                throw new ArgumentNullException("CompanyName cannot be null", nameof(companyName));
+                throw new ArgumentNullException(nameof(companyName), "CompanyName cannot be null");
             }
         }
         public override string ToString()

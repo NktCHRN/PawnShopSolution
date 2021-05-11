@@ -29,7 +29,7 @@ namespace PawnShopLib.Things
                     throw new ArgumentException("Car`s brand name cannot be empty or contain only spaces", nameof(brandName));
             }
             else
-                throw new ArgumentNullException("Car`s brandname cannot be null", nameof(brandName));
+                throw new ArgumentNullException(nameof(brandName), "Car`s brandname cannot be null");
         }
         public override string ToString()
         {

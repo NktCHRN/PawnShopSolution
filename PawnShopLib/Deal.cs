@@ -43,11 +43,11 @@ namespace PawnShopLib
                     throw new BusyObjectException("Customer is already on deal. Close the last deal first");
             }
             else
-                throw new ArgumentNullException("Customer cannot be null", nameof(customer));
+                throw new ArgumentNullException(nameof(customer), "Customer cannot be null");
             if (thing != null)
                 Thing = thing;
             else
-                throw new ArgumentNullException("Thing cannot be null", nameof(thing));
+                throw new ArgumentNullException(nameof(thing), "Thing cannot be null");
             if (term >= 0)
             {
                 Term = term;

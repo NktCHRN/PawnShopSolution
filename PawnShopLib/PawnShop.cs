@@ -20,9 +20,12 @@ namespace PawnShopLib
             }
             set
             {
-                UpdateDeals();
-                if (value > 0)
+                if (value > 0) {
                     _perDayCoefficient = value;
+                    _deals.PerDayCoefficient = value;
+                    foreach (Customer customer in _customers)
+                        customer.Deals.PerDayCoefficient = value;
+                }
                 else
                     throw new ArgumentException("PerDayCoefficient cannot be negative", nameof(value));
             }
@@ -33,7 +36,7 @@ namespace PawnShopLib
         {
             get
             {
-                UpdateDeals();
+                _deals.Update();
                 List<Customer> newList = new List<Customer>();
                 foreach (Customer customer in _customers)
                     newList.Add(customer);
@@ -44,7 +47,7 @@ namespace PawnShopLib
         public DealsBase Deals { 
             get 
             { 
-                UpdateDeals();
+                _deals.Update();
                 return _deals; 
             }
         }
@@ -62,15 +65,15 @@ namespace PawnShopLib
                 Balance = initialBalance;
             else
                 throw new ArgumentOutOfRangeException(nameof(initialBalance), "Balance cannot be smaller than zero");
-            _deals = new DealsBase();
             if (delToEvaluator != null)
                 _evaluator = delToEvaluator;
             else
                 _evaluator = StandartEvaluators.EvaluateThing;
             if (perDayCoefficient > 0)
-                PerDayCoefficient = perDayCoefficient;
+                _perDayCoefficient = perDayCoefficient;
             else
                 throw new ArgumentOutOfRangeException(nameof(perDayCoefficient), "Coefficient cannot be smaller than zero");
+            _deals = new DealsBase(perDayCoefficient);
             if (maxTerm > 4)
                 MaxTerm = maxTerm;
             else
@@ -81,13 +84,13 @@ namespace PawnShopLib
         }
         public Customer AddCustomer(string firstName, string secondName, string patronymic, DateTime birthDay, decimal balance = 0)
         {
-            Customer newCustomer = new Customer(firstName, secondName, patronymic, birthDay, balance);
+            Customer newCustomer = new Customer(firstName, secondName, patronymic, birthDay, PerDayCoefficient, balance);
             _customers.Add(newCustomer);
             return newCustomer;
         }
         public Customer FindCustomer(string id)
         {
-            UpdateDeals();
+            _deals.Update();
             if (id != null)
             {
                 foreach(Customer customer in _customers)
@@ -105,27 +108,26 @@ namespace PawnShopLib
         public decimal EstimateThing(Customer customer, Thing myThing) => (decimal)_evaluator?.Invoke(myThing, DefineTariff(customer));
         public decimal GetRedemptionPrice(Customer customer, Thing myThing, int term)
         {
-            UpdateDeals();
             decimal price = EstimateThing(customer, myThing);
             price += price * PerDayCoefficient * term;
             if (price < 0)
                 price = 0;
             return price;
         }
-        private Tariff DefineTariff(Customer customer)
+        public Tariff DefineTariff(Customer customer)
         {
-            if (customer.GetDealsQuantity() <= 6)
-                return Tariff.Standart;
-            else if ((double)customer.GetSuccessfulDealsQuantity() / customer.GetUnsuccessfulDealsQuantity() >= 1.5)
+            if (customer.GetSuccessfulDealsQuantity() + customer.GetUnsuccessfulDealsQuantity() < 6)
+                return Tariff.Standard;
+            else if (customer.GetUnsuccessfulDealsQuantity() == 0 || (double)customer.GetSuccessfulDealsQuantity() / customer.GetUnsuccessfulDealsQuantity() >= 1.5)
                 return Tariff.Preferential;
             else if ((double)customer.GetSuccessfulDealsQuantity() / customer.GetUnsuccessfulDealsQuantity() <= 0.5)
                 return Tariff.LowPenalty;
             else
-                return Tariff.Standart;
+                return Tariff.Standard;
         }
         public decimal BailThing(Customer customer, Thing myThing, int term)
         {
-            UpdateDeals();
+            _deals.Update();
             if (customer != null)
             {
                 if (!customer.IsOnDeal())
@@ -156,7 +158,7 @@ namespace PawnShopLib
                     }
                     else
                     {
-                        throw new ArgumentNullException("Thing cannot be null", nameof(myThing));
+                        throw new ArgumentNullException(nameof(myThing), "Thing cannot be null");
                     }
                 }
                 else
@@ -166,12 +168,12 @@ namespace PawnShopLib
             }
             else
             {
-                throw new ArgumentNullException("Customer cannot be null", nameof(customer));
+                throw new ArgumentNullException(nameof(customer), "Customer cannot be null");
             }
         }
         public Thing RedeemThing(Customer customer)
         {
-            UpdateDeals();
+            _deals.Update();
             if (customer != null)
             {
                 if (customer.IsOnDeal())
@@ -198,12 +200,12 @@ namespace PawnShopLib
             }
             else
             {
-                throw new ArgumentNullException("Customer cannot be null", nameof(customer));
+                throw new ArgumentNullException(nameof(customer), "Customer cannot be null");
             }
         }
         public bool TryProlong(Customer customer, int term)
         {
-            UpdateDeals();
+            _deals.Update();
             if (customer != null)
             {
                 if (customer.IsOnDeal())
@@ -214,12 +216,12 @@ namespace PawnShopLib
             }
             else
             {
-                throw new ArgumentNullException("Customer cannot be null", nameof(customer));
+                throw new ArgumentNullException(nameof(customer), "Customer cannot be null");
             }
         }
         public Thing BuyThing(IBuyer buyer, string thingID)
         {
-            UpdateDeals();
+            _deals.Update();
             if (buyer != null)
             {
                 if (_deals[thingID] != null && _deals[thingID].IsOnSale) {
@@ -240,28 +242,12 @@ namespace PawnShopLib
                 }
                 else
                 {
-                    throw new ArgumentNullException("Thing was not found or not on sale", nameof(thingID));
+                    throw new ArgumentNullException(nameof(thingID), "Thing was not found or not on sale");
                 }
             }
             else 
             {
-                throw new ArgumentNullException("Buyer cannot be null", nameof(buyer));
-            }
-        }
-        public void UpdateDeals()
-        {
-            DateTime currentTime = DateTime.Now;
-            for (int i = 0; i < _deals.GetDealsQuantity(); i++)
-            {
-                if (!_deals[i].IsClosed)
-                {
-                    if (DateTimeToDays(currentTime) - DateTimeToDays(_deals[i].StartTime) > _deals[i].Term + _deals[i].PenaltyMaxTerm)
-                        _deals[i].Close(true);//+ в логинг
-                    else if (DateTimeToDays(currentTime) - DateTimeToDays(_deals[i].StartTime) > _deals[i].Term)
-                    {
-                        _deals[i].SetPenalty(PerDayCoefficient, (DateTimeToDays(DateTime.Now) - DateTimeToDays(_deals[i].StartTime) - _deals[i].Term));
-                    }
-                }
+                throw new ArgumentNullException(nameof(buyer), "Buyer cannot be null");
             }
         }
         public decimal GetNetProfit() => Revenue - Costs;

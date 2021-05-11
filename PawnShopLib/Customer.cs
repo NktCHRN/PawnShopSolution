@@ -14,9 +14,17 @@ namespace PawnShopLib
         public string Patronymic { get; private set; }
         public DateTime BirthDay { get; private set; }
         public string ID { get; private set; }
-        public DealsBase Deals { get; private set; }
+        private readonly DealsBase _deals;
+        public DealsBase Deals 
+        { 
+            get 
+            {
+                _deals.Update();
+                return _deals;
+            }
+        }
         public decimal Balance { get; private set; }
-        internal Customer(string firstName, string secondName, string patronymic, DateTime birthDay, decimal balance = 0)
+        internal Customer(string firstName, string secondName, string patronymic, DateTime birthDay, decimal perDayCoefficient, decimal balance = 0)
         {
             if (firstName != null)
             {
@@ -27,7 +35,7 @@ namespace PawnShopLib
             }
             else
             {
-                throw new ArgumentNullException("First name cannot be null", nameof(firstName));
+                throw new ArgumentNullException(nameof(firstName), "First name cannot be null");
             }
             if (secondName != null)
             {
@@ -38,12 +46,12 @@ namespace PawnShopLib
             }
             else
             {
-                throw new ArgumentNullException("Second name cannot be null", nameof(secondName));
+                throw new ArgumentNullException(nameof(secondName), "Second name cannot be null");
             }
             if (patronymic != null)
                 Patronymic = patronymic;
             else
-                throw new ArgumentNullException("Patronymic cannot be null", nameof(patronymic));
+                throw new ArgumentNullException(nameof(patronymic), "Patronymic cannot be null");
             const int minimalAge = 18;
                 if (DateTime.Now.Year - birthDay.Year > minimalAge || (DateTime.Now.Year - birthDay.Year == 18 && (birthDay.Month < DateTime.Now.Month || (birthDay.Month == DateTime.Now.Month && birthDay.Day < DateTime.Now.Day))))
                 {
@@ -59,11 +67,14 @@ namespace PawnShopLib
                     throw new TooYoungException(minimalAge, age);
                 }
             _customersQuantity++;
+            if (perDayCoefficient > 0)
+                _deals = new DealsBase(perDayCoefficient);
+            else
+                throw new ArgumentOutOfRangeException(nameof(perDayCoefficient), "Per day coefficient cannot be negative");
             const int maxCustomers = 99999999;
             if (_customersQuantity > maxCustomers)
                 throw new OverflowException("Too many customers. Unable to create an ID");
             ID = String.Format("C{0:00000000}", _customersQuantity);
-            Deals = new DealsBase();
             if (balance >= 0)
                 Balance = balance;
             else
@@ -73,7 +84,8 @@ namespace PawnShopLib
         public int GetSuccessfulDealsQuantity()
         {
             int quantity = 0;
-            foreach(Deal deal in Deals)
+            DealsBase deals = Deals;
+            foreach(Deal deal in deals)
                 if (deal.IsSuccessful)
                     quantity += 1;
             return quantity;
@@ -81,12 +93,13 @@ namespace PawnShopLib
         public int GetUnsuccessfulDealsQuantity()
         {
             int quantity = 0;
-            foreach (Deal deal in Deals)
+            DealsBase deals = Deals;
+            foreach (Deal deal in deals)
                 if (!deal.IsSuccessful && deal.IsClosed)
                     quantity += 1;
             return quantity;
         }
-        public int GetDealsQuantity() => Deals.GetDealsQuantity();
+        public int GetDealsQuantity() => Deals.GetLength();
         internal void AddDeal(Deal deal)
         {
             if (deal != null)
@@ -103,15 +116,17 @@ namespace PawnShopLib
         }
         public bool IsOnDeal()
         {
-            if (Deals.GetDealsQuantity() > 0)
-                return !Deals[Deals.GetDealsQuantity() - 1].IsClosed;
+            DealsBase deals = Deals;
+            if (deals.GetLength() > 0)
+                return !deals[deals.GetLength() - 1].IsClosed;
             else
                 return false;
         }
         public Deal GetLastDeal()
         {
-            if (Deals.GetDealsQuantity() > 0)
-                return Deals[Deals.GetDealsQuantity() - 1];
+            DealsBase deals = Deals;
+            if (deals.GetLength() > 0)
+                return deals[deals.GetLength() - 1];
             else
                 return null;
         }

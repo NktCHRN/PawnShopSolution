@@ -250,7 +250,7 @@ namespace PawnShopConsoleApp
                 Console.ResetColor();
             }
         }
-        public static void PrintCustomer(Customer customer)
+        public static void PrintCustomer(PawnShop pawnShop, Customer customer)
         {
                 Console.Clear();
                 Program.PrintHeader();
@@ -260,17 +260,21 @@ namespace PawnShopConsoleApp
                 Console.WriteLine($"ID: {customer.ID}");
                 Console.WriteLine($"Name: {customer.GetFullName()}");
                 Console.WriteLine($"Birthday: {customer.BirthDay.Day + "." + customer.BirthDay.Month + "." + customer.BirthDay.Year}");
+            Console.WriteLine($"Totally closed deals: {customer.GetSuccessfulDealsQuantity() + customer.GetUnsuccessfulDealsQuantity()}");
                 Console.WriteLine($"Successful deals: {customer.GetSuccessfulDealsQuantity()}");
                 Console.WriteLine($"Unsuccessful deals: {customer.GetUnsuccessfulDealsQuantity()}");
-                Console.WriteLine($"Status: {(customer.IsOnDeal() ? "On deal" : "Not on deal")}");
+            if (customer.GetUnsuccessfulDealsQuantity() != 0)
+                Console.WriteLine($"Sucessful/unsuccessful coefficient: {(double)customer.GetSuccessfulDealsQuantity() / (double)customer.GetUnsuccessfulDealsQuantity():F2}");
+            Console.WriteLine($"Status: {(customer.IsOnDeal() ? "On deal" : "Not on deal")}");
+            Console.WriteLine($"Tariff: {pawnShop.DefineTariff(customer)}");
                 Console.WriteLine("Balance: " + Program.CutZeros(customer.Balance) + " hrn");
                 Console.ForegroundColor = ConsoleColor.DarkGreen;
                 Console.WriteLine("\nCustomer`s deals: ");
-                Console.WriteLine($"{"ID",-10}{"Thing",-55}{"Start time",-11}{"Term(w/o fine)",-15}{"Status",-10}");
+                Console.WriteLine($"{"ID",-10}{"Thing",-60}{"Start time",-11}{"Term(w/o fine)",-15}{"Status",-10}");
                 Console.ForegroundColor = ConsoleColor.Green;
                 IReadOnlyList<Deal> allDeals = customer.Deals.GetFullList();
                 foreach (Deal deal in allDeals)
-                    Console.WriteLine($"{deal.ID,-10}{deal.Thing,-55}{deal.StartTime.Day + "." + deal.StartTime.Month + "." + deal.StartTime.Year,-11}{deal.Term,-15}{(deal.IsClosed ? "Closed" : "Not closed"),-10}");
+                    Console.WriteLine($"{deal.ID,-10}{deal.Thing,-60}{deal.StartTime.Day + "." + deal.StartTime.Month + "." + deal.StartTime.Year,-11}{deal.Term,-15}{(deal.IsClosed ? "Closed" : "Not closed"),-10}");
                 Console.ForegroundColor = ConsoleColor.DarkGreen;
                 Console.WriteLine("\nPress [ENTER] to go back to menu");
                 Console.ReadLine();
@@ -296,7 +300,7 @@ namespace PawnShopConsoleApp
             };
             if (id.Trim() != "0")
             {
-                PrintCustomer(customer);
+                PrintCustomer(pawnShop, customer);
             }
             else
             {

@@ -145,18 +145,78 @@ namespace PawnShopConsoleApp
                 switch (choice)
                 {
                     case 1:
-                        MainMenu.PrintCustomer(customer);
+                        MainMenu.PrintCustomer(pawnShop, customer);
                         break;
                     case 2:
                         Thing thing = EnterThing();
                         EstimateThing(pawnShop, customer, thing);
                         Console.ForegroundColor = ConsoleColor.DarkGreen;
-                        Console.WriteLine("\nPress [ENTER] to go back to main menu");
+                        Console.WriteLine("\nPress [ENTER] to go back to customer`s menu");
                         Console.ReadLine();
                         Console.ResetColor();
                         break;
                     case 3:
-
+                        if (!customer.IsOnDeal())
+                        {
+                            thing = EnterThing();
+                            decimal price = EstimateThing(pawnShop, customer, thing);
+                            Console.ForegroundColor = ConsoleColor.DarkGreen;
+                            if (price != 0)
+                            {
+                                string entered;
+                                Console.WriteLine("Do you really want to bail this thing?[Y/n]");
+                                entered = Console.ReadLine().Trim() + " ";
+                                while (entered.ToLower()[0] != 'n' && entered.ToLower()[0] != 'y')
+                                {
+                                    Console.WriteLine("Error. Please, enter Y on n once more");
+                                    Console.WriteLine("Do you really want to bail this thing?[Y/n]");
+                                    entered = Console.ReadLine().Trim() + " ";
+                                }
+                                if (entered.ToLower()[0] == 'y')
+                                {
+                                    price = BailThing(pawnShop, customer, thing);
+                                    if (price != 0)
+                                    {
+                                        Console.ForegroundColor = ConsoleColor.Green;
+                                        Console.WriteLine("\nCongratulations!");
+                                        Console.WriteLine($"Dear customer, you got {Program.CutZeros(price)} hrn from this deal");
+                                        Console.ForegroundColor = ConsoleColor.DarkGreen;
+                                    }
+                                    Console.WriteLine("\nPress [ENTER] to go back to customer`s menu");
+                                    Console.ReadLine();
+                                    Console.ResetColor();
+                                }
+                            }
+                            else
+                            {
+                                if (thing != null)
+                                {
+                                    Console.ForegroundColor = ConsoleColor.DarkGreen;
+                                    Console.WriteLine("\nDenied.");
+                                    Console.WriteLine("Unfortunately, we cannot buy your thing because it is too cheap now or error occured");
+                                    Console.WriteLine("\nPress [ENTER] to go back to customer`s menu");
+                                    Console.ReadLine();
+                                    Console.ResetColor();
+                                }
+                                else
+                                {
+                                    Console.ForegroundColor = ConsoleColor.DarkGreen;
+                                    Console.WriteLine("\nPress [ENTER] to go back to customer`s menu");
+                                    Console.ReadLine();
+                                    Console.ResetColor();
+                                }
+                            }
+                        }
+                        else
+                        {
+                            Console.Clear();
+                            Program.PrintHeader();
+                            Console.ForegroundColor = ConsoleColor.DarkGreen;
+                            Console.WriteLine("Unfortunately, you already have a hanging deal");
+                            Console.WriteLine("\nPress [ENTER] to go back to customer`s menu");
+                            Console.ReadLine();
+                            Console.ResetColor();
+                        }
                         break;
                     case 4:
                         if (customer.IsOnDeal())
@@ -189,8 +249,12 @@ namespace PawnShopConsoleApp
             {
                 price = pawnShop.EstimateThing(customer, thing);
                 Console.ForegroundColor = ConsoleColor.Green;
-                Console.WriteLine($"\nYou thing was estimated as {Program.CutZeros(price)}");
-                Console.ForegroundColor = ConsoleColor.DarkGreen;
+                Console.WriteLine($"\nYour tariff: {pawnShop.DefineTariff(customer)}");
+                if (pawnShop.DefineTariff(customer) == Tariff.Standard)
+                    Console.WriteLine($"To get a {Tariff.Preferential} tariff, you should have at least 6 deals and your successful/unsuccessful coefficient should be at least 1.5 or you should have 0 unsucessful deals");
+                else if (pawnShop.DefineTariff(customer) == Tariff.LowPenalty)
+                    Console.WriteLine($"To get a {Tariff.Standard} tariff, your successful/unsuccessful coefficient should be bigger than 0.5");
+                Console.WriteLine($"\nYou thing was estimated as {Program.CutZeros(price)} hrn");
             }
             else
             {
@@ -517,9 +581,74 @@ namespace PawnShopConsoleApp
                         break;
                 }
                 if (thing != null)
-                    Console.WriteLine($"Your thing: {thing}");
+                    Console.WriteLine($"\nYour thing: {thing}");
             }
             return thing;
+        }
+        public static decimal BailThing(PawnShop pawnShop, Customer customer, Thing thing)
+        {
+            const int minTerm = 5;
+            int maxTerm = pawnShop.MaxTerm;
+            int term;
+            bool parsed;
+            bool reenter;
+            int choice;
+            bool isImmediateSaleAble = thing is Car || thing is ElectronicThing || thing is Jewel;
+            do
+            {
+                reenter = false;
+                Console.WriteLine("\nChoose the term for your deal: ");
+                Console.WriteLine($"The minimal term is {minTerm}");
+                Console.WriteLine($"The maximal term is {maxTerm}");
+                if (isImmediateSaleAble)
+                    Console.WriteLine("For your thing, the immediate sale is able. Just enter 0 for immediate sale");
+                Console.WriteLine("Enter the term:");
+                parsed = int.TryParse(Console.ReadLine(), out term);
+                while (!parsed || (term < minTerm && !(isImmediateSaleAble && term == 0)) || term > maxTerm)
+                {
+                    Console.WriteLine("You entered the wrong term");
+                    Console.WriteLine("Enter the term once more: ");
+                    parsed = int.TryParse(Console.ReadLine(), out term);
+                }
+                if (term != 0)
+                {
+                    Console.WriteLine($"The redemption will cost you {Program.CutZeros(pawnShop.GetRedemptionPrice(customer, thing, term))} hrn");
+                    Console.WriteLine("Do you want to continue? ");
+                    Console.WriteLine("0. Reenter the term");
+                    Console.WriteLine("1. Continue");
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.WriteLine("2. Quit");
+                    Console.ForegroundColor = ConsoleColor.DarkGreen;
+                    const int minPoint = 0;
+                    const int maxPoint = 2;
+                    Console.WriteLine($"\nEnter the number {minPoint} - {maxPoint}: ");
+                    parsed = int.TryParse(Console.ReadLine(), out choice);
+                    while (!parsed || choice < minPoint || choice > maxPoint)
+                    {
+                        Console.WriteLine($"Error: you entered not a number or number was smaller than {minPoint} or bigger than {maxPoint}.");
+                        Console.WriteLine($"Help - {maxPoint - 1}");
+                        parsed = int.TryParse(Console.ReadLine(), out choice);
+                    }
+                    if (choice == 0)
+                        reenter = true;
+                }
+                else
+                {
+                    choice = 1;
+                }
+            } while (reenter);
+            if (choice == 2)
+                return 0;
+            try
+            {
+                return pawnShop.BailThing(customer, thing, term);
+            }
+            catch (ArgumentException exc)
+            {
+                Console.WriteLine("Denied. Unfortunately, we are not able to handle this deal");
+                Console.WriteLine(exc.Message);
+                return 0;
+            }
         }
         public static void PrintNoHangingDealsError()
         {
