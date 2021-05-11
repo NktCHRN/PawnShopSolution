@@ -18,7 +18,7 @@ namespace PawnShopLib
         private readonly List<Deal> _deals;
         private int _position = -1;
         private decimal _perDayCoefficient;
-        public decimal PerDayCoefficient
+        internal decimal PerDayCoefficient
         {
             set
             {

@@ -664,7 +664,7 @@ namespace PawnShopConsoleApp
             if (customer.IsOnDeal())
             {
                 Console.WriteLine($"Your current balance: {Program.CutZeros(customer.Balance)} hrn");
-                Console.WriteLine($"Redemption of {customer.GetLastDeal().Thing} will cost you {Program.CutZeros(customer.GetLastDeal().RedemptionPrice)} hrn");
+                Console.WriteLine($"Redemption of {customer.GetLastDeal().Thing} will cost you {Program.CutZeros(customer.GetLastDeal().RedemptionPrice + customer.GetLastDeal().Penalty)} hrn");
                 string entered;
                 Console.WriteLine("\nDo you want to redeem it? [Y/n]");
                 entered = Console.ReadLine().Trim() + " ";
@@ -747,7 +747,10 @@ namespace PawnShopConsoleApp
                     Console.WriteLine("Enter the term once more: ");
                     parsed = int.TryParse(Console.ReadLine(), out term);
                 }
-                Console.WriteLine($"\nYour new redemption price will be {Program.CutZeros(customer.GetLastDeal().RedemptionPrice + customer.GetLastDeal().Price * pawnShop.PerDayCoefficient * term)} hrn");
+                if (customer.GetLastDeal().Penalty > 0 && customer.GetLastDeal().Term + term < customer.GetLastDeal().Term + customer.GetLastDeal().PenaltyMaxTerm)
+                    Console.WriteLine($"\nYour new redemption price will be {Program.CutZeros(customer.GetLastDeal().RedemptionPrice + customer.GetLastDeal().Price * pawnShop.PerDayCoefficient * term + customer.GetLastDeal().CalculatePenalty(pawnShop.PerDayCoefficient, term))} hrn");
+                else
+                    Console.WriteLine($"\nYour new redemption price will be {Program.CutZeros(customer.GetLastDeal().RedemptionPrice + customer.GetLastDeal().Price * pawnShop.PerDayCoefficient * term + customer.GetLastDeal().Penalty)} hrn");
                 string entered;
                 Console.WriteLine("\nDo you really want to prolong the deal? [Y/n]");
                 entered = Console.ReadLine().Trim() + " ";

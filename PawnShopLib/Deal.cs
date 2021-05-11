@@ -172,7 +172,7 @@ namespace PawnShopLib
         {
             IsOnSale = false;
         }
-        private decimal CalculatePenalty(decimal perDayCoefficient, int days)
+        public decimal CalculatePenalty(decimal perDayCoefficient, int days)
         {
             if (days >= 0)
                 return days * perDayCoefficient * 2m * Price;
