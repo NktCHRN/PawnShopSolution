@@ -55,7 +55,7 @@ namespace PawnShopLib
                         age--;
                     if (age < 0)
                         age = 0;
-                    throw new TooYoungPersonException(18, age);
+                    throw new TooYoungException(18, age);
                 }
             _customersQuantity++;
             ID = String.Format("C{0:00000000}", _customersQuantity);

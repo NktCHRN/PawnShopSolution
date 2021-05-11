@@ -59,7 +59,7 @@
     <Compile Include="Things\ElectronicThing.cs" />
     <Compile Include="Things\Jewel.cs" />
     <Compile Include="Things\Shares.cs" />
-    <Compile Include="Exceptions\TooYoungPersonException.cs" />
+    <Compile Include="Exceptions\TooYoungException.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

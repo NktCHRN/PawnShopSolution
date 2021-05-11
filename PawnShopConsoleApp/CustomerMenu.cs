@@ -98,7 +98,7 @@ namespace PawnShopConsoleApp
                     Console.WriteLine("Please, enter the date once more");
                     parsed = false;
                 }
-                catch (TooYoungPersonException exc)
+                catch (TooYoungException exc)
                 {
                     Console.WriteLine("Registration denied: you are not mature enough");
                     Console.WriteLine(exc.Message);
