@@ -77,7 +77,7 @@ namespace PawnShopLib.Things
                     jewelDescription += $"Silver ingot: {SilverWeight:F3} g";
                     break;
                 case JewelTypes.Diamond:
-                    jewelDescription += $"{Type.ToString()}: {DiamondWeight:F3} g";
+                    jewelDescription += $"{Type}: {DiamondWeight:F3} g";
                     break;
                 case JewelTypes.AnotherGem:
                     jewelDescription += $"Precious gem: {OtherGemsWeight:F3} g";
@@ -85,13 +85,13 @@ namespace PawnShopLib.Things
                 default:
                     jewelDescription += "Jewel: ";
                     if (GoldWeight > 0)
-                        jewelDescription += $"gold {GoldWeight:F1}g; ";
+                        jewelDescription += $"gold {GoldWeight:F3}g; ";
                     if (SilverWeight > 0)
-                        jewelDescription += $"silv {SilverWeight:F1}g; ";
+                        jewelDescription += $"silv {SilverWeight:F3}g; ";
                     if (DiamondWeight > 0)
-                        jewelDescription += $"diam {DiamondWeight:F1}g; ";
+                        jewelDescription += $"diam {DiamondWeight:F3}g; ";
                     if (OtherGemsWeight > 0)
-                        jewelDescription += $"gems {OtherGemsWeight:F1}g; ";
+                        jewelDescription += $"gems {OtherGemsWeight:F3}g; ";
                     jewelDescription = jewelDescription.Remove(jewelDescription.Length - 2, 2);
                     break;
             }

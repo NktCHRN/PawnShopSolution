@@ -23,12 +23,16 @@ namespace PawnShopLib
                 price = EvaluateShares(share);
             else
                 price = 0;
-            price *= (decimal)tariff / (decimal)100;
+            price *= (decimal)tariff / 100m;
             return price;
         }
         private static decimal EvaluateCar(Things.Car thing)
         {
-            decimal cost = thing.MarketPrice * 0.8m - thing.MarketPrice * (decimal)thing.Mileage / 1000000m;
+            decimal cost;
+            if ((decimal)thing.Mileage / 1000000m >= (decimal)(DateTime.Now.Year - thing.Year) / 100m)
+                cost = thing.MarketPrice * 0.8m - thing.MarketPrice * (decimal)thing.Mileage / 1000000m;
+            else
+                cost = thing.MarketPrice * 0.8m - thing.MarketPrice * (decimal)(DateTime.Now.Year - thing.Year) / 100m;
             if (cost > 0m)
                 return cost;
             else

@@ -288,7 +288,7 @@ namespace PawnShopLib
             int year = 1;
             int month = 1;
             days -= 366;
-            for (int i = 1; days > (DateTime.IsLeapYear(i + 1) ? 366 : 365); i++)
+            for (int i = 1; days > (DateTime.IsLeapYear(i) ? 366 : 365); i++)
             {
                 if (DateTime.IsLeapYear(i))
                     days -= 366;
@@ -296,7 +296,7 @@ namespace PawnShopLib
                     days -= 365;
                 year++;
             }
-            for (int i = 1; days > DateTime.DaysInMonth(year, i + 1); i++)
+            for (int i = 1; days > DateTime.DaysInMonth(year, i); i++)
             {
                 days -= DateTime.DaysInMonth(year, i);
                 month++;

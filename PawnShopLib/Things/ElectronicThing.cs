@@ -17,7 +17,7 @@ namespace PawnShopLib.Things
     public class ElectronicThing : Thing
     {
         public ElectronicTypes Type { get; private set; }
-        public ElectronicThing(double weight, int year, ElectronicTypes type) : base(weight, year)
+        public ElectronicThing(int year, double weight, ElectronicTypes type) : base(weight, year)
         {
             Type = type;
         }

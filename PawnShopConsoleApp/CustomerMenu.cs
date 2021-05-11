@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using PawnShopLib;
+using PawnShopLib.Things;
 
 namespace PawnShopConsoleApp
 {
@@ -134,7 +135,7 @@ namespace PawnShopConsoleApp
             do
             {
                 Console.WriteLine($"\nEnter the number {minPoint} - {maxPoint}: ");
-                parsed = int.TryParse(Console.ReadLine(), out choice);      //пытаемся спарсить введенное в int
+                parsed = int.TryParse(Console.ReadLine(), out choice);
                 if (!parsed || choice < minPoint || choice > maxPoint)
                 {
                     Console.WriteLine($"Error: you entered not a number or number was smaller than {minPoint} or bigger than {maxPoint}.");
@@ -147,7 +148,12 @@ namespace PawnShopConsoleApp
                         MainMenu.PrintCustomer(customer);
                         break;
                     case 2:
-
+                        Thing thing = EnterThing();
+                        EstimateThing(pawnShop, customer, thing);
+                        Console.ForegroundColor = ConsoleColor.DarkGreen;
+                        Console.WriteLine("\nPress [ENTER] to go back to main menu");
+                        Console.ReadLine();
+                        Console.ResetColor();
                         break;
                     case 3:
 
@@ -175,6 +181,345 @@ namespace PawnShopConsoleApp
                     PrintHelp();
                 }
             } while (choice != maxPoint);
+        }
+        public static decimal EstimateThing(PawnShop pawnShop, Customer customer, Thing thing)
+        {
+            decimal price;
+            if (thing != null)
+            {
+                price = pawnShop.EstimateThing(customer, thing);
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.WriteLine($"\nYou thing was estimated as {Program.CutZeros(price)}");
+                Console.ForegroundColor = ConsoleColor.DarkGreen;
+            }
+            else
+            {
+                price = 0;
+            }
+            Console.ResetColor();
+            return price;
+        }
+        public static Thing EnterThing()
+        {
+            Console.Clear();
+            Program.PrintHeader();
+            Console.ForegroundColor = ConsoleColor.DarkGreen;
+            bool parsed;
+            int choice;
+            int minPoint = 0;
+            int maxPoint = 5;
+            Thing thing = null;
+            Console.WriteLine("Choose the type of thing: ");
+            Console.WriteLine("[0 - go back to customer`s menu]");
+            Console.WriteLine("1. Antique thing");
+            Console.WriteLine("2. Car");
+            Console.WriteLine("3. Electronic thing");
+            Console.WriteLine("4. Jewel");
+            Console.WriteLine("5. Shares");
+            Console.WriteLine($"Enter {minPoint} - {maxPoint}: ");
+            parsed = int.TryParse(Console.ReadLine(), out choice);
+            while (!parsed || choice < minPoint || choice > maxPoint)
+            {
+                Console.WriteLine("You entered the wrong number");
+                Console.WriteLine($"Enter {minPoint} - {maxPoint} once more [0, if you want to go back to customer`s menu]: ");
+                parsed = int.TryParse(Console.ReadLine(), out choice);
+            }
+            if (choice != 0)
+            {
+                int year;
+                if (choice != 1)
+                {
+                    Console.WriteLine("\nEnter the year you bought it: ");
+                    parsed = int.TryParse(Console.ReadLine(), out year);
+                    while (!parsed || year > DateTime.Now.Year || year < 0)
+                    {
+                        Console.WriteLine("You entered the wrong year");
+                        Console.WriteLine("Enter the year you bought thing once more: ");
+                        parsed = int.TryParse(Console.ReadLine(), out year);
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("\nEnter the year of the antique thing: ");
+                    parsed = int.TryParse(Console.ReadLine(), out year);
+                    while (!parsed || year > DateTime.Now.Year)
+                    {
+                        Console.WriteLine("You entered the wrong year");
+                        Console.WriteLine("Enter the year year of the antique thing once more: ");
+                        parsed = int.TryParse(Console.ReadLine(), out year);
+                    }
+                }
+                switch (choice)
+                {
+                    case 1:
+                        double weight;
+                        Console.WriteLine("\nEnter the weight:");
+                        parsed = double.TryParse(Console.ReadLine().Replace('.', ','), out weight);
+                        while (!parsed || weight <= 0)
+                        {
+                            Console.WriteLine("You entered the wrong weight");
+                            Console.WriteLine("Enter the weight once more:");
+                            parsed = double.TryParse(Console.ReadLine().Replace('.', ','), out weight);
+                        }
+                        AntiqueTypes antiqueType;
+                        int typeChoice;
+                        minPoint = 1;
+                        maxPoint = 5;
+                        Console.WriteLine("\nChoose the type of antique thing: ");
+                        Console.WriteLine("1. Antique jewel");
+                        Console.WriteLine("2. Icon");
+                        Console.WriteLine("3. Medal");
+                        Console.WriteLine("4. Painting");
+                        Console.WriteLine("5. Watches");
+                        Console.WriteLine($"Enter {minPoint} - {maxPoint}: ");
+                        parsed = int.TryParse(Console.ReadLine(), out typeChoice);
+                        while (!parsed || typeChoice < minPoint || typeChoice > maxPoint)
+                        {
+                            Console.WriteLine("You entered the wrong number");
+                            Console.WriteLine($"Enter {minPoint} - {maxPoint} once more: ");
+                            parsed = int.TryParse(Console.ReadLine(), out typeChoice);
+                        }
+                        switch (typeChoice)
+                        {
+                            case 1:
+                                antiqueType = AntiqueTypes.AntiqueJewel;
+                                break;
+                            case 2:
+                                antiqueType = AntiqueTypes.Icon;
+                                break;
+                            case 3:
+                                antiqueType = AntiqueTypes.Medal;
+                                break;
+                            case 4:
+                                antiqueType = AntiqueTypes.Painting;
+                                break;
+                            default:
+                                antiqueType = AntiqueTypes.Watches;
+                                break;
+                        }
+                        decimal estimatedPrice;
+                        Console.WriteLine("\nAntique things should be estimated by an expert beforehand");
+                        Console.WriteLine("Enter the expert estimated price:");
+                        parsed = decimal.TryParse(Console.ReadLine().Replace('.', ','), out estimatedPrice);
+                        while (!parsed || estimatedPrice <= 0)
+                        {
+                            Console.WriteLine("You entered the wrong expert estimated price");
+                            Console.WriteLine("Enter the expert estimated price once more:");
+                            parsed = decimal.TryParse(Console.ReadLine().Replace('.', ','), out estimatedPrice);
+                        }
+                        try
+                        {
+                            thing = new AntiqueThing(year, weight, antiqueType, estimatedPrice);
+                        }
+                        catch (TooYoungException exc)
+                        {
+                            Console.WriteLine("\nFailed to estimate the thing because it is not an antique one");
+                            Console.WriteLine(exc.Message);
+                        }
+                        break;
+                    case 2:
+                        Console.WriteLine("\nEnter the weight:");
+                        parsed = double.TryParse(Console.ReadLine().Replace('.', ','), out weight);
+                        while (!parsed || weight <= 0)
+                        {
+                            Console.WriteLine("You entered the wrong weight");
+                            Console.WriteLine("Enter the weight once more:");
+                            parsed = double.TryParse(Console.ReadLine().Replace('.', ','), out weight);
+                        }
+                        decimal marketPrice;
+                        Console.WriteLine("\nEnter the price you bought the car:");
+                        parsed = decimal.TryParse(Console.ReadLine().Replace('.', ','), out marketPrice);
+                        while (!parsed || marketPrice < 0)
+                        {
+                            Console.WriteLine("You entered the wrong price");
+                            Console.WriteLine("Enter the price you bought the car once more:");
+                            parsed = decimal.TryParse(Console.ReadLine().Replace('.', ','), out marketPrice);
+                        }
+                        int mileage;
+                        Console.WriteLine("\nEnter the mileage: ");
+                        parsed = int.TryParse(Console.ReadLine(), out mileage);
+                        while (!parsed || mileage < 0)
+                        {
+                            Console.WriteLine("You entered the wrong mileage");
+                            Console.WriteLine("Enter the mileage once more: ");
+                            parsed = int.TryParse(Console.ReadLine(), out mileage);
+                        }
+                        string brandName;
+                        Console.WriteLine("Enter the brand name: ");
+                        brandName = Console.ReadLine();
+                        while (string.IsNullOrWhiteSpace(brandName))
+                        {
+                            Console.WriteLine("Brand name can`t be empty");
+                            Console.WriteLine("Enter the brand name once more: ");
+                            brandName = Console.ReadLine();
+                        }
+                        thing = new Car(year, weight, marketPrice, mileage, brandName);
+                        break;
+                    case 3:
+                        Console.WriteLine("\nEnter the weight:");
+                        parsed = double.TryParse(Console.ReadLine().Replace('.', ','), out weight);
+                        while (!parsed || weight <= 0)
+                        {
+                            Console.WriteLine("You entered the wrong weight");
+                            Console.WriteLine("Enter the weight once more:");
+                            parsed = double.TryParse(Console.ReadLine().Replace('.', ','), out weight);
+                        }
+                        minPoint = 1;
+                        maxPoint = 5;
+                        Console.WriteLine("\nChoose the type of electronic thing: ");
+                        Console.WriteLine("1. Camera");
+                        Console.WriteLine("2. Computer");
+                        Console.WriteLine("3. Fridge");
+                        Console.WriteLine("4. Phone");
+                        Console.WriteLine("5. Washer");
+                        Console.WriteLine($"Enter {minPoint} - {maxPoint}: ");
+                        parsed = int.TryParse(Console.ReadLine(), out typeChoice);
+                        while (!parsed || typeChoice < minPoint || typeChoice > maxPoint)
+                        {
+                            Console.WriteLine("You entered the wrong number");
+                            Console.WriteLine($"Enter {minPoint} - {maxPoint} once more: ");
+                            parsed = int.TryParse(Console.ReadLine(), out typeChoice);
+                        }
+                        ElectronicTypes electronicType;
+                        switch (typeChoice)
+                        {
+                            case 1:
+                                electronicType = ElectronicTypes.Camera;
+                                break;
+                            case 2:
+                                electronicType = ElectronicTypes.Computer;
+                                break;
+                            case 3:
+                                electronicType = ElectronicTypes.Fridge;
+                                break;
+                            case 4:
+                                electronicType = ElectronicTypes.Phone;
+                                break;
+                            default:
+                                electronicType = ElectronicTypes.Washer;
+                                break;
+                        }
+                        thing = new ElectronicThing(year, weight, electronicType);
+                        break;
+                    case 4:
+                        minPoint = 1;
+                        maxPoint = 5;
+                        Console.WriteLine("\nChoose the type of jewel: ");
+                        Console.WriteLine("1. Complicated jewel");
+                        Console.WriteLine("2. Gold ingot");
+                        Console.WriteLine("3. Silver ingot");
+                        Console.WriteLine("4. Diamond");
+                        Console.WriteLine("5. Another precious gem");
+                        Console.WriteLine($"Enter {minPoint} - {maxPoint}: ");
+                        parsed = int.TryParse(Console.ReadLine(), out typeChoice);
+                        while (!parsed || typeChoice < minPoint || typeChoice > maxPoint)
+                        {
+                            Console.WriteLine("You entered the wrong number");
+                            Console.WriteLine($"Enter {minPoint} - {maxPoint} once more: ");
+                            parsed = int.TryParse(Console.ReadLine(), out typeChoice);
+                        }
+                        JewelTypes jewelType;
+                        switch (typeChoice)
+                        {
+                            case 1:
+                                jewelType = JewelTypes.ComplicatedJewel;
+                                break;
+                            case 2:
+                                jewelType = JewelTypes.GoldIngot;
+                                break;
+                            case 3:
+                                jewelType = JewelTypes.SilverIngot;
+                                break;
+                            case 4:
+                                jewelType = JewelTypes.Diamond;
+                                break;
+                            default:
+                                jewelType = JewelTypes.AnotherGem;
+                                break;
+                        }
+                        if (jewelType == JewelTypes.ComplicatedJewel)
+                        {
+                            double goldWeight, silverWeight, diamondWeight, otherGemsWeight;
+                            Console.WriteLine("\nEnter the gold weight:");
+                            parsed = double.TryParse(Console.ReadLine().Replace('.', ','), out goldWeight);
+                            while (!parsed || goldWeight < 0)
+                            {
+                                Console.WriteLine("You entered the wrong weight");
+                                Console.WriteLine("Enter the gold weight once more:");
+                                parsed = double.TryParse(Console.ReadLine().Replace('.', ','), out goldWeight);
+                            }
+                            Console.WriteLine("\nEnter the silver weight:");
+                            parsed = double.TryParse(Console.ReadLine().Replace('.', ','), out silverWeight);
+                            while (!parsed || silverWeight < 0)
+                            {
+                                Console.WriteLine("You entered the wrong weight");
+                                Console.WriteLine("Enter the silver weight once more:");
+                                parsed = double.TryParse(Console.ReadLine().Replace('.', ','), out silverWeight);
+                            }
+                            Console.WriteLine("\nEnter the diamond weight:");
+                            parsed = double.TryParse(Console.ReadLine().Replace('.', ','), out diamondWeight);
+                            while (!parsed || diamondWeight < 0)
+                            {
+                                Console.WriteLine("You entered the wrong weight");
+                                Console.WriteLine("Enter the diamond weight once more:");
+                                parsed = double.TryParse(Console.ReadLine().Replace('.', ','), out diamondWeight);
+                            }
+                            Console.WriteLine("\nEnter the other gems weight:");
+                            parsed = double.TryParse(Console.ReadLine().Replace('.', ','), out otherGemsWeight);
+                            while (!parsed || otherGemsWeight < 0)
+                            {
+                                Console.WriteLine("You entered the wrong weight");
+                                Console.WriteLine("Enter the other gems weight once more:");
+                                parsed = double.TryParse(Console.ReadLine().Replace('.', ','), out otherGemsWeight);
+                            }
+                            try
+                            {
+                                thing = new Jewel(year, goldWeight, silverWeight, diamondWeight, otherGemsWeight);
+                            }
+                            catch (ArgumentOutOfRangeException exc)
+                            {
+                                Console.WriteLine("\nFailed to estimate the thing");
+                                Console.WriteLine("The whole " + exc.Message.ToLower().Remove(exc.Message.LastIndexOf('\n')));//TEST!!!
+                            }
+                        }
+                        else
+                        {
+                            Console.WriteLine("\nEnter the weight:");
+                            parsed = double.TryParse(Console.ReadLine().Replace('.', ','), out weight);
+                            while (!parsed || weight <= 0)
+                            {
+                                Console.WriteLine("You entered the wrong weight");
+                                Console.WriteLine("Enter the weight once more:");
+                                parsed = double.TryParse(Console.ReadLine().Replace('.', ','), out weight);
+                            }
+                            thing = new Jewel(year, weight, jewelType);
+                        }
+                        break;
+                    case 5:
+                        Console.WriteLine("\nEnter the market price of the shares:");
+                        parsed = decimal.TryParse(Console.ReadLine().Replace('.', ','), out marketPrice);
+                        while (!parsed || marketPrice < 0)
+                        {
+                            Console.WriteLine("You entered the wrong price");
+                            Console.WriteLine("Enter the market price of the shares once more:");
+                            parsed = decimal.TryParse(Console.ReadLine().Replace('.', ','), out marketPrice);
+                        }
+                        string companyName;
+                        Console.WriteLine("Enter the company name: ");
+                        companyName = Console.ReadLine();
+                        while (string.IsNullOrWhiteSpace(companyName))
+                        {
+                            Console.WriteLine("Company name can`t be empty");
+                            Console.WriteLine("Enter the company name once more: ");
+                            companyName = Console.ReadLine();
+                        }
+                        thing = new Shares(year, marketPrice, companyName);
+                        break;
+                }
+                if (thing != null)
+                    Console.WriteLine($"Your thing: {thing}");
+            }
+            return thing;
         }
         public static void PrintNoHangingDealsError()
         {

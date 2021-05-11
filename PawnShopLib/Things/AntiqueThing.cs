@@ -18,7 +18,7 @@ namespace PawnShopLib.Things
     {
         public AntiqueTypes Type { get; private set; }
         public decimal EstimatedPrice { get; private set; }
-        public AntiqueThing(double weight, int year, AntiqueTypes type, decimal estimatedPrice) : base(weight, year)
+        public AntiqueThing(int year, double weight, AntiqueTypes type, decimal estimatedPrice) : base(weight, year)
         {
             Type = type;
             const int minimalAge = 30;

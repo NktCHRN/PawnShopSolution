@@ -138,11 +138,11 @@ namespace PawnShopConsoleApp
             Program.PrintHeader();
             Console.ForegroundColor = ConsoleColor.DarkGreen;
             Console.WriteLine("Deals: ");
-            Console.WriteLine($"{"ID", -10}{"Full name", -30}{"Thing", -55}{"Start time", -11}{"Term(w/o fine)", -15}{"Status", -10}");
+            Console.WriteLine($"{"ID", -10}{"Full name", -30}{"Thing", -60}{"Start time", -11}{"Term(w/o fine)", -15}{"Status", -10}");
             Console.ForegroundColor = ConsoleColor.Green;
             IReadOnlyList<Deal> allDeals = pawnShop.Deals.GetFullList();
             foreach (Deal deal in allDeals)
-                Console.WriteLine($"{deal.ID, -10}{deal.Customer.GetFullName(), -30}{deal.Thing, -55}{deal.StartTime.Day + "." + deal.StartTime.Month + "." + deal.StartTime.Year, -11}{deal.Term, -15}{(deal.IsClosed ? "Closed" : "Not closed"), -10}");
+                Console.WriteLine($"{deal.ID, -10}{deal.Customer.GetFullName(), -30}{deal.Thing, -60}{deal.StartTime.Day + "." + deal.StartTime.Month + "." + deal.StartTime.Year, -11}{deal.Term, -15}{(deal.IsClosed ? "Closed" : "Not closed"), -10}");
             Console.ForegroundColor = ConsoleColor.DarkGreen;
             Console.WriteLine("\nPress [ENTER] to go back to main menu");
             Console.ReadLine();
