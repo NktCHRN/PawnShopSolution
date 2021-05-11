@@ -11,5 +11,6 @@ namespace PawnShopLib
         public BusyObjectException() : base() { }
         public BusyObjectException(string message) : base(message) { }
         public BusyObjectException(string message, string paramName) : base(message, paramName) { }
+        public BusyObjectException(string message, Exception innerException) : base(message, innerException) { }
     }
 }
