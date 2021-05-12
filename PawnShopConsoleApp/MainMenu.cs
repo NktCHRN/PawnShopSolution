@@ -279,6 +279,8 @@ namespace PawnShopConsoleApp
                 Console.Write($"{deal.ID,-10}{deal.Thing,-60}{deal.StartTime.Day + "." + deal.StartTime.Month + "." + deal.StartTime.Year,-11}{deal.Term,-15}{(deal.IsClosed ? "Closed" : "Not closed"),-11}");
                 if (deal.IsClosed)
                     Console.Write($"{(deal.IsSuccessful ? "Successful" : "Unsuccessful"),-20}");
+                else
+                    Console.Write("Not defined");
                 Console.WriteLine();
             }
                 Console.ForegroundColor = ConsoleColor.DarkGreen;
