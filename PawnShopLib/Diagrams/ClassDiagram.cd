@@ -58,7 +58,7 @@
     </TypeIdentifier>
   </Class>
   <Class Name="PawnShopLib.Buyer">
-    <Position X="21.5" Y="9.25" Width="1.5" />
+    <Position X="21.5" Y="9.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAoAAAAAAAAAAAAAAAAAABAAAAA=</HashCode>
       <FileName>Buyer.cs</FileName>
