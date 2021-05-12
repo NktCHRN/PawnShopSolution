@@ -271,11 +271,16 @@ namespace PawnShopConsoleApp
                 Console.WriteLine("Balance: " + Program.CutZeros(customer.Balance) + " hrn");
                 Console.ForegroundColor = ConsoleColor.DarkGreen;
                 Console.WriteLine("\nCustomer`s deals: ");
-                Console.WriteLine($"{"ID",-10}{"Thing",-60}{"Start time",-11}{"Term(w/o fine)",-15}{"Status",-10}");
+                Console.WriteLine($"{"ID",-10}{"Thing",-60}{"Start time",-11}{"Term(w/o fine)",-15}{"Status",-11}{"Is sucessful?", -20}");
                 Console.ForegroundColor = ConsoleColor.Green;
                 IReadOnlyList<Deal> allDeals = customer.Deals.GetFullList();
-                foreach (Deal deal in allDeals)
-                    Console.WriteLine($"{deal.ID,-10}{deal.Thing,-60}{deal.StartTime.Day + "." + deal.StartTime.Month + "." + deal.StartTime.Year,-11}{deal.Term,-15}{(deal.IsClosed ? "Closed" : "Not closed"),-10}");
+            foreach (Deal deal in allDeals)
+            {
+                Console.Write($"{deal.ID,-10}{deal.Thing,-60}{deal.StartTime.Day + "." + deal.StartTime.Month + "." + deal.StartTime.Year,-11}{deal.Term,-15}{(deal.IsClosed ? "Closed" : "Not closed"),-11}");
+                if (deal.IsClosed)
+                    Console.Write($"{(deal.IsSuccessful ? "Successful" : "Unsuccessful"),-20}");
+                Console.WriteLine();
+            }
                 Console.ForegroundColor = ConsoleColor.DarkGreen;
                 Console.WriteLine("\nPress [ENTER] to go back to menu");
                 Console.ReadLine();

@@ -86,6 +86,8 @@ namespace PawnShopLib
                 throw new ArgumentOutOfRangeException(nameof(price), "Price cannot be negative or equal 0");
             RedemptionPrice = price + price * perDayCoefficient * term;
             MarketPrice = price + price * perDayCoefficient * (maxTerm + _minTerm);
+            if (tariff != Tariff.Standard)
+                MarketPrice /= (decimal)tariff / 100.0m;
             if (RedemptionPrice > MarketPrice)
                 MarketPrice = RedemptionPrice;
             StartTime = DateTime.Now;
@@ -147,7 +149,7 @@ namespace PawnShopLib
         }
         internal bool Prolong(int additionalTerm, decimal perDayCoefficient)
         {
-            if (additionalTerm > 0 && RedemptionPrice + Price * perDayCoefficient * additionalTerm <= MarketPrice)
+            if (additionalTerm > 0 && additionalTerm <= GetMaxProlongationTerm())
             {
                 if (Penalty > 0 && additionalTerm < PawnShop.DateTimeToDays(DateTime.Now) - PawnShop.DateTimeToDays(StartTime) - Term)
                 {

@@ -159,7 +159,7 @@ namespace PawnShopConsoleApp
             for (int i = 0; i < boughtThings.Count(); i++)
                 Console.WriteLine($"{i + 1}. {boughtThings[i]}");
             Console.ForegroundColor = ConsoleColor.DarkGreen;
-            Console.WriteLine($"\nMoney left: {Program.CutZeros(buyer.Balance)} hrn");
+            Console.WriteLine($"\nMoney returned to you: {Program.CutZeros(buyer.Balance)} hrn");
             Console.WriteLine("\nPress [ENTER] to go back to main menu");
             Console.ReadLine();
             Console.ResetColor();

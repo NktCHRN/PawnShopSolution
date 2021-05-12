@@ -17,7 +17,7 @@ namespace PawnShopConsoleApp
             Console.ForegroundColor = ConsoleColor.White;
             string id;
             Customer customer;
-            Console.WriteLine("Are you already a cutomer? ");
+            Console.WriteLine("Are you already a customer? ");
             Console.WriteLine("If yes, enter your ID (ex. C00000001)");
             Console.WriteLine("Otherwise, enter 0");
             id = Console.ReadLine();
@@ -257,7 +257,7 @@ namespace PawnShopConsoleApp
                 Console.ForegroundColor = ConsoleColor.Green;
                 Console.WriteLine($"\nYour tariff: {pawnShop.DefineTariff(customer)}");
                 if (pawnShop.DefineTariff(customer) == Tariff.Standard)
-                    Console.WriteLine($"To get a {Tariff.Preferential} tariff, you should have at least 6 deals and your successful/unsuccessful coefficient should be at least 1.5 or you should have 0 unsucessful deals");
+                    Console.WriteLine($"To get a {Tariff.Preferential} tariff, you should have at least 6 deals and your successful/unsuccessful coefficient\nshould be at least 1.5 or you should have 0 unsucessful deals");
                 else if (pawnShop.DefineTariff(customer) == Tariff.LowPenalty)
                     Console.WriteLine($"To get a {Tariff.Standard} tariff, your successful/unsuccessful coefficient should be bigger than 0.5");
                 Console.WriteLine($"\nYou thing was estimated as {Program.CutZeros(price)} hrn");
@@ -397,12 +397,12 @@ namespace PawnShopConsoleApp
                             parsed = double.TryParse(Console.ReadLine().Replace('.', ','), out weight);
                         }
                         decimal marketPrice;
-                        Console.WriteLine("\nEnter the price you bought the car:");
+                        Console.WriteLine("\nEnter the average price this car costs now:");
                         parsed = decimal.TryParse(Console.ReadLine().Replace('.', ','), out marketPrice);
                         while (!parsed || marketPrice < 0)
                         {
                             Console.WriteLine("You entered the wrong price");
-                            Console.WriteLine("Enter the price you bought the car once more:");
+                            Console.WriteLine("Enter the average price this car costs now once more:");
                             parsed = decimal.TryParse(Console.ReadLine().Replace('.', ','), out marketPrice);
                         }
                         int mileage;
