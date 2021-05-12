@@ -693,11 +693,10 @@ namespace PawnShopConsoleApp
                         parsed = decimal.TryParse(Console.ReadLine().Replace('.', ','), out earned);
                     }
                     customer.EarnMoney(earned);
-                    Thing thing = null;
                     Console.WriteLine();
                     try
                     {
-                        thing = pawnShop.RedeemThing(customer);
+                        Thing thing = pawnShop.RedeemThing(customer);
                         Console.ForegroundColor = ConsoleColor.Green;
                         Console.WriteLine("Congratulations!");
                         Console.WriteLine($"Dear customer, you have just redeemed {thing}");

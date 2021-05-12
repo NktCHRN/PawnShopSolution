@@ -1,0 +1,201 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="PawnShopLib.PawnShop">
+    <Position X="21.5" Y="0.5" Width="1.5" />
+    <AssociationLine Name="_evaluator" Type="PawnShopLib.Evaluator" ManuallyRouted="true" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="23" Y="1" />
+        <Point X="23.124" Y="1.023" />
+        <Point X="24" Y="1.023" />
+      </Path>
+    </AssociationLine>
+    <AssociationLine Name="_customers" Type="PawnShopLib.Customer" ManuallyRouted="true" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="21.5" Y="5.562" />
+        <Point X="21.408" Y="5.591" />
+        <Point X="20.656" Y="5.591" />
+        <Point X="20.656" Y="7" />
+      </Path>
+      <MemberNameLabel ManuallyPlaced="true">
+        <Position X="0.009" Y="0.484" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>GBACRQAAAAAAAABAIAgCAAQAACEABGAQCQIAAAUAAQA=</HashCode>
+      <FileName>PawnShop.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="_evaluator" />
+    </ShowAsAssociation>
+    <ShowAsCollectionAssociation>
+      <Field Name="_customers" />
+      <Field Name="_deals" />
+    </ShowAsCollectionAssociation>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="PawnShopLib.Thing">
+    <Position X="21.5" Y="13.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAABAAAAAAEAAAAAAAAACAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Thing.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="PawnShopLib.StandardEvaluators">
+    <Position X="24" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAIAAAAAEAAAAAAAAACAAAAQAAAAAAAAABAAAA=</HashCode>
+      <FileName>StandardEvaluators.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="PawnShopLib.Buyer">
+    <Position X="21.5" Y="9.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAoAAAAAAAAAAAAAAAAAABAAAAA=</HashCode>
+      <FileName>Buyer.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="PawnShopLib.DealsBase">
+    <Position X="23.75" Y="7" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ECYAQAAAAAAABBAADACAAAAAAAAQACAAIAAAgAAAAAA=</HashCode>
+      <FileName>DealsBase.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsCollectionAssociation>
+      <Field Name="_deals" />
+    </ShowAsCollectionAssociation>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="PawnShopLib.Deal">
+    <Position X="16.75" Y="7" Width="1.5" />
+    <AssociationLine Name="Thing" Type="PawnShopLib.Thing" ManuallyRouted="true" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="18.25" Y="13.188" />
+        <Point X="18.625" Y="13.188" />
+        <Point X="18.625" Y="14" />
+        <Point X="21.5" Y="14" />
+      </Path>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>wAmAQCBBAQAAwBAAAQAAiASCIAAAAEAAMAAAAACQAAA=</HashCode>
+      <FileName>Deal.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Tariff" />
+      <Property Name="Thing" />
+      <Property Name="Customer" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="PawnShopLib.Customer">
+    <Position X="19.25" Y="7" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>EBAACOgAIAEAgQAEAQoAAAAAAAAIAAAIAAAAABAAAAA=</HashCode>
+      <FileName>Customer.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsCollectionAssociation>
+      <Field Name="_deals" />
+    </ShowAsCollectionAssociation>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="PawnShopLib.Things.Shares">
+    <Position X="25" Y="16.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAQAAAAAAAAAAEAAAAAAQAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Things\Shares.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="PawnShopLib.Things.Jewel">
+    <Position X="23.25" Y="16.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>CAAAAAAAAAAAAIAEEAAAAAAAEAAAAAAAAQAAAAAAAAA=</HashCode>
+      <FileName>Things\Jewel.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Type" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="PawnShopLib.Things.ElectronicThing">
+    <Position X="21.5" Y="16.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAQAAAAAAAAA=</HashCode>
+      <FileName>Things\ElectronicThing.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Type" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="PawnShopLib.Things.Car">
+    <Position X="19.75" Y="16.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAIAAAAAAAAAAAAEAAAAAAQAAAAAAABAAAAAAAAAAAA=</HashCode>
+      <FileName>Things\Car.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="PawnShopLib.Things.AntiqueThing">
+    <Position X="18" Y="16.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAQAAACAAAAA=</HashCode>
+      <FileName>Things\AntiqueThing.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Type" />
+    </ShowAsAssociation>
+  </Class>
+  <Interface Name="PawnShopLib.IPawnShop">
+    <Position X="19" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAABQAAAAAAAAAAIAAAAAAAAAEAAAAQAAAAAAAAAAA=</HashCode>
+      <FileName>IPawnShop.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="PawnShopLib.IBuyer">
+    <Position X="21.5" Y="7" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAoAAAAAAAAAAAAAAAAAABAAAAA=</HashCode>
+      <FileName>IBuyer.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Enum Name="PawnShopLib.Tariff">
+    <Position X="14.25" Y="7" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAQAAAAAAAAAAAAAAAYAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Tariff.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="PawnShopLib.DealSortingTypes">
+    <Position X="25.75" Y="7" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>EAAAAAAAAAAAgAAAAAAAAAAAAAAAAAAAAAAAAAQAAAA=</HashCode>
+      <FileName>DealsBase.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="PawnShopLib.Things.JewelTypes">
+    <Position X="23.25" Y="19.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAACAAAAAAAAAAAAAAAAAAAgAAAAAAKAAAACA=</HashCode>
+      <FileName>Things\Jewel.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="PawnShopLib.Things.ElectronicTypes">
+    <Position X="21.5" Y="19.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAAgAAAAAAAAAAAAAAAAAACABAAAAAAIAAAAAA=</HashCode>
+      <FileName>Things\ElectronicThing.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="PawnShopLib.Things.AntiqueTypes">
+    <Position X="18" Y="19.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAQAAAAgEAAAAAAAAAQEAAAA=</HashCode>
+      <FileName>Things\AntiqueThing.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Delegate Name="PawnShopLib.Evaluator">
+    <Position X="24" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAABAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>PawnShop.cs</FileName>
+    </TypeIdentifier>
+  </Delegate>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

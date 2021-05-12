@@ -23,7 +23,7 @@ namespace PawnShopLib.Things
         }
         public override string ToString()
         {
-            return $"{Type.ToString()}: {Year}; {Weight:F3} g";
+            return $"{Type}: {Year}; {Weight:F3} g";
         }
     }
 }

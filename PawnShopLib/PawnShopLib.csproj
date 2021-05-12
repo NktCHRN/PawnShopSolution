@@ -61,5 +61,8 @@
     <Compile Include="Things\Shares.cs" />
     <Compile Include="Exceptions\TooYoungException.cs" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="Diagrams\ClassDiagram.cd" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

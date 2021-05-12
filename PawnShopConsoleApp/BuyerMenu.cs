@@ -12,10 +12,10 @@ namespace PawnShopConsoleApp
     {
         public static void LoginBuyer(PawnShop pawnShop)
         {
-            Buyer buyer = RegisterBuyer(pawnShop);
+            Buyer buyer = RegisterBuyer();
             PrintBuyerMenu(pawnShop, buyer);
         }
-        public static Buyer RegisterBuyer(PawnShop pawnShop)
+        public static Buyer RegisterBuyer()
         {
             Console.Clear();
             Program.PrintHeader();

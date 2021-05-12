@@ -24,8 +24,8 @@ namespace PawnShopLib
         public decimal PawnShopProfit { get; internal set; }
         public string ID { get; private set; }
         public static int DealsCount { get; private set; }
-        private int _minTerm;
-        private int _maxTerm;
+        private readonly int _minTerm;
+        private readonly int _maxTerm;
         static Deal()
         {
             DealsCount = 0;
