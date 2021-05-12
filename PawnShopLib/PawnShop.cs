@@ -20,7 +20,8 @@ namespace PawnShopLib
             }
             set
             {
-                if (value > 0) {
+                if (value > 0) 
+                {
                     _perDayCoefficient = value;
                     _deals.PerDayCoefficient = value;
                     foreach (Customer customer in _customers)
@@ -94,10 +95,8 @@ namespace PawnShopLib
             if (id != null)
             {
                 foreach(Customer customer in _customers)
-                {
                     if (customer.ID == id)
                         return customer;
-                }
                 return null;
             }
             else
@@ -209,9 +208,7 @@ namespace PawnShopLib
             if (customer != null)
             {
                 if (customer.IsOnDeal())
-                {
                     return customer.Deals[customer.GetDealsQuantity() - 1].Prolong(term, PerDayCoefficient);
-                }
                 throw new BusyObjectException("Customer is not on deal.");
             }
             else
@@ -224,17 +221,18 @@ namespace PawnShopLib
             _deals.Update();
             if (buyer != null)
             {
-                if (_deals[thingID] != null) {
-                    if (_deals[thingID].IsOnSale) {
-                        decimal price = _deals[thingID].MarketPrice;
+                Deal found = _deals.FindDeal(thingID);
+                if (found != null) {
+                    if (found.IsOnSale) {
+                        decimal price = found.MarketPrice;
                         if (buyer.Balance >= price)
                         {
                             buyer.SpendMoney(price);
                             Balance += price;
-                            _deals[thingID].SellThing();
-                            _deals[thingID].PawnShopProfit = price - _deals[thingID].Price;
+                            found.SellThing();
+                            found.PawnShopProfit = price - found.Price;
                             Revenue += price;
-                            return _deals[thingID].Thing;
+                            return found.Thing;
                         }
                         else
                         {

@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace PawnShopLib
 {
+    [Serializable]
     public class TooYoungException : Exception
     {
         public TooYoungException() : base() { }

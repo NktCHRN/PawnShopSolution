@@ -43,22 +43,14 @@ namespace PawnShopLib
             Update();
             List<Deal> onSale = new List<Deal>();
             foreach(Deal deal in _deals)
-            {
                 if (deal.IsOnSale && deal.Thing is T)
                     onSale.Add(deal);
-            }
             if (sortBy == DealSortingTypes.PriceAsceding)
-            {
                 onSale.Sort((left, right) => Deal.CompareDealsByPrice(left, right));
-            }
             else if (sortBy == DealSortingTypes.PriceDescending)
-            {
                 onSale.Sort((left, right) => -Deal.CompareDealsByPrice(left, right));
-            }
             else
-            {
                 onSale.Sort((left, right) => String.Compare(left.ID, right.ID));
-            }
             return onSale;
         }
         public IReadOnlyList<Deal> GetFullList(DealSortingTypes sortBy = DealSortingTypes.ID)
@@ -68,35 +60,26 @@ namespace PawnShopLib
             foreach (Deal deal in _deals)
                 FullDealsList.Add(deal);
             if (sortBy == DealSortingTypes.PriceAsceding)
-            {
                 FullDealsList.Sort((left, right) => Deal.CompareDealsByPrice(left, right));
-            }
             else if (sortBy == DealSortingTypes.PriceDescending)
-            {
                 FullDealsList.Sort((left, right) => -Deal.CompareDealsByPrice(left, right));
+            else
+                FullDealsList.Sort((left, right) => String.Compare(left.ID, right.ID));
+            return FullDealsList;
+        }
+        public Deal FindDeal(string id)
+        {
+            Update();
+            if (id != null)
+            {
+                foreach (Deal deal in _deals)
+                    if (deal.ID == id)
+                        return deal;
+                return null;
             }
             else
             {
-                FullDealsList.Sort((left, right) => String.Compare(left.ID, right.ID));
-            }
-            return FullDealsList;
-        }
-        public Deal this[string id]
-        {
-            get
-            {
-                Update();
-                if (id != null)
-                {
-                    foreach (Deal deal in _deals)
-                        if (deal.ID == id)
-                            return deal;
-                    return null;
-                }
-                else
-                {
-                    throw new ArgumentNullException("Deal`s ID cannot be null", nameof(id));
-                }
+                throw new ArgumentNullException("Deal`s ID cannot be null", nameof(id));
             }
         }
         public Deal this[int id]
@@ -105,13 +88,9 @@ namespace PawnShopLib
             {
                 Update();
                 if (id >= 0 && id < _deals.Count)
-                {
                     return _deals[id];
-                }
                 else
-                {
                     throw new IndexOutOfRangeException($"{nameof(id)} was not in bounds of the Base (should be from 0 to {_deals.Count - 1})");
-                }
             }
         }
         internal void Add(Deal newDeal)
@@ -162,9 +141,7 @@ namespace PawnShopLib
                     if (PawnShop.DateTimeToDays(currentTime) - PawnShop.DateTimeToDays(_deals[i].StartTime) > _deals[i].Term + _deals[i].PenaltyMaxTerm)
                         _deals[i].Close(true);//+ в логинг
                     else if (PawnShop.DateTimeToDays(currentTime) - PawnShop.DateTimeToDays(_deals[i].StartTime) > _deals[i].Term)
-                    {
                         _deals[i].SetPenalty(_perDayCoefficient, (PawnShop.DateTimeToDays(DateTime.Now) - PawnShop.DateTimeToDays(_deals[i].StartTime) - _deals[i].Term));
-                    }
                 }
             }
         }

@@ -233,14 +233,14 @@ namespace PawnShopConsoleApp
             Deal deal;
             Console.WriteLine("Enter the id of the deal (ex. D00000001):");
             id = Console.ReadLine();
-            deal = pawnShop.Deals[id];
+            deal = pawnShop.Deals.FindDeal(id);
             while (deal == null && id.Trim() != "0")
             {
                 Console.WriteLine("Not found.");
                 Console.WriteLine("Enter the id of the deal once more (ex. D00000001):");
                 Console.WriteLine("Enter 0 to quit");
                 id = Console.ReadLine();
-                deal = pawnShop.Deals[id];
+                deal = pawnShop.Deals.FindDeal(id);
             };
             if (id.Trim() != "0")
             {

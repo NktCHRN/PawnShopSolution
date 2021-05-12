@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace PawnShopLib
 {
+    [Serializable]
     public class BusyObjectException : ArgumentException
     {
         public BusyObjectException() : base() { }
