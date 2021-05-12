@@ -20,16 +20,26 @@
         <Position X="0.009" Y="0.484" />
       </MemberNameLabel>
     </AssociationLine>
+    <AssociationLine Name="Deals" Type="PawnShopLib.DealsBase" ManuallyRouted="true" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="23" Y="5.108" />
+        <Point X="24.938" Y="5.108" />
+        <Point X="24.938" Y="7" />
+      </Path>
+      <MemberNameLabel ManuallyPlaced="true">
+        <Position X="0.068" Y="1.175" />
+      </MemberNameLabel>
+    </AssociationLine>
     <TypeIdentifier>
       <HashCode>GBACRQAAAAAAAABAIAgCAAQAACEABGAQCQIAAAUAAQA=</HashCode>
       <FileName>PawnShop.cs</FileName>
     </TypeIdentifier>
     <ShowAsAssociation>
       <Field Name="_evaluator" />
+      <Property Name="Deals" />
     </ShowAsAssociation>
     <ShowAsCollectionAssociation>
       <Field Name="_customers" />
-      <Field Name="_deals" />
     </ShowAsCollectionAssociation>
     <Lollipop Position="0.2" />
   </Class>
@@ -81,9 +91,9 @@
       <FileName>Deal.cs</FileName>
     </TypeIdentifier>
     <ShowAsAssociation>
-      <Property Name="Tariff" />
-      <Property Name="Thing" />
       <Property Name="Customer" />
+      <Property Name="Thing" />
+      <Property Name="Tariff" />
     </ShowAsAssociation>
   </Class>
   <Class Name="PawnShopLib.Customer">
@@ -92,9 +102,9 @@
       <HashCode>EBAACOgAIAEAgQAEAQoAAAAAAAAIAAAIAAAAABAAAAA=</HashCode>
       <FileName>Customer.cs</FileName>
     </TypeIdentifier>
-    <ShowAsCollectionAssociation>
-      <Field Name="_deals" />
-    </ShowAsCollectionAssociation>
+    <ShowAsAssociation>
+      <Property Name="Deals" />
+    </ShowAsAssociation>
     <Lollipop Position="0.2" />
   </Class>
   <Class Name="PawnShopLib.Things.Shares">
