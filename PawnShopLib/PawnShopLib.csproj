@@ -45,7 +45,7 @@
     <Compile Include="Buyer.cs" />
     <Compile Include="DealsBase.cs" />
     <Compile Include="IBuyer.cs" />
-    <Compile Include="StandartEvaluators.cs" />
+    <Compile Include="StandardEvaluators.cs" />
     <Compile Include="Deal.cs" />
     <Compile Include="Customer.cs" />
     <Compile Include="CustomerStateHandler.cs" />

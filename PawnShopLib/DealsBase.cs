@@ -61,17 +61,6 @@ namespace PawnShopLib
             }
             return onSale;
         }
-        public DealsBase GetFilteredByCustomer(Customer customer)
-        {
-            Update();
-            DealsBase customerDeals = new DealsBase(_perDayCoefficient);
-            foreach (Deal deal in _deals)
-            {
-                if (deal.Customer == customer)
-                    customerDeals.Add(deal);
-            }
-            return customerDeals;
-        }
         public IReadOnlyList<Deal> GetFullList(DealSortingTypes sortBy = DealSortingTypes.ID)
         {
             Update();

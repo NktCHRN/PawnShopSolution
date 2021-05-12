@@ -164,7 +164,7 @@ namespace PawnShopConsoleApp
                             if (price != 0)
                             {
                                 string entered;
-                                Console.WriteLine("Do you really want to bail this thing?[Y/n]");
+                                Console.WriteLine("\nDo you really want to bail this thing?[Y/n]");
                                 entered = Console.ReadLine().Trim() + " ";
                                 while (entered.ToLower()[0] != 'n' && entered.ToLower()[0] != 'y')
                                 {
@@ -655,6 +655,12 @@ namespace PawnShopConsoleApp
                 Console.WriteLine(exc.Message);
                 return 0;
             }
+            catch (OverflowException exc)
+            {
+                Console.WriteLine("Denied due to technical problems");
+                Console.WriteLine(exc.Message);
+                return 0;
+            }
         }
         public static void RedeemThing(PawnShop pawnShop, Customer customer)
         {
@@ -678,12 +684,12 @@ namespace PawnShopConsoleApp
                 {
                     decimal earned;
                     bool parsed;
-                    Console.WriteLine("\nEnter how many money do you have:");
+                    Console.WriteLine("\nEnter how much money do you have:");
                     parsed = decimal.TryParse(Console.ReadLine().Replace('.', ','), out earned);
                     while (!parsed || earned < 0)
                     {
                         Console.WriteLine("You entered the wrong sum");
-                        Console.WriteLine("Enter how many money do you have once more:");
+                        Console.WriteLine("Enter how much money do you have once more:");
                         parsed = decimal.TryParse(Console.ReadLine().Replace('.', ','), out earned);
                     }
                     customer.EarnMoney(earned);

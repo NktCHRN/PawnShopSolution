@@ -55,6 +55,7 @@ namespace PawnShopConsoleApp
                         CustomerMenu.LoginCustomer(pawnShop);
                         break;
                     case 8:
+                        BuyerMenu.LoginBuyer(pawnShop);
                         break;
                 }
                 if (choice >= minPoint && choice < maxPoint)
@@ -316,8 +317,8 @@ namespace PawnShopConsoleApp
             Console.WriteLine("4. Print revenue, costs and net profit");
             Console.WriteLine("5. Print detailed info about a deal");
             Console.WriteLine("6. Print detailed info about a customer");
-            Console.WriteLine("7. Switch to customer mode");
-            Console.WriteLine("8. Switch to buyer mode");
+            Console.WriteLine("7. Switch to customer`s mode");
+            Console.WriteLine("8. Switch to buyer`s mode");
             Console.WriteLine("9. Print help");
             Console.ForegroundColor = ConsoleColor.Red;
             Console.WriteLine("10. Quit");

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace PawnShopLib
 {
-    public static class StandartEvaluators
+    public static class StandardEvaluators
     {
         public static decimal EvaluateThing(Thing thing, Tariff tariff)
         {

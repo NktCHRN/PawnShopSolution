@@ -68,7 +68,7 @@ namespace PawnShopLib
             if (delToEvaluator != null)
                 _evaluator = delToEvaluator;
             else
-                _evaluator = StandartEvaluators.EvaluateThing;
+                _evaluator = StandardEvaluators.EvaluateThing;
             if (perDayCoefficient > 0)
                 _perDayCoefficient = perDayCoefficient;
             else
@@ -224,25 +224,31 @@ namespace PawnShopLib
             _deals.Update();
             if (buyer != null)
             {
-                if (_deals[thingID] != null && _deals[thingID].IsOnSale) {
-                    decimal price = _deals[thingID].MarketPrice;
-                    if (buyer.Balance >= price)
-                    {
-                        buyer.SpendMoney(price);
-                        Balance += price;
-                        _deals[thingID].SellThing();
-                        _deals[thingID].PawnShopProfit = price - _deals[thingID].Price;
-                        Revenue += price;
-                        return _deals[thingID].Thing;
+                if (_deals[thingID] != null) {
+                    if (_deals[thingID].IsOnSale) {
+                        decimal price = _deals[thingID].MarketPrice;
+                        if (buyer.Balance >= price)
+                        {
+                            buyer.SpendMoney(price);
+                            Balance += price;
+                            _deals[thingID].SellThing();
+                            _deals[thingID].PawnShopProfit = price - _deals[thingID].Price;
+                            Revenue += price;
+                            return _deals[thingID].Thing;
+                        }
+                        else
+                        {
+                            throw new ArgumentException($"Buyer has not got enought money: {buyer.Balance:F3} hrn; required: {price:F3} hrn");
+                        }
                     }
                     else
                     {
-                        throw new ArgumentException($"Buyer has not got enought money: {buyer.Balance:F3}; required: {price:F3}");
+                        throw new ArgumentException("Thing was not on sale", nameof(thingID));
                     }
                 }
                 else
                 {
-                    throw new ArgumentNullException(nameof(thingID), "Thing was not found or not on sale");
+                    throw new ArgumentNullException(nameof(thingID), "Thing was not found");
                 }
             }
             else 
