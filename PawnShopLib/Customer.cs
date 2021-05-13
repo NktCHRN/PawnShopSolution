@@ -14,6 +14,38 @@ namespace PawnShopLib
         public string Patronymic { get; private set; }
         public DateTime BirthDay { get; private set; }
         public string ID { get; private set; }
+        private string _password;
+        public string Password
+        {
+            get
+            {
+                return _password;
+            }
+            set
+            {
+                if (value != null)
+                {
+                    const int minSize = 4;
+                    if (value.Length >= minSize)
+                    {
+                        foreach (char symbol in value)
+                        {
+                            if (char.IsWhiteSpace(symbol))
+                                throw new ArgumentException("Password should not contain whitespaces");
+                        }
+                        _password = value;
+                    }
+                    else
+                    {
+                        throw new ArgumentException($"Password should have at least {minSize} characters");
+                    }
+                }
+                else
+                {
+                    throw new ArgumentNullException("Password can`t be null", nameof(value));
+                }
+            }
+        }
         private readonly DealsBase _deals;
         public DealsBase Deals 
         { 
@@ -24,7 +56,7 @@ namespace PawnShopLib
             }
         }
         public decimal Balance { get; private set; }
-        internal Customer(string firstName, string secondName, string patronymic, DateTime birthDay, decimal perDayCoefficient, decimal balance = 0)
+        internal Customer(string firstName, string secondName, string patronymic, DateTime birthDay, string password, decimal perDayCoefficient, decimal balance = 0)
         {
             if (firstName != null)
             {
@@ -66,19 +98,21 @@ namespace PawnShopLib
                         age = 0;
                     throw new TooYoungException(minimalAge, age);
                 }
-            _customersQuantity++;
             if (perDayCoefficient > 0)
                 _deals = new DealsBase(perDayCoefficient);
             else
                 throw new ArgumentOutOfRangeException(nameof(perDayCoefficient), "Per day coefficient cannot be negative");
-            const int maxCustomers = 99999999;
-            if (_customersQuantity > maxCustomers)
-                throw new OverflowException("Too many customers. Unable to create an ID");
-            ID = String.Format("C{0:00000000}", _customersQuantity);
+            Password = password;
             if (balance >= 0)
                 Balance = balance;
             else
                 throw new ArgumentOutOfRangeException(nameof(balance), "Balance cannot be negative");
+            _customersQuantity++;
+            const int maxCustomers = 99999999;
+            if (_customersQuantity > maxCustomers)
+                throw new OverflowException("Too many customers. Unable to create an ID");
+            ID = String.Format("C{0:00000000}", _customersQuantity);
+
         }
         public string GetFullName() => String.Format("{0} {1} {2}", SecondName, FirstName, Patronymic);
         public int GetSuccessfulDealsQuantity()

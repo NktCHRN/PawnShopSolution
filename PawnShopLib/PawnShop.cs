@@ -83,9 +83,9 @@ namespace PawnShopLib
             Costs = 0;
             _customers = new List<Customer>();
         }
-        public Customer AddCustomer(string firstName, string secondName, string patronymic, DateTime birthDay, decimal balance = 0)
+        public Customer AddCustomer(string firstName, string secondName, string patronymic, DateTime birthDay, string password, decimal balance = 0)
         {
-            Customer newCustomer = new Customer(firstName, secondName, patronymic, birthDay, PerDayCoefficient, balance);
+            Customer newCustomer = new Customer(firstName, secondName, patronymic, birthDay, password, PerDayCoefficient, balance);
             _customers.Add(newCustomer);
             return newCustomer;
         }

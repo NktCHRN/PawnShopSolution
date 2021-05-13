@@ -19,20 +19,39 @@ namespace PawnShopConsoleApp
             Customer customer;
             Console.WriteLine("Are you already a customer? ");
             Console.WriteLine("If yes, enter your ID (ex. C00000001)");
-            Console.WriteLine("Otherwise, enter 0");
+            Console.WriteLine("Otherwise, enter 1 to register a new one, 0 to quit");
             id = Console.ReadLine();
             customer = pawnShop.FindCustomer(id);
-            while (customer == null && id.Trim() != "0")
+            while (customer == null && id.Trim() != "0" && id.Trim() != "1")
             {
                 Console.WriteLine("Not found.");
                 Console.WriteLine("Enter the id of the customer once more (ex. C00000001):");
-                Console.WriteLine("Enter 0 to quit");
+                Console.WriteLine("Enter 1 to register a new one, 0 to quit");
                 id = Console.ReadLine();
                 customer = pawnShop.FindCustomer(id);
             };
-            if (id.Trim() == "0")
+            if (id.Trim() == "1")
+            {
                 customer = RegisterCustomer(pawnShop);
-            if (customer != null)
+            }
+            else if (id.Trim() != "0")
+            {
+                string password;
+                bool firstTime = true;
+                Console.WriteLine("\nEnter your password:");
+                password = Console.ReadLine();
+                while (password != customer.Password && (password != "0" || firstTime))
+                {
+                    firstTime = false;
+                    Console.WriteLine("Wrong password");
+                    Console.WriteLine("Enter your password once more:");
+                    Console.WriteLine("Enter 0 to quit");
+                    password = Console.ReadLine();
+                }
+                if (password == "0")
+                    id = "0";
+            }
+            if (customer != null && id != "0")
                 PrintCustomerMenu(pawnShop, customer);
             Console.ResetColor();
         }
@@ -90,7 +109,24 @@ namespace PawnShopConsoleApp
                         parsed = short.TryParse(Console.ReadLine(), out year);
                     }
                     birthday = new DateTime(year, month, day);
-                    customer = pawnShop.AddCustomer(firstName, secondName, patronymic, birthday);
+                    bool reenter;
+                    string password;
+                    Console.WriteLine("Enter your password");
+                    do
+                    {
+                    password = Console.ReadLine();
+                    reenter = false;
+                        try
+                        {
+                            customer = pawnShop.AddCustomer(firstName, secondName, patronymic, birthday, password);
+                        }
+                        catch (ArgumentException exc)
+                        {
+                            Console.WriteLine(exc.Message);
+                            Console.WriteLine("Enter your password once more");
+                            reenter = true;
+                        }
+                    } while (reenter);
                     parsed = true;
                 }
                 catch (ArgumentOutOfRangeException)
