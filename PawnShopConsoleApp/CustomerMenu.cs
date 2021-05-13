@@ -846,7 +846,7 @@ namespace PawnShopConsoleApp
             {
                 Console.WriteLine("Wrong password");
                 Console.WriteLine("Enter your old password once more:");
-                Console.WriteLine("Enter 0 to quit");
+                Console.WriteLine("Enter 0 to cancel changing");
                 password = Console.ReadLine();
             }
             if (password != "0")
