@@ -19,7 +19,7 @@ namespace PawnShopConsoleApp
             Customer customer;
             Console.WriteLine("Are you already a customer? ");
             Console.WriteLine("If yes, enter your ID (ex. C00000001)");
-            Console.WriteLine("Otherwise, enter 1 to register a new one, 0 to quit");
+            Console.WriteLine("Otherwise, enter 1 to register a new customer account, 0 to quit");
             id = Console.ReadLine();
             customer = pawnShop.FindCustomer(id);
             while (customer == null && id.Trim() != "0" && id.Trim() != "1")
