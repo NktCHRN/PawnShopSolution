@@ -167,7 +167,7 @@ namespace PawnShopConsoleApp
             bool parsed;
             int choice;
             const int minPoint = 1;
-            const int maxPoint = 8;
+            const int maxPoint = 9;
             do
             {
                 Console.WriteLine($"\nEnter the number {minPoint} - {maxPoint}: ");
@@ -271,6 +271,9 @@ namespace PawnShopConsoleApp
                             Prolong(pawnShop, customer);
                         else
                             PrintNoHangingDealsError();
+                        break;
+                    case 7:
+                        ChangePassword(customer);
                         break;
                 }
                 if (choice >= minPoint && choice < maxPoint)
@@ -831,6 +834,50 @@ namespace PawnShopConsoleApp
             Console.ReadLine();
             Console.ResetColor();
         }
+        static void ChangePassword(Customer customer)
+        {
+            Console.Clear();
+            Program.PrintHeader();
+            Console.ForegroundColor = ConsoleColor.DarkGreen;
+            string password;
+            Console.WriteLine("\nEnter your old password (0 - cancel):");
+            password = Console.ReadLine();
+            while (password != customer.Password && password != "0")
+            {
+                Console.WriteLine("Wrong password");
+                Console.WriteLine("Enter your old password once more:");
+                Console.WriteLine("Enter 0 to quit");
+                password = Console.ReadLine();
+            }
+            if (password != "0")
+            {
+                string newPassword;
+                bool reenter;
+                Console.WriteLine("Enter your new password");
+                do
+                {
+                    newPassword = Console.ReadLine();
+                    reenter = false;
+                        try
+                        {
+                            customer.Password = newPassword;
+                            Console.ForegroundColor = ConsoleColor.Green;
+                            Console.WriteLine("Congratulations!");
+                            Console.WriteLine("Dear customer, you successfully changed your password");
+                        }
+                        catch (ArgumentException exc)
+                        {
+                            Console.WriteLine(exc.Message);
+                            Console.WriteLine("Enter your new password once more");
+                            reenter = true;
+                        }
+                } while (reenter);
+            }
+            Console.ForegroundColor = ConsoleColor.DarkGreen;
+            Console.WriteLine("\nPress [ENTER] to go back to customer`s menu");
+            Console.ReadLine();
+            Console.ResetColor();
+        }
         public static void PrintNoHangingDealsError()
         {
             Console.Clear();
@@ -851,9 +898,10 @@ namespace PawnShopConsoleApp
             Console.WriteLine("4. Print detailed info about my hanging deal");
             Console.WriteLine("5. Redeem thing");
             Console.WriteLine("6. Prolong hanging deal");
-            Console.WriteLine("7. Print help");
+            Console.WriteLine("7. Change password");
+            Console.WriteLine("8. Print help");
             Console.ForegroundColor = ConsoleColor.Red;
-            Console.WriteLine("8. Quit");
+            Console.WriteLine("9. Quit");
             Console.ResetColor();
         }
     }
