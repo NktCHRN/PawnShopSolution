@@ -119,6 +119,13 @@ namespace PawnShopConsoleApp
                         try
                         {
                             customer = pawnShop.AddCustomer(firstName, secondName, patronymic, birthday, password);
+                            Console.ForegroundColor = ConsoleColor.Green;
+                            Console.WriteLine("\nCongratulations!");
+                            Console.WriteLine($"Dear {customer.GetFullName()}, you successfully registered your account");
+                            Console.WriteLine($"Your ID: {customer.ID}");
+                            Console.ForegroundColor = ConsoleColor.DarkGreen;
+                            Console.WriteLine("\nPress [ENTER] to continue");
+                            Console.ReadLine();
                         }
                         catch (ArgumentException exc)
                         {
@@ -853,7 +860,7 @@ namespace PawnShopConsoleApp
             {
                 string newPassword;
                 bool reenter;
-                Console.WriteLine("Enter your new password");
+                Console.WriteLine("\nEnter your new password");
                 do
                 {
                     newPassword = Console.ReadLine();
@@ -862,7 +869,7 @@ namespace PawnShopConsoleApp
                         {
                             customer.Password = newPassword;
                             Console.ForegroundColor = ConsoleColor.Green;
-                            Console.WriteLine("Congratulations!");
+                            Console.WriteLine("\nCongratulations!");
                             Console.WriteLine("Dear customer, you successfully changed your password");
                         }
                         catch (ArgumentException exc)
