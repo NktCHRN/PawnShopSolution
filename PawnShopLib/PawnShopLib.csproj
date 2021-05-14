@@ -48,7 +48,6 @@
     <Compile Include="StandardEvaluators.cs" />
     <Compile Include="Deal.cs" />
     <Compile Include="Customer.cs" />
-    <Compile Include="CustomerStateHandler.cs" />
     <Compile Include="IPawnShop.cs" />
     <Compile Include="PawnShop.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

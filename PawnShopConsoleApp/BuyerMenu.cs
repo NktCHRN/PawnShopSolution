@@ -21,10 +21,9 @@ namespace PawnShopConsoleApp
             Program.PrintHeader();
             Console.ForegroundColor = ConsoleColor.White;
             Console.WriteLine("Hello, dear buyer!");
-            decimal balance;
             bool parsed;
             Console.WriteLine("\nEnter how much money do you have:");
-            parsed = decimal.TryParse(Console.ReadLine().Replace('.', ','), out balance);
+            parsed = decimal.TryParse(Console.ReadLine().Replace('.', ','), out decimal balance);
             while (!parsed || balance < 0)
             {
                 Console.WriteLine("You entered the wrong sum");

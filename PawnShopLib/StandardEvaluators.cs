@@ -29,10 +29,10 @@ namespace PawnShopLib
         private static decimal EvaluateCar(Things.Car thing)
         {
             decimal cost;
-            if ((decimal)thing.Mileage / 1000000m >= (decimal)(DateTime.Now.Year - thing.Year) / 100m)
-                cost = thing.MarketPrice * 0.8m - thing.MarketPrice * (decimal)thing.Mileage / 1000000m;
+            if (thing.Mileage / 1000000m >= (DateTime.Now.Year - thing.Year) / 100m)
+                cost = thing.MarketPrice * 0.8m - thing.MarketPrice * thing.Mileage / 1000000m;
             else
-                cost = thing.MarketPrice * 0.8m - thing.MarketPrice * (decimal)(DateTime.Now.Year - thing.Year) / 100m;
+                cost = thing.MarketPrice * 0.8m - thing.MarketPrice * (DateTime.Now.Year - thing.Year) / 100m;
             if (cost > 0m)
                 return cost;
             else
@@ -44,19 +44,19 @@ namespace PawnShopLib
             switch (thing.Type)
             {
                 case Things.ElectronicTypes.Camera:
-                    cost = 7500m - (decimal)(DateTime.Now.Year - thing.Year) * 300m;
+                    cost = 7500m - (DateTime.Now.Year - thing.Year) * 300m;
                     break;
                 case Things.ElectronicTypes.Computer:
-                    cost = 11000m - (decimal)(DateTime.Now.Year - thing.Year) * 500m;
+                    cost = 11000m - (DateTime.Now.Year - thing.Year) * 500m;
                     break;
                 case Things.ElectronicTypes.Fridge:
-                    cost = 12500m - (decimal)(DateTime.Now.Year - thing.Year) * 250m;
+                    cost = 12500m - (DateTime.Now.Year - thing.Year) * 250m;
                     break;
                 case Things.ElectronicTypes.Phone:
-                    cost = 8000m - (decimal)(DateTime.Now.Year - thing.Year) * 600m;
+                    cost = 8000m - (DateTime.Now.Year - thing.Year) * 600m;
                     break;
                 default:
-                    cost = 9000m - (decimal)(DateTime.Now.Year - thing.Year) * 250m;
+                    cost = 9000m - (DateTime.Now.Year - thing.Year) * 250m;
                     break;
             }
             if (cost > 0m)

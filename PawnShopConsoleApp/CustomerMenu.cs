@@ -78,14 +78,13 @@ namespace PawnShopConsoleApp
             Console.WriteLine("Enter the patronymic: ");
             patronymic = Console.ReadLine();
             bool parsed;
-            short day, month, year;
             DateTime birthday;
             do
             {
                 try
                 {
                     Console.WriteLine("Enter the day of birth: ");
-                    parsed = short.TryParse(Console.ReadLine(), out day);
+                    parsed = short.TryParse(Console.ReadLine(), out short day);
                     while (!parsed || day < 0)
                     {
                         Console.WriteLine("Error: day can`t be negative");
@@ -93,7 +92,7 @@ namespace PawnShopConsoleApp
                         parsed = short.TryParse(Console.ReadLine(), out day);
                     }
                     Console.WriteLine("Enter the month of birth: ");
-                    parsed = short.TryParse(Console.ReadLine(), out month);
+                    parsed = short.TryParse(Console.ReadLine(), out short month);
                     while (!parsed || month < 0)
                     {
                         Console.WriteLine("Error: month can`t be negative");
@@ -101,7 +100,7 @@ namespace PawnShopConsoleApp
                         parsed = short.TryParse(Console.ReadLine(), out month);
                     }
                     Console.WriteLine("Enter the year of birth: ");
-                    parsed = short.TryParse(Console.ReadLine(), out year);
+                    parsed = short.TryParse(Console.ReadLine(), out short year);
                     while (!parsed || year < 0)
                     {
                         Console.WriteLine("Error: year can`t be negative");
@@ -321,7 +320,6 @@ namespace PawnShopConsoleApp
             Program.PrintHeader();
             Console.ForegroundColor = ConsoleColor.DarkGreen;
             bool parsed;
-            int choice;
             int minPoint = 0;
             int maxPoint = 5;
             Thing thing = null;
@@ -333,7 +331,7 @@ namespace PawnShopConsoleApp
             Console.WriteLine("4. Jewel");
             Console.WriteLine("5. Shares");
             Console.WriteLine($"Enter {minPoint} - {maxPoint}: ");
-            parsed = int.TryParse(Console.ReadLine(), out choice);
+            parsed = int.TryParse(Console.ReadLine(), out int choice);
             while (!parsed || choice < minPoint || choice > maxPoint)
             {
                 Console.WriteLine("You entered the wrong number");
@@ -555,9 +553,8 @@ namespace PawnShopConsoleApp
                         }
                         if (jewelType == JewelTypes.ComplicatedJewel)
                         {
-                            double goldWeight, silverWeight, diamondWeight, otherGemsWeight;
                             Console.WriteLine("\nEnter the gold weight:");
-                            parsed = double.TryParse(Console.ReadLine().Replace('.', ','), out goldWeight);
+                            parsed = double.TryParse(Console.ReadLine().Replace('.', ','), out double goldWeight);
                             while (!parsed || goldWeight < 0)
                             {
                                 Console.WriteLine("You entered the wrong weight");
@@ -565,7 +562,7 @@ namespace PawnShopConsoleApp
                                 parsed = double.TryParse(Console.ReadLine().Replace('.', ','), out goldWeight);
                             }
                             Console.WriteLine("\nEnter the silver weight:");
-                            parsed = double.TryParse(Console.ReadLine().Replace('.', ','), out silverWeight);
+                            parsed = double.TryParse(Console.ReadLine().Replace('.', ','), out double silverWeight);
                             while (!parsed || silverWeight < 0)
                             {
                                 Console.WriteLine("You entered the wrong weight");
@@ -573,7 +570,7 @@ namespace PawnShopConsoleApp
                                 parsed = double.TryParse(Console.ReadLine().Replace('.', ','), out silverWeight);
                             }
                             Console.WriteLine("\nEnter the diamond weight:");
-                            parsed = double.TryParse(Console.ReadLine().Replace('.', ','), out diamondWeight);
+                            parsed = double.TryParse(Console.ReadLine().Replace('.', ','), out double diamondWeight);
                             while (!parsed || diamondWeight < 0)
                             {
                                 Console.WriteLine("You entered the wrong weight");
@@ -581,7 +578,7 @@ namespace PawnShopConsoleApp
                                 parsed = double.TryParse(Console.ReadLine().Replace('.', ','), out diamondWeight);
                             }
                             Console.WriteLine("\nEnter the other gems weight:");
-                            parsed = double.TryParse(Console.ReadLine().Replace('.', ','), out otherGemsWeight);
+                            parsed = double.TryParse(Console.ReadLine().Replace('.', ','), out double otherGemsWeight);
                             while (!parsed || otherGemsWeight < 0)
                             {
                                 Console.WriteLine("You entered the wrong weight");
@@ -728,10 +725,9 @@ namespace PawnShopConsoleApp
                 }
                 if (entered.ToLower()[0] == 'y')
                 {
-                    decimal earned;
                     bool parsed;
                     Console.WriteLine("\nEnter how much money do you have:");
-                    parsed = decimal.TryParse(Console.ReadLine().Replace('.', ','), out earned);
+                    parsed = decimal.TryParse(Console.ReadLine().Replace('.', ','), out decimal earned);
                     while (!parsed || earned < 0)
                     {
                         Console.WriteLine("You entered the wrong sum");
@@ -789,9 +785,8 @@ namespace PawnShopConsoleApp
                 int maxTerm = customer.GetLastDeal().GetMaxProlongationTerm();
                 Console.WriteLine($"For your deal ({customer.GetLastDeal().Thing}) maximum prolongation term is {maxTerm} days");
                 bool parsed;
-                int term;
                 Console.WriteLine("Enter the term:");
-                parsed = int.TryParse(Console.ReadLine(), out term);
+                parsed = int.TryParse(Console.ReadLine(), out int term);
                 while (!parsed || term < minTerm || term > maxTerm)
                 {
                     Console.WriteLine("You entered the wrong term");

@@ -131,7 +131,6 @@ namespace PawnShopLib
             if (_customersQuantity > maxCustomers)
                 throw new OverflowException("Too many customers. Unable to create an ID");
             ID = String.Format("C{0:00000000}", _customersQuantity);
-
         }
         public string GetFullName() => String.Format("{0} {1} {2}", SecondName, FirstName, Patronymic);
         public int GetSuccessfulDealsQuantity()

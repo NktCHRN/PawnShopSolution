@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 using PawnShopLib;
-using PawnShopLib.Things;
 
 namespace PawnShopConsoleApp
 {
@@ -17,7 +16,7 @@ namespace PawnShopConsoleApp
         static void Main(string[] args)
         {
             Console.Title = "PAWN SHOP";
-            string filename = "pawnShopCurrentState.dat";
+            const string fileName = "pawnShopCurrentState.dat";
             BinaryFormatter formatter = new BinaryFormatter();
             PawnShop pawnShop = null;
             WindowHeight = 35;
@@ -28,7 +27,7 @@ namespace PawnShopConsoleApp
             Console.WriteLine("Group IS-02, FICT, KPI");
             bool stop = false;
             string entered;
-            if (File.Exists(filename))
+            if (File.Exists(fileName))
             {
                 Console.WriteLine("Do you want to recover the last session?[Y/n]");
                 entered = Console.ReadLine().Trim() + " ";
@@ -41,7 +40,7 @@ namespace PawnShopConsoleApp
                 if (entered.ToLower()[0] == 'y') {
                     try
                     {
-                        using (FileStream fs = new FileStream(filename, FileMode.Open))
+                        using (FileStream fs = new FileStream(fileName, FileMode.Open))
                         {
                             pawnShop = (PawnShop)formatter.Deserialize(fs);
                         }
@@ -98,9 +97,8 @@ namespace PawnShopConsoleApp
                     Console.WriteLine("\nEnter the name of your pawn shop: ");
                     string name = Console.ReadLine();
                     bool parsed;
-                    decimal initialBalance;
                     Console.WriteLine("Enter the balance of your pawn shop: ");
-                    parsed = decimal.TryParse(Console.ReadLine().Replace('.', ','), out initialBalance);
+                    parsed = decimal.TryParse(Console.ReadLine().Replace('.', ','), out decimal initialBalance);
                     while (!parsed || initialBalance <= 0)
                     {
                         Console.WriteLine("Balance can`t be lower than or equal 0.");
@@ -137,7 +135,7 @@ namespace PawnShopConsoleApp
                     pawnShop = new PawnShop(name, initialBalance, _evaluator, perDayCoefficient, maxTerm);
                 }
                 MainMenu.PrintMainMenu(pawnShop);
-                using (FileStream fs = new FileStream(filename, FileMode.OpenOrCreate))
+                using (FileStream fs = new FileStream(fileName, FileMode.OpenOrCreate))
                 {
                     formatter.Serialize(fs, pawnShop);
                 }
@@ -147,7 +145,7 @@ namespace PawnShopConsoleApp
         public static void SetSize()
         {
             Console.SetWindowSize(1, 1);
-            Console.SetBufferSize(WindowWidth, WindowHeight);
+            Console.SetBufferSize(WindowWidth, Console.BufferHeight);
             Console.SetWindowSize(WindowWidth, WindowHeight);
         }
         public static void PrintHeader()

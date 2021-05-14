@@ -106,7 +106,6 @@ namespace PawnShopLib
             Reset();
             return (IEnumerator)this;
         }
-        //IEnumerator
         public bool MoveNext()
         {
             if (_position < _deals.Count() - 1)
@@ -117,12 +116,10 @@ namespace PawnShopLib
             else
                 return false;
         }
-        //IEnumerable
         public void Reset()
         {
             _position = -1;
         }
-        //IEnumerable
         public object Current
         {
             get
@@ -140,7 +137,7 @@ namespace PawnShopLib
                 if (!_deals[i].IsClosed)
                 {
                     if (PawnShop.DateTimeToDays(currentTime) - PawnShop.DateTimeToDays(_deals[i].StartTime) > _deals[i].Term + _deals[i].PenaltyMaxTerm)
-                        _deals[i].Close(true);//+ в логинг
+                        _deals[i].Close(true);
                     else if (PawnShop.DateTimeToDays(currentTime) - PawnShop.DateTimeToDays(_deals[i].StartTime) > _deals[i].Term)
                         _deals[i].SetPenalty(_perDayCoefficient, (PawnShop.DateTimeToDays(DateTime.Now) - PawnShop.DateTimeToDays(_deals[i].StartTime) - _deals[i].Term));
                 }
