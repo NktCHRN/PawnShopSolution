@@ -170,7 +170,7 @@ namespace PawnShopConsoleApp
             Console.Clear();
             Program.PrintHeader();
             Console.ForegroundColor = ConsoleColor.DarkGreen;
-            Console.WriteLine($"Information about pawnshop \"{pawnShop.Name}\": ");
+            Console.WriteLine($"Information about pawn shop \"{pawnShop.Name}\": ");
             Console.ForegroundColor = ConsoleColor.Green;
             Console.WriteLine("Revenue: " + Program.CutZeros(pawnShop.Revenue) + " hrn");
             Console.WriteLine("Costs: " + Program.CutZeros(pawnShop.Costs) + " hrn");
