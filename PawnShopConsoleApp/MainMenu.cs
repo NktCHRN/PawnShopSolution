@@ -18,13 +18,13 @@ namespace PawnShopConsoleApp
             Console.WriteLine("What do you want to do?");
             PrintHelp();
             bool parsed;
-            int choice;
-            const int minPoint = 1;
-            const int maxPoint = 10;
+            short choice;
+            const short minPoint = 1;
+            const short maxPoint = 10;
             do
             {
                 Console.WriteLine($"\nEnter the number {minPoint} - {maxPoint}: ");
-                parsed = int.TryParse(Console.ReadLine(), out choice);      //пытаемся спарсить введенное в int
+                parsed = short.TryParse(Console.ReadLine(), out choice);      //пытаемся спарсить введенное в int
                 if (!parsed || choice < minPoint || choice > maxPoint)
                 {
                     Console.WriteLine($"Error: you entered not a number or number was smaller than {minPoint} or bigger than {maxPoint}.");

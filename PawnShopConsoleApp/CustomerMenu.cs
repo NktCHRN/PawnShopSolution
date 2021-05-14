@@ -100,12 +100,12 @@ namespace PawnShopConsoleApp
                         parsed = short.TryParse(Console.ReadLine(), out month);
                     }
                     Console.WriteLine("Enter the year of birth: ");
-                    parsed = short.TryParse(Console.ReadLine(), out short year);
+                    parsed = int.TryParse(Console.ReadLine(), out int year);
                     while (!parsed || year < 0)
                     {
                         Console.WriteLine("Error: year can`t be negative");
                         Console.WriteLine("Enter the year of birth once more: ");
-                        parsed = short.TryParse(Console.ReadLine(), out year);
+                        parsed = int.TryParse(Console.ReadLine(), out year);
                     }
                     birthday = new DateTime(year, month, day);
                     bool reenter;
@@ -171,13 +171,13 @@ namespace PawnShopConsoleApp
             Console.WriteLine("What do you want to do?");
             PrintHelp();
             bool parsed;
-            int choice;
-            const int minPoint = 1;
-            const int maxPoint = 9;
+            short choice;
+            const short minPoint = 1;
+            const short maxPoint = 9;
             do
             {
                 Console.WriteLine($"\nEnter the number {minPoint} - {maxPoint}: ");
-                parsed = int.TryParse(Console.ReadLine(), out choice);
+                parsed = short.TryParse(Console.ReadLine(), out choice);
                 if (!parsed || choice < minPoint || choice > maxPoint)
                 {
                     Console.WriteLine($"Error: you entered not a number or number was smaller than {minPoint} or bigger than {maxPoint}.");
@@ -320,8 +320,8 @@ namespace PawnShopConsoleApp
             Program.PrintHeader();
             Console.ForegroundColor = ConsoleColor.DarkGreen;
             bool parsed;
-            int minPoint = 0;
-            int maxPoint = 5;
+            short minPoint = 0;
+            short maxPoint = 5;
             Thing thing = null;
             Console.WriteLine("Choose the type of thing: ");
             Console.WriteLine("[0 - go back to customer`s menu]");
@@ -331,12 +331,12 @@ namespace PawnShopConsoleApp
             Console.WriteLine("4. Jewel");
             Console.WriteLine("5. Shares");
             Console.WriteLine($"Enter {minPoint} - {maxPoint}: ");
-            parsed = int.TryParse(Console.ReadLine(), out int choice);
+            parsed = short.TryParse(Console.ReadLine(), out short choice);
             while (!parsed || choice < minPoint || choice > maxPoint)
             {
                 Console.WriteLine("You entered the wrong number");
                 Console.WriteLine($"Enter {minPoint} - {maxPoint} once more [0, if you want to go back to customer`s menu]: ");
-                parsed = int.TryParse(Console.ReadLine(), out choice);
+                parsed = short.TryParse(Console.ReadLine(), out choice);
             }
             if (choice != 0)
             {
@@ -376,7 +376,7 @@ namespace PawnShopConsoleApp
                             parsed = double.TryParse(Console.ReadLine().Replace('.', ','), out weight);
                         }
                         AntiqueTypes antiqueType;
-                        int typeChoice;
+                        short typeChoice;
                         minPoint = 1;
                         maxPoint = 5;
                         Console.WriteLine("\nChoose the type of antique thing: ");
@@ -386,12 +386,12 @@ namespace PawnShopConsoleApp
                         Console.WriteLine("4. Painting");
                         Console.WriteLine("5. Watches");
                         Console.WriteLine($"Enter {minPoint} - {maxPoint}: ");
-                        parsed = int.TryParse(Console.ReadLine(), out typeChoice);
+                        parsed = short.TryParse(Console.ReadLine(), out typeChoice);
                         while (!parsed || typeChoice < minPoint || typeChoice > maxPoint)
                         {
                             Console.WriteLine("You entered the wrong number");
                             Console.WriteLine($"Enter {minPoint} - {maxPoint} once more: ");
-                            parsed = int.TryParse(Console.ReadLine(), out typeChoice);
+                            parsed = short.TryParse(Console.ReadLine(), out typeChoice);
                         }
                         switch (typeChoice)
                         {
@@ -487,12 +487,12 @@ namespace PawnShopConsoleApp
                         Console.WriteLine("4. Phone");
                         Console.WriteLine("5. Washer");
                         Console.WriteLine($"Enter {minPoint} - {maxPoint}: ");
-                        parsed = int.TryParse(Console.ReadLine(), out typeChoice);
+                        parsed = short.TryParse(Console.ReadLine(), out typeChoice);
                         while (!parsed || typeChoice < minPoint || typeChoice > maxPoint)
                         {
                             Console.WriteLine("You entered the wrong number");
                             Console.WriteLine($"Enter {minPoint} - {maxPoint} once more: ");
-                            parsed = int.TryParse(Console.ReadLine(), out typeChoice);
+                            parsed = short.TryParse(Console.ReadLine(), out typeChoice);
                         }
                         ElectronicTypes electronicType;
                         switch (typeChoice)
@@ -525,12 +525,12 @@ namespace PawnShopConsoleApp
                         Console.WriteLine("4. Diamond");
                         Console.WriteLine("5. Another precious gem");
                         Console.WriteLine($"Enter {minPoint} - {maxPoint}: ");
-                        parsed = int.TryParse(Console.ReadLine(), out typeChoice);
+                        parsed = short.TryParse(Console.ReadLine(), out typeChoice);
                         while (!parsed || typeChoice < minPoint || typeChoice > maxPoint)
                         {
                             Console.WriteLine("You entered the wrong number");
                             Console.WriteLine($"Enter {minPoint} - {maxPoint} once more: ");
-                            parsed = int.TryParse(Console.ReadLine(), out typeChoice);
+                            parsed = short.TryParse(Console.ReadLine(), out typeChoice);
                         }
                         JewelTypes jewelType;
                         switch (typeChoice)
@@ -641,7 +641,7 @@ namespace PawnShopConsoleApp
             int term;
             bool parsed;
             bool reenter;
-            int choice;
+            short choice;
             bool isImmediateSaleAble = thing is Car || thing is ElectronicThing || thing is Jewel;
             do
             {
@@ -671,12 +671,12 @@ namespace PawnShopConsoleApp
                     const int minPoint = 0;
                     const int maxPoint = 2;
                     Console.WriteLine($"\nEnter the number {minPoint} - {maxPoint}: ");
-                    parsed = int.TryParse(Console.ReadLine(), out choice);
+                    parsed = short.TryParse(Console.ReadLine(), out choice);
                     while (!parsed || choice < minPoint || choice > maxPoint)
                     {
                         Console.WriteLine($"Error: you entered not a number or number was smaller than {minPoint} or bigger than {maxPoint}.");
                         Console.WriteLine($"Help - {maxPoint - 1}");
-                        parsed = int.TryParse(Console.ReadLine(), out choice);
+                        parsed = short.TryParse(Console.ReadLine(), out choice);
                     }
                     if (choice == 0)
                         reenter = true;
