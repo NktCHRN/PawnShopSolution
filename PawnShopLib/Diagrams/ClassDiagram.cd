@@ -80,14 +80,14 @@
     <Position X="3" Y="7" Width="1.5" />
     <AssociationLine Name="Thing" Type="PawnShopLib.Thing" ManuallyRouted="true" FixedFromPoint="true" FixedToPoint="true">
       <Path>
-        <Point X="4.5" Y="13.188" />
-        <Point X="4.875" Y="13.188" />
+        <Point X="4.5" Y="13.368" />
+        <Point X="4.875" Y="13.368" />
         <Point X="4.875" Y="14" />
         <Point X="7.75" Y="14" />
       </Path>
     </AssociationLine>
     <TypeIdentifier>
-      <HashCode>wAmAQCBBAQAAwBAAAQAAiASCIAAAAEAAMAAAAACQAAA=</HashCode>
+      <HashCode>wAmAQCBBAQAAwBAQAQAAiASCIAAAAEAAMAAAAACQAAA=</HashCode>
       <FileName>Deal.cs</FileName>
     </TypeIdentifier>
     <ShowAsAssociation>
@@ -99,7 +99,7 @@
   <Class Name="PawnShopLib.Customer">
     <Position X="5.5" Y="7" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>EBAACOgAIAEAgQAEAQoAAAAAAAAIAAAIAAAAABAAAAA=</HashCode>
+      <HashCode>EBQACOgAIAEAgQAEAQoAAAAAAAAIAAAKAAAAABAAAAg=</HashCode>
       <FileName>Customer.cs</FileName>
     </TypeIdentifier>
     <ShowAsAssociation>

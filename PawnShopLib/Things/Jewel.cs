@@ -14,6 +14,7 @@ namespace PawnShopLib.Things
         AnotherGem,
         ComplicatedJewel
     }
+    [Serializable]
     public class Jewel : Thing
     {
         public double GoldWeight { get; private set; }

@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 namespace PawnShopLib
 {
     public delegate decimal Evaluator(Thing thing, Tariff tariff);
+    [Serializable]
     public sealed class PawnShop : IPawnShop
     {
         private readonly Evaluator _evaluator;

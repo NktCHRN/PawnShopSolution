@@ -14,6 +14,7 @@ namespace PawnShopLib.Things
         AntiqueJewel,
         Medal
     }
+    [Serializable]
     public class AntiqueThing : Thing
     {
         public AntiqueTypes Type { get; private set; }

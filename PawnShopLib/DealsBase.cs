@@ -13,6 +13,7 @@ namespace PawnShopLib
         PriceAsceding,
         PriceDescending
     }
+    [Serializable]
     public class DealsBase : IEnumerator, IEnumerable
     {
         private readonly List<Deal> _deals;

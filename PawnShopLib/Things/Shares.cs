@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace PawnShopLib.Things
 {
+    [Serializable]
     public class Shares : Thing
     {
         public decimal MarketPrice { get; private set; }

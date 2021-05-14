@@ -14,6 +14,7 @@ namespace PawnShopLib.Things
         Fridge,
         Camera
     }
+    [Serializable]
     public class ElectronicThing : Thing
     {
         public ElectronicTypes Type { get; private set; }

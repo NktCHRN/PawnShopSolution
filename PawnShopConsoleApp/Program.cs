@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.IO;
+using System.Runtime.Serialization.Formatters.Binary;
 using PawnShopLib;
 using PawnShopLib.Things;
 
@@ -15,55 +17,131 @@ namespace PawnShopConsoleApp
         static void Main(string[] args)
         {
             Console.Title = "PAWN SHOP";
+            string filename = "pawnShopCurrentState.dat";
+            BinaryFormatter formatter = new BinaryFormatter();
+            PawnShop pawnShop = null;
             WindowHeight = 35;
             WindowWidth = 140;
             SetSize();
             PrintHeader();
             Console.WriteLine("Program by Nikita Chernikov");
             Console.WriteLine("Group IS-02, FICT, KPI");
-            Evaluator _evaluator = StandardEvaluators.EvaluateThing;
-            Console.WriteLine("\nEnter the name of your pawn shop: ");
-            string name = Console.ReadLine();
-            bool parsed;
-            decimal initialBalance;
-            Console.WriteLine("Enter the balance of your pawn shop: ");
-            parsed = decimal.TryParse(Console.ReadLine().Replace('.', ','), out initialBalance);
-            while (!parsed || initialBalance <= 0)
-            {
-                Console.WriteLine("Balance can`t be lower than or equal 0.");
-                Console.WriteLine("Enter the balance once more: ");
-                parsed = decimal.TryParse(Console.ReadLine().Replace('.', ','), out initialBalance);
-            };
-            decimal perDayCoefficient = 0.005m;
-            int maxTerm = 365;
+            bool stop = false;
             string entered;
-            do
+            if (File.Exists(filename))
             {
-                Console.WriteLine("Do you want to change coefficient per day (now: " + CutZeros(perDayCoefficient * 100m) + $"%) and max term (now : {maxTerm} days)? [Y/n]");
+                Console.WriteLine("Do you want to recover the last session?[Y/n]");
                 entered = Console.ReadLine().Trim() + " ";
-            } while (entered.ToLower()[0] != 'n' && entered.ToLower()[0] != 'y');
-            if (entered.ToLower()[0] == 'y')
-            {
-                Console.WriteLine("Enter the coefficient per day (in %): ");
-                parsed = decimal.TryParse(Console.ReadLine().Replace('.', ','), out perDayCoefficient);
-                while (!parsed || perDayCoefficient <= 0)
+                while (entered.ToLower()[0] != 'n' && entered.ToLower()[0] != 'y')
                 {
-                    Console.WriteLine("Coefficient per day can`t be lower than or equal 0.");
-                    Console.WriteLine("Enter the coefficient per day (in %) once more: ");
-                    parsed = decimal.TryParse(Console.ReadLine().Replace('.', ','), out perDayCoefficient);
-                };
-                perDayCoefficient /= 100;
-                Console.WriteLine("Enter the max term (days): ");
-                parsed = int.TryParse(Console.ReadLine().Replace('.', ','), out maxTerm);
-                while (!parsed || maxTerm < 5)
-                {
-                    Console.WriteLine("Max term can`t be lower than 5.");
-                    Console.WriteLine("Enter the max term once more: ");
-                    parsed = int.TryParse(Console.ReadLine().Replace('.', ','), out maxTerm);
-                };
+                    Console.WriteLine("Error. Please, enter Y on n once more");
+                    Console.WriteLine("Do you want to recover the last session?[Y/n]");
+                    entered = Console.ReadLine().Trim() + " ";
+                }
+                if (entered.ToLower()[0] == 'y') {
+                    try
+                    {
+                        using (FileStream fs = new FileStream(filename, FileMode.Open))
+                        {
+                            pawnShop = (PawnShop)formatter.Deserialize(fs);
+                        }
+                        string maxCustomerID = "C00000000";
+                        string maxDealID = "D00000000";
+                        foreach (Customer customer in pawnShop.CustomersList)
+                        {
+                            if (String.Compare(customer.ID, maxCustomerID) == 1)
+                                maxCustomerID = customer.ID;
+                        }
+                        foreach (Deal deal in pawnShop.Deals)
+                        {
+                            if (String.Compare(deal.ID, maxDealID) == 1)
+                                maxDealID = deal.ID;
+                        }
+                        Customer.CustomersQuantity = int.Parse(maxCustomerID.Remove(0, 1));
+                        Deal.DealsCount = int.Parse(maxDealID.Remove(0, 1));
+                    }
+                    catch (System.Runtime.Serialization.SerializationException)
+                    {
+                        Console.WriteLine("Damaged file. Unable to parse");
+                        Console.WriteLine("Do you want to start a new pawnshop[Y/n]");
+                        entered = Console.ReadLine().Trim() + " ";
+                        while (entered.ToLower()[0] != 'n' && entered.ToLower()[0] != 'y')
+                        {
+                            Console.WriteLine("Error. Please, enter Y on n once more");
+                            Console.WriteLine("Do you want to start a new pawnshop[Y/n]");
+                            entered = Console.ReadLine().Trim() + " ";
+                        }
+                        if (entered.ToLower()[0] == 'n')
+                            stop = true;
+                    }
+                    catch(System.IO.FileNotFoundException)
+                    {
+                        Console.WriteLine("Damaged file. Unable to parse");
+                        Console.WriteLine("Do you want to start a new pawnshop[Y/n]");
+                        entered = Console.ReadLine().Trim() + " ";
+                        while (entered.ToLower()[0] != 'n' && entered.ToLower()[0] != 'y')
+                        {
+                            Console.WriteLine("Error. Please, enter Y on n once more");
+                            Console.WriteLine("Do you want to start a new pawnshop[Y/n]");
+                            entered = Console.ReadLine().Trim() + " ";
+                        }
+                        if (entered.ToLower()[0] == 'n')
+                            stop = true;
+                    }
+                }
             }
-            PawnShop pawnShop = new PawnShop(name, initialBalance, _evaluator, perDayCoefficient, maxTerm);
-            MainMenu.PrintMainMenu(pawnShop);
+            if (!stop)
+            {
+                if (pawnShop == null)
+                {
+                    Evaluator _evaluator = StandardEvaluators.EvaluateThing;
+                    Console.WriteLine("\nEnter the name of your pawn shop: ");
+                    string name = Console.ReadLine();
+                    bool parsed;
+                    decimal initialBalance;
+                    Console.WriteLine("Enter the balance of your pawn shop: ");
+                    parsed = decimal.TryParse(Console.ReadLine().Replace('.', ','), out initialBalance);
+                    while (!parsed || initialBalance <= 0)
+                    {
+                        Console.WriteLine("Balance can`t be lower than or equal 0.");
+                        Console.WriteLine("Enter the balance once more: ");
+                        parsed = decimal.TryParse(Console.ReadLine().Replace('.', ','), out initialBalance);
+                    };
+                    decimal perDayCoefficient = 0.005m;
+                    int maxTerm = 365;
+                    do
+                    {
+                        Console.WriteLine("Do you want to change coefficient per day (now: " + CutZeros(perDayCoefficient * 100m) + $"%) and max term (now : {maxTerm} days)? [Y/n]");
+                        entered = Console.ReadLine().Trim() + " ";
+                    } while (entered.ToLower()[0] != 'n' && entered.ToLower()[0] != 'y');
+                    if (entered.ToLower()[0] == 'y')
+                    {
+                        Console.WriteLine("Enter the coefficient per day (in %): ");
+                        parsed = decimal.TryParse(Console.ReadLine().Replace('.', ','), out perDayCoefficient);
+                        while (!parsed || perDayCoefficient <= 0)
+                        {
+                            Console.WriteLine("Coefficient per day can`t be lower than or equal 0.");
+                            Console.WriteLine("Enter the coefficient per day (in %) once more: ");
+                            parsed = decimal.TryParse(Console.ReadLine().Replace('.', ','), out perDayCoefficient);
+                        };
+                        perDayCoefficient /= 100;
+                        Console.WriteLine("Enter the max term (days): ");
+                        parsed = int.TryParse(Console.ReadLine().Replace('.', ','), out maxTerm);
+                        while (!parsed || maxTerm < 5)
+                        {
+                            Console.WriteLine("Max term can`t be lower than 5.");
+                            Console.WriteLine("Enter the max term once more: ");
+                            parsed = int.TryParse(Console.ReadLine().Replace('.', ','), out maxTerm);
+                        };
+                    }
+                    pawnShop = new PawnShop(name, initialBalance, _evaluator, perDayCoefficient, maxTerm);
+                }
+                MainMenu.PrintMainMenu(pawnShop);
+                using (FileStream fs = new FileStream(filename, FileMode.OpenOrCreate))
+                {
+                    formatter.Serialize(fs, pawnShop);
+                }
+            }
             Console.Clear();
         }
         public static void SetSize()

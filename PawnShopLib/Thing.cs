@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace PawnShopLib
 {
+    [Serializable]
     public abstract class Thing
     {
         public double Weight { get; protected set; }

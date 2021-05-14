@@ -6,9 +6,28 @@ using System.Threading.Tasks;
 
 namespace PawnShopLib
 {
+    [Serializable]
     public sealed class Customer : IBuyer
     {
         private static int _customersQuantity = 0;
+        public static int CustomersQuantity
+        {
+            get
+            {
+                return _customersQuantity;
+            }
+            set
+            {
+                if (value > _customersQuantity && _customersQuantity == 0)
+                {
+                    _customersQuantity = value;
+                }
+                else
+                {
+                    throw new InvalidOperationException("CustomerQuantity may be setted only on creation of the project");
+                }
+            }
+        }
         public string FirstName { get; private set; }
         public string SecondName { get; private set; }
         public string Patronymic { get; private set; }

@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace PawnShopLib
 {
+    [Serializable]
     public class Deal
     {
         public Customer Customer { get; private set; }
@@ -23,12 +24,29 @@ namespace PawnShopLib
         public bool IsSuccessful { get; private set; }
         public decimal PawnShopProfit { get; internal set; }
         public string ID { get; private set; }
-        public static int DealsCount { get; private set; }
+        private static int _dealsCount;
+        public static int DealsCount 
+        { get 
+            {
+                return _dealsCount;
+            }
+          set
+            {
+                if (value > _dealsCount && _dealsCount == 0)
+                {
+                    _dealsCount = value;
+                }
+                else
+                {
+                    throw new InvalidOperationException("DealsCount may be setted only on creation of the project");
+                }
+            }
+        }
         private readonly int _minTerm;
         private readonly int _maxTerm;
         static Deal()
         {
-            DealsCount = 0;
+            _dealsCount = 0;
         }
         internal Deal(Customer customer, Thing thing, int term, Tariff tariff, decimal price, decimal perDayCoefficient, int maxTerm)
         {
@@ -93,11 +111,11 @@ namespace PawnShopLib
             StartTime = DateTime.Now;
             PawnShopProfit = 0;
             Penalty = 0;
-            DealsCount++;
+            _dealsCount++;
             const int maxDealsCount = 99999999;
-            if (DealsCount > maxDealsCount)
+            if (_dealsCount > maxDealsCount)
                 throw new OverflowException("Too many deals. Unable to create an ID");
-            ID = String.Format("D{0:00000000}", DealsCount);
+            ID = String.Format("D{0:00000000}", _dealsCount);
         }
         public DateTime GetLastNonPenaltyDate()
         {

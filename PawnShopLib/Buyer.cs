@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace PawnShopLib
 {
+    [Serializable]
     public class Buyer : IBuyer
     {
         public decimal Balance { get; private set; }
