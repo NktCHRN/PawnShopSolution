@@ -153,14 +153,28 @@ namespace PawnShopLib
                 int daysLast = Term + PenaltyMaxTerm - (PawnShop.DateTimeToDays(currentTime) - PawnShop.DateTimeToDays(StartTime));
                 return (daysLast >= 0) ? daysLast : 0;
         }
+        /// <summary>
+        /// Deals comparer (compares by price)
+        /// </summary>
+        /// <param name="left"></param>
+        /// <param name="right"></param>
+        /// <exception cref="ArgumentNullException">Thrown if at least one of deals is null</exception>
+        /// <returns>1 if left has bigger price, 0 if the prices are equal, -1 if right has bigger price</returns>
         public static int CompareDealsByPrice(Deal left, Deal right)
         {
-            if (left.MarketPrice > right.MarketPrice)
-                return 1;
-            else if (left.MarketPrice == right.MarketPrice)
-                return 0;
+            if (left != null && right != null)
+            {
+                if (left.MarketPrice > right.MarketPrice)
+                    return 1;
+                else if (left.MarketPrice == right.MarketPrice)
+                    return 0;
+                else
+                    return -1;
+            }
             else
-                return -1;
+            {
+                throw new ArgumentNullException("At least, one of the params was null");
+            }
         }
         internal void Close(bool toSale)
         {

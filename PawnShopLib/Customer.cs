@@ -176,6 +176,10 @@ namespace PawnShopLib
                 throw new ArgumentNullException("Deal cannot be null", nameof(deal));
             }
         }
+        /// <summary>
+        /// Checks if customer is on deal now or not
+        /// </summary>
+        /// <returns>True if the customer is on deal, false if not</returns>
         public bool IsOnDeal()
         {
             DealsBase deals = Deals;
@@ -184,6 +188,10 @@ namespace PawnShopLib
             else
                 return false;
         }
+        /// <summary>
+        /// Get the last customer`s deal
+        /// </summary>
+        /// <returns>The last deal; null if there are no deals yet</returns>
         public Deal GetLastDeal()
         {
             DealsBase deals = Deals;
@@ -192,6 +200,11 @@ namespace PawnShopLib
             else
                 return null;
         }
+        /// <summary>
+        /// Method for spending money (balance is subtracted on sum)
+        /// </summary>
+        /// <param name="sum"></param>
+        /// <exception cref="ArgumentOutOfRangeException">Thrown when sum is bigger than balance</exception>
         public void SpendMoney(decimal sum)
         {
             if (sum <= Balance)
@@ -199,6 +212,11 @@ namespace PawnShopLib
             else
                 throw new ArgumentOutOfRangeException(nameof(sum), "Sum to spend cannot be greater than balance");
         }
+        /// <summary>
+        /// Method for earning money (sum is added to the balance)
+        /// </summary>
+        /// <param name="sum"></param>
+        /// <exception cref="ArgumentOutOfRangeException">Thrown when sum is negative</exception>
         public void EarnMoney(decimal sum)
         {
             if (sum >= 0)
@@ -206,6 +224,12 @@ namespace PawnShopLib
             else
                 throw new ArgumentOutOfRangeException(nameof(sum), "Sum cannot be negative");
         }
+        /// <summary>
+        /// Checks if toCheck is a password
+        /// </summary>
+        /// <param name="toCheck">Potential password</param>
+        /// <exception cref="ArgumentNullException">Thrown when toCheck is null</exception>
+        /// <returns>True, if toCheck is a password, false if not</returns>
         public bool CheckPassword(string toCheck)
         {
             if (toCheck != null)

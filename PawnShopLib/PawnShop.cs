@@ -104,12 +104,32 @@ namespace PawnShopLib
             Costs = 0;
             _customers = new List<Customer>();
         }
+        /// <summary>
+        /// Add a customer
+        /// </summary>
+        /// <param name="firstName"></param>
+        /// <param name="secondName"></param>
+        /// <param name="patronymic"></param>
+        /// <param name="birthDay"></param>
+        /// <param name="password"></param>
+        /// <param name="balance"></param>
+        /// <exception cref="ArgumentNullException">Thrown inside the method if one of strings is null</exception>
+        /// <exception cref="ArgumentOutOfRangeException">Thrown when balance is negative</exception>
+        /// <exception cref="TooYoungException">Thrown when the person is younger than 18 years old</exception>
+        /// <exception cref="OverflowException">Thrown when there are too many customers (unable to create a new ID)</exception>
+        /// <returns>new Customer object</returns>
         public Customer AddCustomer(string firstName, string secondName, string patronymic, DateTime birthDay, string password, decimal balance = 0)
         {
             Customer newCustomer = new Customer(firstName, secondName, patronymic, birthDay, password, PerDayCoefficient, balance);
             _customers.Add(newCustomer);
             return newCustomer;
         }
+        /// <summary>
+        /// Finds a customer
+        /// </summary>
+        /// <param name="id"></param>
+        /// <exception cref="ArgumentNullException">Thrown when the parameter id is null</exception>
+        /// <returns>Customer if found, null if not</returns>
         public Customer FindCustomer(string id)
         {
             _deals.Update();
@@ -188,6 +208,7 @@ namespace PawnShopLib
         /// <exception cref="ArgumentOutOfRangeException">Thrown when term is negative</exception>
         /// <exception cref="ArgumentException">Thrown when pawnshop has not got enough money for this deal</exception>
         /// <exception cref="BusyObjectException">Thrown when customer is already on deal (IsOnDeal propetry is true)</exception>
+        /// <exception cref="OverflowException">Thrown when there are too many deals (unable to create a new ID)</exception>
         /// <returns>Sum customer got from the deal</returns>
         public decimal BailThing(Customer customer, Thing myThing, int term)
         {
