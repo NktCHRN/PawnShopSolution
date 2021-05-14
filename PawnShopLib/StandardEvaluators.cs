@@ -8,23 +8,37 @@ namespace PawnShopLib
 {
     public static class StandardEvaluators
     {
+        /// <summary>
+        /// Evaluates the thing of any derived from the Thing type
+        /// </summary>
+        /// <param name="thing"></param>
+        /// <param name="tariff"></param>
+        /// <exception cref="ArgumentNullException">Thrown when thing is null</exception>
+        /// <returns>Price of the thing</returns>
         public static decimal EvaluateThing(Thing thing, Tariff tariff)
         {
-            decimal price;
-            if (thing is Things.AntiqueThing antiqueThing)
-                price = antiqueThing.EstimatedPrice / 1.5m;
-            else if (thing is Things.Car car)
-                price = EvaluateCar(car);
-            else if (thing is Things.ElectronicThing electronicThing)
-                price = EvaluateElectronicThing(electronicThing);
-            else if (thing is Things.Jewel jewel)
-                price = EvaluateJewel(jewel);
-            else if (thing is Things.Shares share)
-                price = EvaluateShares(share);
+            if (thing != null)
+            {
+                decimal price;
+                if (thing is Things.AntiqueThing antiqueThing)
+                    price = antiqueThing.EstimatedPrice / 1.5m;
+                else if (thing is Things.Car car)
+                    price = EvaluateCar(car);
+                else if (thing is Things.ElectronicThing electronicThing)
+                    price = EvaluateElectronicThing(electronicThing);
+                else if (thing is Things.Jewel jewel)
+                    price = EvaluateJewel(jewel);
+                else if (thing is Things.Shares share)
+                    price = EvaluateShares(share);
+                else
+                    price = 0;
+                price *= (decimal)tariff / 100m;
+                return price;
+            }
             else
-                price = 0;
-            price *= (decimal)tariff / 100m;
-            return price;
+            {
+                throw new ArgumentNullException(nameof(thing), "Thing cannot be null");
+            }
         }
         private static decimal EvaluateCar(Things.Car thing)
         {

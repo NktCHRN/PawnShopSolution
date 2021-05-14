@@ -11,6 +11,10 @@ namespace PawnShopLib
     public sealed class Customer : IBuyer
     {
         private static int _customersQuantity = 0;
+        /// <summary>
+        /// Total quantity of customers
+        /// </summary>
+        /// <exception cref="InvalidOperationException">Thrown when customer quantity now is not 0 or given value is negative or equal 0 (in setter)</exception>
         public static int CustomersQuantity
         {
             get
@@ -33,8 +37,16 @@ namespace PawnShopLib
         public string SecondName { get; private set; }
         public string Patronymic { get; private set; }
         public DateTime BirthDay { get; private set; }
+        /// <summary>
+        /// Automatically generated ID (ex.C00000001)
+        /// </summary>
         public string ID { get; private set; }
         private string _hashPassword;
+        /// <summary>
+        /// Password property (only setter)
+        /// </summary>
+        /// <exception cref="ArgumentException">Thrown when value contains whitespaces or smaller than 4 characters</exception>
+        /// <exception cref="ArgumentNullException">Thrown when value is null</exception>
         public string Password
         {
             set
@@ -203,8 +215,8 @@ namespace PawnShopLib
         }
         private string GetHash(string toHash)
         {
-            var sha512 = SHA512.Create();
-            var hash = sha512.ComputeHash(Encoding.UTF8.GetBytes(toHash));
+            SHA512 sha512 = SHA512.Create();
+            byte[] hash = sha512.ComputeHash(Encoding.UTF8.GetBytes(toHash));
             return Convert.ToBase64String(hash);
         }
     }

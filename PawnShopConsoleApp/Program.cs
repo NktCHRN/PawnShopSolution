@@ -132,7 +132,7 @@ namespace PawnShopConsoleApp
                             parsed = int.TryParse(Console.ReadLine().Replace('.', ','), out maxTerm);
                         };
                     }
-                    pawnShop = new PawnShop(name, initialBalance, _evaluator, perDayCoefficient, maxTerm);
+                    pawnShop = new PawnShop(name, initialBalance, perDayCoefficient, maxTerm, _evaluator);
                 }
                 MainMenu.PrintMainMenu(pawnShop);
                 using (FileStream fs = new FileStream(fileName, FileMode.OpenOrCreate))

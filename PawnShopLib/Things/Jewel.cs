@@ -30,6 +30,13 @@ namespace PawnShopLib.Things
             DiamondWeight = 0;
             OtherGemsWeight = 0;
         }
+        /// <summary>
+        /// Constructor of the class Jewel only for solid jewel types (GoldIngot, SilverIngot, Diamond and Gem)
+        /// </summary>
+        /// <param name="year"></param>
+        /// <param name="weight"></param>
+        /// <param name="solidJewelType">Only GoldIngot, SilverIngot, Diamond or Gem</param>
+        /// <exception cref="ArgumentException">Thrown when type is not a solid one</exception>
         public Jewel(int year, double weight, JewelTypes solidJewelType) : this(weight, year)
         {
             Type = solidJewelType;
@@ -50,6 +57,15 @@ namespace PawnShopLib.Things
                     throw new ArgumentException("Type should be GoldIngot, SilverIngot, Diamond or AnotherGem in this constructor", nameof(solidJewelType));
             }
         }
+        /// <summary>
+        /// Constructor of the class Jewel only for complicated jewel
+        /// </summary>
+        /// <param name="year"></param>
+        /// <param name="goldWeight"></param>
+        /// <param name="silverWeight"></param>
+        /// <param name="diamondWeight"></param>
+        /// <param name="otherGemsWeight"></param>
+        /// <exception cref="ArgumentOutOfRangeException">Thrown when one of weights is negative</exception>
         public Jewel(int year, double goldWeight, double silverWeight, double diamondWeight, double otherGemsWeight) : base(goldWeight + silverWeight + diamondWeight + otherGemsWeight, year)
         {
             Type = JewelTypes.ComplicatedJewel;

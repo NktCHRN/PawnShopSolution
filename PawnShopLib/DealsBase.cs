@@ -39,6 +39,12 @@ namespace PawnShopLib
                 throw new ArgumentOutOfRangeException(nameof(perDayCoefficient), "Coefficient cannot be smaller than zero");
         }
         public int GetLength() => _deals.Count();
+        /// <summary>
+        /// Retuns filtered an sorted list of deals
+        /// </summary>
+        /// <typeparam name="T">Thing or its derivatives</typeparam>
+        /// <param name="sortBy"></param>
+        /// <returns></returns>
         public IReadOnlyList<Deal> GetFilteredOnSale<T>(DealSortingTypes sortBy = DealSortingTypes.ID) where T : Thing
         {
             Update();
@@ -54,6 +60,12 @@ namespace PawnShopLib
                 onSale.Sort((left, right) => String.Compare(left.ID, right.ID));
             return onSale;
         }
+        /// <summary>
+        /// Retuns sorted list of deals
+        /// </summary>
+        /// <typeparam name="T">Thing or its derivatives</typeparam>
+        /// <param name="sortBy"></param>
+        /// <returns></returns>
         public IReadOnlyList<Deal> GetFullList(DealSortingTypes sortBy = DealSortingTypes.ID)
         {
             Update();
@@ -68,6 +80,12 @@ namespace PawnShopLib
                 FullDealsList.Sort((left, right) => String.Compare(left.ID, right.ID));
             return FullDealsList;
         }
+        /// <summary>
+        /// Method that finds the deal with given ID
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns>Deal when deal is found, null when is not</returns>
+        /// <exception cref="ArgumentNullException">Thrown when id is null</exception>
         public Deal FindDeal(string id)
         {
             Update();
@@ -129,6 +147,9 @@ namespace PawnShopLib
                 return _deals[_position];
             }
         }
+        /// <summary>
+        /// Updates the deal base
+        /// </summary>
         public void Update()
         {
             DateTime currentTime = DateTime.Now;

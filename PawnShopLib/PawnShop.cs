@@ -12,7 +12,12 @@ namespace PawnShopLib
     {
         private readonly Evaluator _evaluator;
         private decimal _perDayCoefficient;
+        public int MinTerm { get; private set; }
         public int MaxTerm { get; private set; }
+        /// <summary>
+        /// Percent of sum added every day on every deal
+        /// </summary>
+        /// <exception cref="ArgumentException">Thrown when value is negative (in setter)</exception>
         public decimal PerDayCoefficient 
         {
             get
@@ -57,12 +62,26 @@ namespace PawnShopLib
         public decimal Balance { get; private set; }
         public decimal Revenue { get; private set; }
         public decimal Costs { get; private set; }
-        public PawnShop(string name, decimal initialBalance, Evaluator delToEvaluator = null, decimal perDayCoefficient = 0.005m, int maxTerm = 365)
+        /// <summary>
+        /// The constructor of the class PawnShop
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="initialBalance"></param>
+        /// <param name="delToEvaluator">Delegate to evaluator. To use a default one,
+        /// just do not write anything or write delegate to EvaluateThing() in StandardEvaluators static class</param>
+        /// <param name="perDayCoefficient">Percent of sum added every day on every deal</param>
+        /// <param name="maxTerm">Max term of any deal</param>
+        /// <exception cref="ArgumentOutOfRangeException">Thrown when initialBalance smaller than 0, 
+        /// perDayCoefficient if smaller than or equal zero 
+        /// or when maxTerm is smaller than MinTerm (initially, 5)
+        /// </exception>
+        /// <exception cref="ArgumentNullException">Thrown when name is null</exception>
+        public PawnShop(string name, decimal initialBalance, decimal perDayCoefficient = 0.005m, int maxTerm = 365, Evaluator delToEvaluator = null)
         {
             if (name != null)
                 Name = name;
             else
-                Name = "";
+                throw new ArgumentNullException(nameof(name), "Name cannot be null");
             if (initialBalance >= 0)
                 Balance = initialBalance;
             else
@@ -76,7 +95,8 @@ namespace PawnShopLib
             else
                 throw new ArgumentOutOfRangeException(nameof(perDayCoefficient), "Coefficient cannot be smaller than zero");
             _deals = new DealsBase(perDayCoefficient);
-            if (maxTerm > 4)
+            MinTerm = 5;
+            if (maxTerm >= MinTerm)
                 MaxTerm = maxTerm;
             else
                 throw new ArgumentOutOfRangeException(nameof(maxTerm), "MaxTerm cannot be smaller than five");
@@ -105,15 +125,48 @@ namespace PawnShopLib
                 throw new ArgumentNullException("ID cannot be null", nameof(id));
             }
         }
-        public decimal EstimateThing(Customer customer, Thing myThing) => (decimal)_evaluator?.Invoke(myThing, DefineTariff(customer));
+        /// <summary>
+        /// Calculates a price of thing
+        /// </summary>
+        /// <param name="customer"></param>
+        /// <param name="myThing"></param>
+        /// <exception cref="ArgumentNullException">Thrown when customer of thing is null</exception>
+        /// <returns>The price of thing</returns>
+        public decimal EstimateThing(Customer customer, Thing myThing)
+        {
+            if (customer == null)
+                throw new ArgumentNullException(nameof(customer), "Customer cannot be null");
+            else if (myThing == null)
+                throw new ArgumentNullException(nameof(myThing), "Thing cannot be null");
+            return (decimal)_evaluator?.Invoke(myThing, DefineTariff(customer));
+        }
+        /// <summary>
+        /// Calculates a redemption price
+        /// </summary>
+        /// <param name="customer"></param>
+        /// <param name="myThing"></param>
+        /// <param name="term"></param>
+        /// <exception cref="ArgumentOutOfRangeException">Thrown when term is negative</exception>
+        /// <returns>a redemption price</returns>
         public decimal GetRedemptionPrice(Customer customer, Thing myThing, int term)
         {
+            if (term < 0)
+                throw new ArgumentOutOfRangeException(nameof(term), "Term cannot be negative");
             decimal price = EstimateThing(customer, myThing);
             price += price * PerDayCoefficient * term;
             if (price < 0)
                 price = 0;
             return price;
         }
+        /// <summary>
+        /// Defines a tariff for a customer
+        /// </summary>
+        /// <param name="customer"></param>
+        /// <returns>If totally smaller than 6 closed deals, Standard 
+        /// Else:
+        /// Preferential if 0 unsuccessful deals or successful/unsuccessful coefficient is higher than or equal 1.5
+        /// LowPenatry, if successful/unsuccessful coefficient is smaller than or equal 0.5
+        /// Standard in other cases</returns>
         public Tariff DefineTariff(Customer customer)
         {
             if (customer.GetSuccessfulDealsQuantity() + customer.GetUnsuccessfulDealsQuantity() < 6)
@@ -125,6 +178,17 @@ namespace PawnShopLib
             else
                 return Tariff.Standard;
         }
+        /// <summary>
+        /// Bail thing
+        /// </summary>
+        /// <param name="customer"></param>
+        /// <param name="myThing"></param>
+        /// <param name="term"></param>
+        /// <exception cref="ArgumentNullException">Thrown when customer of thing is null</exception>
+        /// <exception cref="ArgumentOutOfRangeException">Thrown when term is negative</exception>
+        /// <exception cref="ArgumentException">Thrown when pawnshop has not got enough money for this deal</exception>
+        /// <exception cref="BusyObjectException">Thrown when customer is already on deal (IsOnDeal propetry is true)</exception>
+        /// <returns>Sum customer got from the deal</returns>
         public decimal BailThing(Customer customer, Thing myThing, int term)
         {
             _deals.Update();
@@ -171,6 +235,14 @@ namespace PawnShopLib
                 throw new ArgumentNullException(nameof(customer), "Customer cannot be null");
             }
         }
+        /// <summary>
+        /// Redeem Thing
+        /// </summary>
+        /// <param name="customer"></param>
+        /// <exception cref="ArgumentNullException">Thrown when customer is null</exception>
+        /// <exception cref="ArgumentException">Thrown when customer has not got enough money for this deal</exception>
+        /// <exception cref="BusyObjectException">Thrown when customer is not on deal (IsOnDeal propetry is false)</exception>
+        /// <returns>Redeemed thing</returns>
         public Thing RedeemThing(Customer customer)
         {
             _deals.Update();
@@ -203,20 +275,46 @@ namespace PawnShopLib
                 throw new ArgumentNullException(nameof(customer), "Customer cannot be null");
             }
         }
+        /// <summary>
+        /// Prolongate a deal
+        /// </summary>
+        /// <param name="customer"></param>
+        /// <param name="term"></param>
+        /// <exception cref="ArgumentNullException">Thrown when customer is null</exception>
+        /// <exception cref="ArgumentOutOfRangeException">Thrown when term is negative or equals 0</exception>
+        /// <exception cref="BusyObjectException">Thrown when customer is not on deal (IsOnDeal propetry is false)</exception>
+        /// <returns>True if prolongation was successful, false if not</returns>
         public bool TryProlong(Customer customer, int term)
         {
             _deals.Update();
             if (customer != null)
             {
-                if (customer.IsOnDeal())
-                    return customer.Deals[customer.GetDealsQuantity() - 1].Prolong(term, PerDayCoefficient);
-                throw new BusyObjectException("Customer is not on deal.");
+                if (term > 0)
+                {
+                    if (customer.IsOnDeal())
+                        return customer.Deals[customer.GetDealsQuantity() - 1].Prolong(term, PerDayCoefficient);
+                    else
+                        throw new BusyObjectException("Customer is not on deal.");
+                }
+                else
+                {
+                    throw new ArgumentOutOfRangeException(nameof(term), "Term cannot be negative or equal 0");
+                }
             }
             else
             {
                 throw new ArgumentNullException(nameof(customer), "Customer cannot be null");
             }
         }
+        /// <summary>
+        /// Buy a thing
+        /// </summary>
+        /// <param name="buyer"></param>
+        /// <param name="thingID">ID of the thing buyer wants to buy</param>
+        /// <exception cref="ArgumentNullException">Thrown when buyer is null or deal was not found</exception>
+        /// <exception cref="ArgumentException">Thrown when thing is not on sale now</exception>
+        /// <exception cref="ArgumentException">Thrown when buyer has not got enough money for this deal</exception>
+        /// <returns>Bought thing</returns>
         public Thing BuyThing(IBuyer buyer, string thingID)
         {
             _deals.Update();
@@ -255,6 +353,10 @@ namespace PawnShopLib
                 throw new ArgumentNullException(nameof(buyer), "Buyer cannot be null");
             }
         }
+        /// <summary>
+        /// Calculate a net profit
+        /// </summary>
+        /// <returns>Revenue - Costs</returns>
         public decimal GetNetProfit() => Revenue - Costs;
         internal static int DateTimeToDays(DateTime time)
         {

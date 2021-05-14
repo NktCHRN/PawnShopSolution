@@ -10,7 +10,15 @@ namespace PawnShopLib
     public abstract class Thing
     {
         public double Weight { get; protected set; }
+        /// <summary>
+        /// Year the thing was produced in
+        /// </summary>
         public int Year { get; protected set; }
+        /// <summary>
+        /// Costructor of the class Thing
+        /// </summary>
+        /// <exception cref="System.ArgumentOutOfRangeException">Thrown when weight is smaller than or equal zero
+        /// or year is bigger than the year now</exception>
         public Thing(double weight, int year)
         {
             if (weight > 0)

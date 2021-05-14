@@ -15,7 +15,13 @@ namespace PawnShopLib
         public decimal RedemptionPrice { get; private set; }
         public decimal MarketPrice { get; private set; }
         public DateTime StartTime { get; private set; }
-        public int Term { get; private set; }   // in days
+        /// <summary>
+        /// Term in days
+        /// </summary>
+        public int Term { get; private set; }
+        /// <summary>
+        /// Max penalty term
+        /// </summary>
         public int PenaltyMaxTerm { get; private set; }
         public decimal Penalty { get; private set; }
         public Tariff Tariff { get; private set; }
@@ -23,14 +29,22 @@ namespace PawnShopLib
         public bool IsOnSale { get; private set; }
         public bool IsSuccessful { get; private set; }
         public decimal PawnShopProfit { get; internal set; }
+        /// <summary>
+        /// Automatically generated ID (ex.D00000001)
+        /// </summary>
         public string ID { get; private set; }
         private static int _dealsCount;
+        /// <summary>
+        /// Total quantity of deals
+        /// </summary>
+        /// <exception cref="InvalidOperationException">Thrown when deals quantity now is not 0 or given value is negative or equal 0 (in setter)</exception>
         public static int DealsCount 
-        { get 
+        { 
+            get 
             {
                 return _dealsCount;
             }
-          set
+            set
             {
                 if (value > _dealsCount && _dealsCount == 0)
                 {
@@ -192,6 +206,12 @@ namespace PawnShopLib
         {
             IsOnSale = false;
         }
+        /// <summary>
+        /// Calculates potential penalty for this deal
+        /// </summary>
+        /// <param name="perDayCoefficient">Coefficient per day (should be in pawn shop)</param>
+        /// <param name="days">Quantity of days for penalty</param>
+        /// <returns></returns>
         public decimal CalculatePenalty(decimal perDayCoefficient, int days)
         {
             if (days >= 0)
