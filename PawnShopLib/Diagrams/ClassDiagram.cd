@@ -99,7 +99,7 @@
   <Class Name="PawnShopLib.Customer">
     <Position X="5.5" Y="7" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>EBQACOgAIAEAgQAEAQoAAAAAAAAIAAAKAAAAAJAAAAg=</HashCode>
+      <HashCode>EBAACOgAIAEAgQAEAQoAAAABAAAIAAAKAAAAAJAAAAg=</HashCode>
       <FileName>Customer.cs</FileName>
     </TypeIdentifier>
     <ShowAsAssociation>

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Security.Cryptography;
 
 namespace PawnShopLib
 {
@@ -33,7 +34,7 @@ namespace PawnShopLib
         public string Patronymic { get; private set; }
         public DateTime BirthDay { get; private set; }
         public string ID { get; private set; }
-        private string _password;
+        private string _hashPassword;
         public string Password
         {
             set
@@ -48,7 +49,8 @@ namespace PawnShopLib
                             if (char.IsWhiteSpace(symbol))
                                 throw new ArgumentException("Password should not contain whitespaces");
                         }
-                        _password = value;
+
+                        _hashPassword = GetHash(value);
                     }
                     else
                     {
@@ -195,9 +197,15 @@ namespace PawnShopLib
         public bool CheckPassword(string toCheck)
         {
             if (toCheck != null)
-                return _password == toCheck;
+                return _hashPassword == GetHash(toCheck);
             else
                 throw new ArgumentNullException(nameof(toCheck), "Possible password can`t be null");
+        }
+        private string GetHash(string toHash)
+        {
+            var sha512 = SHA512.Create();
+            var hash = sha512.ComputeHash(Encoding.UTF8.GetBytes(toHash));
+            return Convert.ToBase64String(hash);
         }
     }
 }

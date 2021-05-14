@@ -459,7 +459,7 @@ namespace PawnShopConsoleApp
                             parsed = int.TryParse(Console.ReadLine(), out mileage);
                         }
                         string brandName;
-                        Console.WriteLine("Enter the brand name: ");
+                        Console.WriteLine("\nEnter the brand name: ");
                         brandName = Console.ReadLine();
                         while (string.IsNullOrWhiteSpace(brandName))
                         {
