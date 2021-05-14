@@ -36,10 +36,6 @@ namespace PawnShopLib
         private string _password;
         public string Password
         {
-            get
-            {
-                return _password;
-            }
             set
             {
                 if (value != null)
@@ -195,6 +191,13 @@ namespace PawnShopLib
                 Balance += sum;
             else
                 throw new ArgumentOutOfRangeException(nameof(sum), "Sum cannot be negative");
+        }
+        public bool CheckPassword(string toCheck)
+        {
+            if (toCheck != null)
+                return _password == toCheck;
+            else
+                throw new ArgumentNullException(nameof(toCheck), "Possible password can`t be null");
         }
     }
 }

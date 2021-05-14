@@ -40,7 +40,7 @@ namespace PawnShopConsoleApp
                 bool firstTime = true;
                 Console.WriteLine("\nEnter your password:");
                 password = Console.ReadLine();
-                while (password != customer.Password && (password != "0" || firstTime))
+                while (!customer.CheckPassword(password) && (password != "0" || firstTime))
                 {
                     firstTime = false;
                     Console.WriteLine("Wrong password");
@@ -844,7 +844,7 @@ namespace PawnShopConsoleApp
             string password;
             Console.WriteLine("\nEnter your old password (0 - cancel):");
             password = Console.ReadLine();
-            while (password != customer.Password && password != "0")
+            while (!customer.CheckPassword(password) && password != "0")
             {
                 Console.WriteLine("Wrong password");
                 Console.WriteLine("Enter your old password once more:");
