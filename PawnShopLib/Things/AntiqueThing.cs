@@ -29,7 +29,7 @@ namespace PawnShopLib.Things
         /// <param name="weight"></param>
         /// <param name="type">Type from AntiqueTypes enum</param>
         /// <param name="estimatedPrice">Expert estimated price</param>
-        /// <exception cref="System.ArgumentOutOfRangeException">Thrown when price is negative</exception>
+        /// <exception cref="ArgumentOutOfRangeException">Thrown when price is negative</exception>
         /// <exception cref="TooYoungException">Thrown when age of thing is smaller than 30 years</exception>
         public AntiqueThing(int year, double weight, AntiqueTypes type, decimal estimatedPrice) : base(weight, year)
         {
