@@ -22,7 +22,7 @@ namespace PawnShopLib.Things
         /// Constructor of the car class
         /// </summary>
         /// <param name="year">Year the car was produced in</param>
-        /// <param name="weight"></param>
+        /// <param name="weight">Weight of the car in grams</param>
         /// <param name="marketPrice">Average price of the car now</param>
         /// <param name="mileage"></param>
         /// <param name="brandName">Brandname of the car and model</param>

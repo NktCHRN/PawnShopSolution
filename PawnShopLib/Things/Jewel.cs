@@ -17,9 +17,21 @@ namespace PawnShopLib.Things
     [Serializable]
     public class Jewel : Thing
     {
+        /// <summary>
+        /// Weight of the gold in grams
+        /// </summary>
         public double GoldWeight { get; private set; }
+        /// <summary>
+        /// Weight of the silver in grams
+        /// </summary>
         public double SilverWeight { get; private set; }
+        /// <summary>
+        /// Weight of the diamond in grams
+        /// </summary>
         public double DiamondWeight { get; private set; }
+        /// <summary>
+        /// Weight of other gems in grams
+        /// </summary>
         public double OtherGemsWeight { get; private set; }
         public JewelTypes Type { get; private set; }
         private Jewel(double weight, int year) : base(weight, year)
@@ -34,7 +46,7 @@ namespace PawnShopLib.Things
         /// Constructor of the class Jewel only for solid jewel types (GoldIngot, SilverIngot, Diamond and Gem)
         /// </summary>
         /// <param name="year"></param>
-        /// <param name="weight"></param>
+        /// <param name="weight">Weight in grams</param>
         /// <param name="solidJewelType">Only GoldIngot, SilverIngot, Diamond or Gem</param>
         /// <exception cref="ArgumentException">Thrown when type is not a solid one</exception>
         public Jewel(int year, double weight, JewelTypes solidJewelType) : this(weight, year)
@@ -61,10 +73,10 @@ namespace PawnShopLib.Things
         /// Constructor of the class Jewel only for complicated jewel
         /// </summary>
         /// <param name="year"></param>
-        /// <param name="goldWeight"></param>
-        /// <param name="silverWeight"></param>
-        /// <param name="diamondWeight"></param>
-        /// <param name="otherGemsWeight"></param>
+        /// <param name="goldWeight">Weight of the gold in grams</param>
+        /// <param name="silverWeight">Weight of the silver in grams</param>
+        /// <param name="diamondWeight">Weight of the diamond in grams</param>
+        /// <param name="otherGemsWeight">Weight of other gems in grams</param>
         /// <exception cref="ArgumentOutOfRangeException">Thrown when one of weights is negative</exception>
         public Jewel(int year, double goldWeight, double silverWeight, double diamondWeight, double otherGemsWeight) : base(goldWeight + silverWeight + diamondWeight + otherGemsWeight, year)
         {

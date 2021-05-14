@@ -9,6 +9,9 @@ namespace PawnShopLib
     [Serializable]
     public abstract class Thing
     {
+        /// <summary>
+        /// Weight of the thing in grams
+        /// </summary>
         public double Weight { get; protected set; }
         /// <summary>
         /// Year the thing was produced in

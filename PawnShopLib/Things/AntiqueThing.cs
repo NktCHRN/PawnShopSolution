@@ -26,7 +26,7 @@ namespace PawnShopLib.Things
         /// Constructor of the AntiqueThing class
         /// </summary>
         /// <param name="year">Year the thing was produced in</param>
-        /// <param name="weight"></param>
+        /// <param name="weight">Weight of the thing in grams</param>
         /// <param name="type">Type from AntiqueTypes enum</param>
         /// <param name="estimatedPrice">Expert estimated price</param>
         /// <exception cref="ArgumentOutOfRangeException">Thrown when price is negative</exception>
