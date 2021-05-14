@@ -11,8 +11,8 @@ namespace PawnShopConsoleApp
 {
     static class Program
     {
-        public static int WindowWidth { get; private set; }
-        public static int WindowHeight {get; private set;}
+        public static short WindowWidth { get; private set; }
+        public static short WindowHeight { get; private set; }
         static void Main(string[] args)
         {
             Console.Title = "PAWN SHOP";
@@ -144,8 +144,9 @@ namespace PawnShopConsoleApp
         }
         public static void SetSize()
         {
+            const short maxBufferHeight = short.MaxValue - 1;
             Console.SetWindowSize(1, 1);
-            Console.SetBufferSize(WindowWidth, Console.BufferHeight);
+            Console.SetBufferSize(WindowWidth, (Console.BufferHeight > WindowHeight) ? Console.BufferHeight : maxBufferHeight);
             Console.SetWindowSize(WindowWidth, WindowHeight);
         }
         public static void PrintHeader()
