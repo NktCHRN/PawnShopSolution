@@ -70,13 +70,15 @@ namespace PawnShopLib
         /// <param name="delToEvaluator">Delegate to evaluator. To use a default one,
         /// just do not write anything or write delegate to EvaluateThing() in StandardEvaluators static class</param>
         /// <param name="perDayCoefficient">Percent of sum added every day on every deal</param>
+        /// <param name="minTerm">Minimal term. Should be at least 5</param>
         /// <param name="maxTerm">Max term of any deal</param>
         /// <exception cref="ArgumentOutOfRangeException">Thrown when initialBalance smaller than 0, 
-        /// perDayCoefficient if smaller than or equal zero 
+        /// perDayCoefficient if smaller than or equal zero, 
+        /// when minTerm is lower than 5
         /// or when maxTerm is smaller than MinTerm (initially, 5)
         /// </exception>
         /// <exception cref="ArgumentNullException">Thrown when name is null</exception>
-        public PawnShop(string name, decimal initialBalance, decimal perDayCoefficient = 0.005m, int maxTerm = 365, Evaluator delToEvaluator = null)
+        public PawnShop(string name, decimal initialBalance, decimal perDayCoefficient = 0.005m, int minTerm = 5, int maxTerm = 365, Evaluator delToEvaluator = null)
         {
             if (name != null)
                 Name = name;
@@ -95,7 +97,11 @@ namespace PawnShopLib
             else
                 throw new ArgumentOutOfRangeException(nameof(perDayCoefficient), "Coefficient cannot be smaller than zero");
             _deals = new DealsBase(perDayCoefficient);
-            MinTerm = 5;
+            const int minPenaltyTerm = 5;
+            if (minTerm >= minPenaltyTerm)
+                MinTerm = minTerm;
+            else
+                throw new ArgumentOutOfRangeException(nameof(minTerm), $"Min term cannot be lowe than {minPenaltyTerm}");
             if (maxTerm >= MinTerm)
                 MaxTerm = maxTerm;
             else
@@ -225,7 +231,7 @@ namespace PawnShopLib
                         {
                             if (term >= 0 && term <= MaxTerm)
                             {
-                                Deal newDeal = new Deal(customer, myThing, term, tariff, price, PerDayCoefficient, MaxTerm);
+                                Deal newDeal = new Deal(customer, myThing, term, tariff, price, PerDayCoefficient, MinTerm, MaxTerm);
                                 _deals.Add(newDeal);
                                 Balance -= price;
                                 Costs += price;

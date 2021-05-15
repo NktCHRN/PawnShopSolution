@@ -367,12 +367,12 @@ namespace PawnShopConsoleApp
                 {
                     case 1:
                         double weight;
-                        Console.WriteLine("\nEnter the weight:");
+                        Console.WriteLine("\nEnter the weight in grams:");
                         parsed = double.TryParse(Console.ReadLine().Replace('.', ','), out weight);
                         while (!parsed || weight <= 0)
                         {
                             Console.WriteLine("You entered the wrong weight");
-                            Console.WriteLine("Enter the weight once more:");
+                            Console.WriteLine("Enter the weight in grams once more:");
                             parsed = double.TryParse(Console.ReadLine().Replace('.', ','), out weight);
                         }
                         AntiqueTypes antiqueType;
@@ -432,14 +432,15 @@ namespace PawnShopConsoleApp
                         }
                         break;
                     case 2:
-                        Console.WriteLine("\nEnter the weight:");
+                        Console.WriteLine("\nEnter the weight in tons:");
                         parsed = double.TryParse(Console.ReadLine().Replace('.', ','), out weight);
                         while (!parsed || weight <= 0)
                         {
                             Console.WriteLine("You entered the wrong weight");
-                            Console.WriteLine("Enter the weight once more:");
+                            Console.WriteLine("Enter the weight in tons once more:");
                             parsed = double.TryParse(Console.ReadLine().Replace('.', ','), out weight);
                         }
+                        weight *= 1000000;
                         decimal marketPrice;
                         Console.WriteLine("\nEnter the average price this car costs now:");
                         parsed = decimal.TryParse(Console.ReadLine().Replace('.', ','), out marketPrice);
@@ -470,12 +471,12 @@ namespace PawnShopConsoleApp
                         thing = new Car(year, weight, marketPrice, mileage, brandName);
                         break;
                     case 3:
-                        Console.WriteLine("\nEnter the weight:");
+                        Console.WriteLine("\nEnter the weight in grams:");
                         parsed = double.TryParse(Console.ReadLine().Replace('.', ','), out weight);
                         while (!parsed || weight <= 0)
                         {
                             Console.WriteLine("You entered the wrong weight");
-                            Console.WriteLine("Enter the weight once more:");
+                            Console.WriteLine("Enter the weight in grams once more:");
                             parsed = double.TryParse(Console.ReadLine().Replace('.', ','), out weight);
                         }
                         minPoint = 1;
@@ -553,36 +554,36 @@ namespace PawnShopConsoleApp
                         }
                         if (jewelType == JewelTypes.ComplicatedJewel)
                         {
-                            Console.WriteLine("\nEnter the gold weight:");
+                            Console.WriteLine("\nEnter the gold weight in grams:");
                             parsed = double.TryParse(Console.ReadLine().Replace('.', ','), out double goldWeight);
                             while (!parsed || goldWeight < 0)
                             {
                                 Console.WriteLine("You entered the wrong weight");
-                                Console.WriteLine("Enter the gold weight once more:");
+                                Console.WriteLine("Enter the gold weight in grams once more:");
                                 parsed = double.TryParse(Console.ReadLine().Replace('.', ','), out goldWeight);
                             }
-                            Console.WriteLine("\nEnter the silver weight:");
+                            Console.WriteLine("\nEnter the silver weight in grams:");
                             parsed = double.TryParse(Console.ReadLine().Replace('.', ','), out double silverWeight);
                             while (!parsed || silverWeight < 0)
                             {
                                 Console.WriteLine("You entered the wrong weight");
-                                Console.WriteLine("Enter the silver weight once more:");
+                                Console.WriteLine("Enter the silver weight in grams once more:");
                                 parsed = double.TryParse(Console.ReadLine().Replace('.', ','), out silverWeight);
                             }
-                            Console.WriteLine("\nEnter the diamond weight:");
+                            Console.WriteLine("\nEnter the diamond weight in grams:");
                             parsed = double.TryParse(Console.ReadLine().Replace('.', ','), out double diamondWeight);
                             while (!parsed || diamondWeight < 0)
                             {
                                 Console.WriteLine("You entered the wrong weight");
-                                Console.WriteLine("Enter the diamond weight once more:");
+                                Console.WriteLine("Enter the diamond weight in grams once more:");
                                 parsed = double.TryParse(Console.ReadLine().Replace('.', ','), out diamondWeight);
                             }
-                            Console.WriteLine("\nEnter the other gems weight:");
+                            Console.WriteLine("\nEnter the other gems weight in grams:");
                             parsed = double.TryParse(Console.ReadLine().Replace('.', ','), out double otherGemsWeight);
                             while (!parsed || otherGemsWeight < 0)
                             {
                                 Console.WriteLine("You entered the wrong weight");
-                                Console.WriteLine("Enter the other gems weight once more:");
+                                Console.WriteLine("Enter the other gems weight in grams once more:");
                                 parsed = double.TryParse(Console.ReadLine().Replace('.', ','), out otherGemsWeight);
                             }
                             try
@@ -597,12 +598,12 @@ namespace PawnShopConsoleApp
                         }
                         else
                         {
-                            Console.WriteLine("\nEnter the weight:");
+                            Console.WriteLine("\nEnter the weight in grams:");
                             parsed = double.TryParse(Console.ReadLine().Replace('.', ','), out weight);
                             while (!parsed || weight <= 0)
                             {
                                 Console.WriteLine("You entered the wrong weight");
-                                Console.WriteLine("Enter the weight once more:");
+                                Console.WriteLine("Enter the weight in grams once more:");
                                 parsed = double.TryParse(Console.ReadLine().Replace('.', ','), out weight);
                             }
                             thing = new Jewel(year, weight, jewelType);
@@ -636,7 +637,7 @@ namespace PawnShopConsoleApp
         }
         public static decimal BailThing(PawnShop pawnShop, Customer customer, Thing thing)
         {
-            const int minTerm = 5;
+            int minTerm = pawnShop.MinTerm;
             int maxTerm = pawnShop.MaxTerm;
             int term;
             bool parsed;

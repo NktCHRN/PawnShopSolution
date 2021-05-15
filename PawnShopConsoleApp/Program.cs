@@ -106,10 +106,11 @@ namespace PawnShopConsoleApp
                         parsed = decimal.TryParse(Console.ReadLine().Replace('.', ','), out initialBalance);
                     };
                     decimal perDayCoefficient = 0.005m;
+                    int minTerm = 5;
                     int maxTerm = 365;
                     do
                     {
-                        Console.WriteLine("Do you want to change coefficient per day (now: " + CutZeros(perDayCoefficient * 100m) + $"%) and max term (now : {maxTerm} days)? [Y/n]");
+                        Console.WriteLine("Do you want to change coefficient per day (now: " + CutZeros(perDayCoefficient * 100m) + $"%), min term (now: {minTerm}) and max term (now: {maxTerm} days)? [Y/n]");
                         entered = Console.ReadLine().Trim() + " ";
                     } while (entered.ToLower()[0] != 'n' && entered.ToLower()[0] != 'y');
                     if (entered.ToLower()[0] == 'y')
@@ -123,16 +124,24 @@ namespace PawnShopConsoleApp
                             parsed = decimal.TryParse(Console.ReadLine().Replace('.', ','), out perDayCoefficient);
                         };
                         perDayCoefficient /= 100;
+                        Console.WriteLine("Enter the min term (days): ");
+                        parsed = int.TryParse(Console.ReadLine().Replace('.', ','), out minTerm);
+                        while (!parsed || minTerm < 5)
+                        {
+                            Console.WriteLine("Min term can`t be lower than 5.");
+                            Console.WriteLine("Enter the min term once more: ");
+                            parsed = int.TryParse(Console.ReadLine().Replace('.', ','), out minTerm);
+                        };
                         Console.WriteLine("Enter the max term (days): ");
                         parsed = int.TryParse(Console.ReadLine().Replace('.', ','), out maxTerm);
-                        while (!parsed || maxTerm < 5)
+                        while (!parsed || maxTerm < minTerm)
                         {
                             Console.WriteLine("Max term can`t be lower than 5.");
                             Console.WriteLine("Enter the max term once more: ");
                             parsed = int.TryParse(Console.ReadLine().Replace('.', ','), out maxTerm);
                         };
                     }
-                    pawnShop = new PawnShop(name, initialBalance, perDayCoefficient, maxTerm, _evaluator);
+                    pawnShop = new PawnShop(name, initialBalance, perDayCoefficient, minTerm, maxTerm, _evaluator);
                 }
                 MainMenu.PrintMainMenu(pawnShop);
                 using (FileStream fs = new FileStream(fileName, FileMode.OpenOrCreate))

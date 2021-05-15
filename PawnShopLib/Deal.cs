@@ -62,7 +62,7 @@ namespace PawnShopLib
         {
             _dealsCount = 0;
         }
-        internal Deal(Customer customer, Thing thing, int term, Tariff tariff, decimal price, decimal perDayCoefficient, int maxTerm)
+        internal Deal(Customer customer, Thing thing, int term, Tariff tariff, decimal price, decimal perDayCoefficient, int minTerm, int maxTerm)
         {
             if (customer != null) {
                 if (!customer.IsOnDeal())
@@ -79,8 +79,11 @@ namespace PawnShopLib
                 Thing = thing;
             else
                 throw new ArgumentNullException(nameof(thing), "Thing cannot be null");
-            _minTerm = 5;
-            if (maxTerm < 5)
+            if (minTerm > 0)
+                _minTerm = minTerm;
+            else
+                throw new ArgumentOutOfRangeException(nameof(minTerm), "Min term cannot be negative or equal zero");
+            if (maxTerm < _minTerm)
                 throw new ArgumentOutOfRangeException(nameof(maxTerm), $"Max term should be at least {_minTerm} days");
             _maxTerm = maxTerm;
             if (term >= 0)

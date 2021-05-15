@@ -177,6 +177,7 @@ namespace PawnShopConsoleApp
             Console.WriteLine("Net profit: " + Program.CutZeros(pawnShop.GetNetProfit()) + " hrn");
             Console.WriteLine("Balance: " + Program.CutZeros(pawnShop.Balance) + " hrn");
             Console.WriteLine();
+            Console.WriteLine($"Min term: {pawnShop.MinTerm} days");
             Console.WriteLine($"Max term: {pawnShop.MaxTerm} days");
             Console.WriteLine($"Coefficient per day: {Program.CutZeros(pawnShop.PerDayCoefficient * 100m)}%");
             Console.ForegroundColor = ConsoleColor.DarkGreen;
