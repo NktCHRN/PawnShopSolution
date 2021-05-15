@@ -101,7 +101,7 @@ namespace PawnShopLib
             if (minTerm >= minPenaltyTerm)
                 MinTerm = minTerm;
             else
-                throw new ArgumentOutOfRangeException(nameof(minTerm), $"Min term cannot be lowe than {minPenaltyTerm}");
+                throw new ArgumentOutOfRangeException(nameof(minTerm), $"Min term cannot be lower than {minPenaltyTerm}");
             if (maxTerm >= MinTerm)
                 MaxTerm = maxTerm;
             else
@@ -385,43 +385,5 @@ namespace PawnShopLib
         /// </summary>
         /// <returns>Revenue - Costs</returns>
         public decimal GetNetProfit() => Revenue - Costs;
-        internal static int DateTimeToDays(DateTime time)
-        {
-            int days = 0;
-            days += 366;
-            for (int i = 1; i < time.Year; i++)
-            {
-                if (DateTime.IsLeapYear(i))
-                    days += 366;
-                else
-                    days += 365;
-            }
-            for (int i = 1; i < time.Month; i++)
-            {
-                days += DateTime.DaysInMonth(time.Year, i);
-            }
-            days += time.Day;
-            return days;
-        }
-        internal static DateTime DaysToDateTime(int days)
-        {
-            int year = 1;
-            int month = 1;
-            days -= 366;
-            for (int i = 1; days > (DateTime.IsLeapYear(i) ? 366 : 365); i++)
-            {
-                if (DateTime.IsLeapYear(i))
-                    days -= 366;
-                else
-                    days -= 365;
-                year++;
-            }
-            for (int i = 1; days > DateTime.DaysInMonth(year, i); i++)
-            {
-                days -= DateTime.DaysInMonth(year, i);
-                month++;
-            }
-            return new DateTime(year, month, days);
-        }
     }
 }

@@ -8,7 +8,7 @@ using System.Security.Cryptography;
 namespace PawnShopLib
 {
     [Serializable]
-    public sealed class Customer : IBuyer
+    public class Customer : IBuyer
     {
         private static int _customersQuantity = 0;
         /// <summary>

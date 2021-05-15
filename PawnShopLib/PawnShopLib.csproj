@@ -41,6 +41,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DateTimeConverter.cs" />
     <Compile Include="Exceptions\BusyObjectException.cs" />
     <Compile Include="Buyer.cs" />
     <Compile Include="DealsBase.cs" />

@@ -157,10 +157,10 @@ namespace PawnShopLib
             {
                 if (!_deals[i].IsClosed)
                 {
-                    if (PawnShop.DateTimeToDays(currentTime) - PawnShop.DateTimeToDays(_deals[i].StartTime) > _deals[i].Term + _deals[i].PenaltyMaxTerm)
+                    if (DateTimeConverter.DateTimeToDays(currentTime) - DateTimeConverter.DateTimeToDays(_deals[i].StartTime) > _deals[i].Term + _deals[i].PenaltyMaxTerm)
                         _deals[i].Close(true);
-                    else if (PawnShop.DateTimeToDays(currentTime) - PawnShop.DateTimeToDays(_deals[i].StartTime) > _deals[i].Term)
-                        _deals[i].SetPenalty(_perDayCoefficient, (PawnShop.DateTimeToDays(DateTime.Now) - PawnShop.DateTimeToDays(_deals[i].StartTime) - _deals[i].Term));
+                    else if (DateTimeConverter.DateTimeToDays(currentTime) - DateTimeConverter.DateTimeToDays(_deals[i].StartTime) > _deals[i].Term)
+                        _deals[i].SetPenalty(_perDayCoefficient, (DateTimeConverter.DateTimeToDays(DateTime.Now) - DateTimeConverter.DateTimeToDays(_deals[i].StartTime) - _deals[i].Term));
                 }
             }
         }

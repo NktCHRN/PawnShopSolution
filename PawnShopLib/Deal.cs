@@ -136,24 +136,24 @@ namespace PawnShopLib
         }
         public DateTime GetLastNonPenaltyDate()
         {
-            int tempTerm = Term + PawnShop.DateTimeToDays(StartTime);
-            return PawnShop.DaysToDateTime(tempTerm);
+            int tempTerm = Term + DateTimeConverter.DateTimeToDays(StartTime);
+            return DateTimeConverter.DaysToDateTime(tempTerm);
         }
         public DateTime GetLastDate()
         {
-            int tempTerm = Term + PenaltyMaxTerm + PawnShop.DateTimeToDays(StartTime);
-            return PawnShop.DaysToDateTime(tempTerm);
+            int tempTerm = Term + PenaltyMaxTerm + DateTimeConverter.DateTimeToDays(StartTime);
+            return DateTimeConverter.DaysToDateTime(tempTerm);
         }
         public int GetLastNonPenaltyTerm()
         {
                 DateTime currentTime = DateTime.Now;
-                int daysLast = Term - (PawnShop.DateTimeToDays(currentTime) - PawnShop.DateTimeToDays(StartTime));
+                int daysLast = Term - (DateTimeConverter.DateTimeToDays(currentTime) - DateTimeConverter.DateTimeToDays(StartTime));
                 return (daysLast >= 0) ? daysLast : 0;
         }
         public int GetLastTerm()
         {
                 DateTime currentTime = DateTime.Now;
-                int daysLast = Term + PenaltyMaxTerm - (PawnShop.DateTimeToDays(currentTime) - PawnShop.DateTimeToDays(StartTime));
+                int daysLast = Term + PenaltyMaxTerm - (DateTimeConverter.DateTimeToDays(currentTime) - DateTimeConverter.DateTimeToDays(StartTime));
                 return (daysLast >= 0) ? daysLast : 0;
         }
         /// <summary>
@@ -200,11 +200,11 @@ namespace PawnShopLib
         {
             if (additionalTerm > 0 && additionalTerm <= GetMaxProlongationTerm())
             {
-                if (Penalty > 0 && additionalTerm < PawnShop.DateTimeToDays(DateTime.Now) - PawnShop.DateTimeToDays(StartTime) - Term)
+                if (Penalty > 0 && additionalTerm < DateTimeConverter.DateTimeToDays(DateTime.Now) - DateTimeConverter.DateTimeToDays(StartTime) - Term)
                 {
                     decimal oldPenalty = CalculatePenalty(perDayCoefficient, additionalTerm);
                     RedemptionPrice += Price * perDayCoefficient * additionalTerm + oldPenalty;
-                    SetPenalty(perDayCoefficient, PawnShop.DateTimeToDays(DateTime.Now) - PawnShop.DateTimeToDays(StartTime) - Term - additionalTerm);
+                    SetPenalty(perDayCoefficient, DateTimeConverter.DateTimeToDays(DateTime.Now) - DateTimeConverter.DateTimeToDays(StartTime) - Term - additionalTerm);
                 }
                 else
                 {

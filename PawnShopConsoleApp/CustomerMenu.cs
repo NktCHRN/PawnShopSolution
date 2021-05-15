@@ -101,9 +101,10 @@ namespace PawnShopConsoleApp
                     }
                     Console.WriteLine("Enter the year of birth: ");
                     parsed = int.TryParse(Console.ReadLine(), out int year);
-                    while (!parsed || year < 0)
+                    const int minPersonYear = 1870;
+                    while (!parsed || year < minPersonYear)
                     {
-                        Console.WriteLine("Error: year can`t be negative");
+                        Console.WriteLine($"Error: year can`t be lower than {minPersonYear}");
                         Console.WriteLine("Enter the year of birth once more: ");
                         parsed = int.TryParse(Console.ReadLine(), out year);
                     }
@@ -345,9 +346,10 @@ namespace PawnShopConsoleApp
                 {
                     Console.WriteLine("\nEnter the year you bought it: ");
                     parsed = int.TryParse(Console.ReadLine(), out year);
-                    while (!parsed || year > DateTime.Now.Year || year < 0)
+                    const int minThingYear = 1900;
+                    while (!parsed || year > DateTime.Now.Year || year < minThingYear)
                     {
-                        Console.WriteLine("You entered the wrong year");
+                        Console.WriteLine($"You entered the wrong year or it was lower than {minThingYear}");
                         Console.WriteLine("Enter the year you bought thing once more: ");
                         parsed = int.TryParse(Console.ReadLine(), out year);
                     }
@@ -356,7 +358,8 @@ namespace PawnShopConsoleApp
                 {
                     Console.WriteLine("\nEnter the year of the antique thing: ");
                     parsed = int.TryParse(Console.ReadLine(), out year);
-                    while (!parsed || year > DateTime.Now.Year)
+                    const int minAntiqueYear = 1;
+                    while (!parsed || year > DateTime.Now.Year || year < minAntiqueYear)
                     {
                         Console.WriteLine("You entered the wrong year");
                         Console.WriteLine("Enter the year year of the antique thing once more: ");
