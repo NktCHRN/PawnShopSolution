@@ -173,7 +173,7 @@ namespace PawnShopConsoleApp
                 do
                 {
                     Console.WriteLine($"\nEnter the number {minPoint} - {maxPoint}: ");
-                    parsed = short.TryParse(Console.ReadLine(), out choice);      //пытаемся спарсить введенное в int
+                    parsed = short.TryParse(Console.ReadLine(), out choice);
                     if (!parsed || choice < minPoint || choice > maxPoint)
                     {
                         Console.WriteLine($"Error: you entered not a number or number was smaller than {minPoint} or bigger than {maxPoint}.");
@@ -237,7 +237,7 @@ namespace PawnShopConsoleApp
         {
             Console.ForegroundColor = ConsoleColor.DarkGreen;
             Console.WriteLine("Login as");
-            Console.WriteLine("1. Admin");
+            Console.WriteLine("1. Administrator");
             Console.WriteLine("2. Customer");
             Console.WriteLine("3. Buyer");
             Console.ForegroundColor = ConsoleColor.Red;

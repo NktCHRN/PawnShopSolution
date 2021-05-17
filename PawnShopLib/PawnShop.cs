@@ -68,6 +68,7 @@ namespace PawnShopLib
         /// </summary>
         /// <param name="name"></param>
         /// <param name="initialBalance"></param>
+        /// <param name="admin">Administrator of the pawn shop. Has a password</param>
         /// <param name="delToEvaluator">Delegate to evaluator. To use a default one,
         /// just do not write anything or write delegate to EvaluateThing() in StandardEvaluators static class</param>
         /// <param name="perDayCoefficient">Percent of sum added every day on every deal</param>
