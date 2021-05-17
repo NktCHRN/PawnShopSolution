@@ -46,7 +46,7 @@ namespace PawnShopLib
             }
             set
             {
-                if (value > _dealsCount && _dealsCount == 0)
+                if (value >= _dealsCount && _dealsCount == 0)
                 {
                     _dealsCount = value;
                 }

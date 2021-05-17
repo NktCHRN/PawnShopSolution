@@ -14,6 +14,7 @@ namespace PawnShopLib
         private decimal _perDayCoefficient;
         public int MinTerm { get; private set; }
         public int MaxTerm { get; private set; }
+        public Administrator Admin { get; private set; }
         /// <summary>
         /// Percent of sum added every day on every deal
         /// </summary>
@@ -78,7 +79,7 @@ namespace PawnShopLib
         /// or when maxTerm is smaller than MinTerm (initially, 5)
         /// </exception>
         /// <exception cref="ArgumentNullException">Thrown when name is null</exception>
-        public PawnShop(string name, decimal initialBalance, decimal perDayCoefficient = 0.005m, int minTerm = 5, int maxTerm = 365, Evaluator delToEvaluator = null)
+        public PawnShop(string name, decimal initialBalance, Administrator admin, decimal perDayCoefficient = 0.005m, int minTerm = 5, int maxTerm = 365, Evaluator delToEvaluator = null)
         {
             if (name != null)
                 Name = name;
@@ -88,6 +89,10 @@ namespace PawnShopLib
                 Balance = initialBalance;
             else
                 throw new ArgumentOutOfRangeException(nameof(initialBalance), "Balance cannot be smaller than zero");
+            if (admin != null)
+                Admin = admin;
+            else
+                throw new ArgumentNullException(nameof(admin), "Administrator can`t be null");
             if (delToEvaluator != null)
                 _evaluator = delToEvaluator;
             else

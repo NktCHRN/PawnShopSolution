@@ -37,7 +37,8 @@ namespace PawnShopConsoleApp
                     Console.WriteLine("Do you want to recover the last session?[Y/n]");
                     entered = Console.ReadLine().Trim() + " ";
                 }
-                if (entered.ToLower()[0] == 'y') {
+                if (entered.ToLower()[0] == 'y')
+                {
                     try
                     {
                         using (FileStream fs = new FileStream(fileName, FileMode.Open))
@@ -73,7 +74,7 @@ namespace PawnShopConsoleApp
                         if (entered.ToLower()[0] == 'n')
                             stop = true;
                     }
-                    catch(System.IO.FileNotFoundException)
+                    catch (System.IO.FileNotFoundException)
                     {
                         Console.WriteLine("Damaged file. Unable to parse");
                         Console.WriteLine("Do you want to start a new pawnshop[Y/n]");
@@ -91,12 +92,12 @@ namespace PawnShopConsoleApp
             }
             if (!stop)
             {
+                bool parsed;
                 if (pawnShop == null)
                 {
                     Evaluator _evaluator = StandardEvaluators.EvaluateThing;
                     Console.WriteLine("\nEnter the name of your pawn shop: ");
                     string name = Console.ReadLine();
-                    bool parsed;
                     Console.WriteLine("Enter the balance of your pawn shop: ");
                     parsed = decimal.TryParse(Console.ReadLine().Replace('.', ','), out decimal initialBalance);
                     while (!parsed || initialBalance <= 0)
@@ -105,6 +106,25 @@ namespace PawnShopConsoleApp
                         Console.WriteLine("Enter the balance once more: ");
                         parsed = decimal.TryParse(Console.ReadLine().Replace('.', ','), out initialBalance);
                     };
+                    Administrator admin = null;
+                    bool reenter;
+                    string password;
+                    Console.WriteLine("Enter your password");
+                    do
+                    {
+                        password = Console.ReadLine();
+                        reenter = false;
+                        try
+                        {
+                            admin = new Administrator(password);
+                        }
+                        catch (ArgumentException exc)
+                        {
+                            Console.WriteLine(exc.Message);
+                            Console.WriteLine("Enter your password once more");
+                            reenter = true;
+                        }
+                    } while (reenter);
                     decimal perDayCoefficient = 0.005m;
                     int minTerm = 5;
                     int maxTerm = 365;
@@ -141,9 +161,45 @@ namespace PawnShopConsoleApp
                             parsed = int.TryParse(Console.ReadLine().Replace('.', ','), out maxTerm);
                         };
                     }
-                    pawnShop = new PawnShop(name, initialBalance, perDayCoefficient, minTerm, maxTerm, _evaluator);
+                    pawnShop = new PawnShop(name, initialBalance, admin, perDayCoefficient, minTerm, maxTerm, _evaluator);
                 }
-                MainMenu.PrintMainMenu(pawnShop);
+                Console.Clear();
+                Program.PrintHeader();
+                PrintHelp();
+                Console.ForegroundColor = ConsoleColor.DarkGreen;
+                short choice;
+                const short minPoint = 1;
+                const short maxPoint = 4;
+                do
+                {
+                    Console.WriteLine($"\nEnter the number {minPoint} - {maxPoint}: ");
+                    parsed = short.TryParse(Console.ReadLine(), out choice);      //пытаемся спарсить введенное в int
+                    if (!parsed || choice < minPoint || choice > maxPoint)
+                    {
+                        Console.WriteLine($"Error: you entered not a number or number was smaller than {minPoint} or bigger than {maxPoint}.");
+                        Console.WriteLine($"Quit - {maxPoint}");
+                        choice = minPoint - 1;
+                    }
+                    switch (choice)
+                    {
+                        case 1:
+                            AdminMenu.LoginAdmin(pawnShop);
+                            break;
+                        case 2:
+                            CustomerMenu.LoginCustomer(pawnShop);
+                            break;
+                        case 3:
+                            BuyerMenu.LoginBuyer(pawnShop);
+                            break;
+                    }
+                    if (choice >= minPoint && choice < maxPoint)
+                    {
+                        Console.Clear();
+                        PrintHeader();
+                        Console.ForegroundColor = ConsoleColor.DarkGreen;
+                        PrintHelp();
+                    }
+                } while (choice != maxPoint);
                 using (FileStream fs = new FileStream(fileName, FileMode.OpenOrCreate))
                 {
                     formatter.Serialize(fs, pawnShop);
@@ -176,6 +232,17 @@ namespace PawnShopConsoleApp
                     cut = cut.Remove(cut.Length - 1);
             }
             return cut;
+        }
+        public static void PrintHelp()
+        {
+            Console.ForegroundColor = ConsoleColor.DarkGreen;
+            Console.WriteLine("Login as");
+            Console.WriteLine("1. Admin");
+            Console.WriteLine("2. Customer");
+            Console.WriteLine("3. Buyer");
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.WriteLine("4. Quit");
+            Console.ResetColor();
         }
     }
 }

@@ -188,7 +188,7 @@ namespace PawnShopConsoleApp
                 switch (choice)
                 {
                     case 1:
-                        MainMenu.PrintCustomer(pawnShop, customer);
+                        AdminMenu.PrintCustomer(pawnShop, customer);
                         break;
                     case 2:
                         Thing thing = EnterThing();
@@ -263,7 +263,7 @@ namespace PawnShopConsoleApp
                         break;
                     case 4:
                         if (customer.IsOnDeal())
-                            MainMenu.PrintDeal(customer.GetLastDeal());
+                            AdminMenu.PrintDeal(customer.GetLastDeal());
                         else
                             PrintNoHangingDealsError();
                         break;
@@ -280,7 +280,7 @@ namespace PawnShopConsoleApp
                             PrintNoHangingDealsError();
                         break;
                     case 7:
-                        ChangePassword(customer);
+                        AdminMenu.ChangePassword(customer);
                         break;
                 }
                 if (choice >= minPoint && choice < maxPoint)
@@ -679,7 +679,6 @@ namespace PawnShopConsoleApp
                     while (!parsed || choice < minPoint || choice > maxPoint)
                     {
                         Console.WriteLine($"Error: you entered not a number or number was smaller than {minPoint} or bigger than {maxPoint}.");
-                        Console.WriteLine($"Help - {maxPoint - 1}");
                         parsed = short.TryParse(Console.ReadLine(), out choice);
                     }
                     if (choice == 0)
@@ -836,50 +835,6 @@ namespace PawnShopConsoleApp
                     }
                 }
             }
-            Console.WriteLine("\nPress [ENTER] to go back to customer`s menu");
-            Console.ReadLine();
-            Console.ResetColor();
-        }
-        static void ChangePassword(Customer customer)
-        {
-            Console.Clear();
-            Program.PrintHeader();
-            Console.ForegroundColor = ConsoleColor.DarkGreen;
-            string password;
-            Console.WriteLine("\nEnter your old password (0 - cancel):");
-            password = Console.ReadLine();
-            while (!customer.CheckPassword(password) && password != "0")
-            {
-                Console.WriteLine("Wrong password");
-                Console.WriteLine("Enter your old password once more:");
-                Console.WriteLine("Enter 0 to cancel changing");
-                password = Console.ReadLine();
-            }
-            if (password != "0")
-            {
-                string newPassword;
-                bool reenter;
-                Console.WriteLine("\nEnter your new password");
-                do
-                {
-                    newPassword = Console.ReadLine();
-                    reenter = false;
-                        try
-                        {
-                            customer.Password = newPassword;
-                            Console.ForegroundColor = ConsoleColor.Green;
-                            Console.WriteLine("\nCongratulations!");
-                            Console.WriteLine("Dear customer, you successfully changed your password");
-                        }
-                        catch (ArgumentException exc)
-                        {
-                            Console.WriteLine(exc.Message);
-                            Console.WriteLine("Enter your new password once more");
-                            reenter = true;
-                        }
-                } while (reenter);
-            }
-            Console.ForegroundColor = ConsoleColor.DarkGreen;
             Console.WriteLine("\nPress [ENTER] to go back to customer`s menu");
             Console.ReadLine();
             Console.ResetColor();

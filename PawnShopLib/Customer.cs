@@ -3,12 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Security.Cryptography;
 
 namespace PawnShopLib
 {
     [Serializable]
-    public class Customer : IBuyer
+    public class Customer : RegisteredUser, IBuyer
     {
         private static int _customersQuantity = 0;
         /// <summary>
@@ -23,7 +22,7 @@ namespace PawnShopLib
             }
             set
             {
-                if (value > _customersQuantity && _customersQuantity == 0)
+                if (value >= _customersQuantity && _customersQuantity == 0)
                 {
                     _customersQuantity = value;
                 }
@@ -41,40 +40,6 @@ namespace PawnShopLib
         /// Automatically generated ID (ex.C00000001)
         /// </summary>
         public string ID { get; private set; }
-        private string _hashPassword;
-        /// <summary>
-        /// Password property (only setter)
-        /// </summary>
-        /// <exception cref="ArgumentException">Thrown when value contains whitespaces or smaller than 4 characters</exception>
-        /// <exception cref="ArgumentNullException">Thrown when value is null</exception>
-        public string Password
-        {
-            set
-            {
-                if (value != null)
-                {
-                    const int minSize = 4;
-                    if (value.Length >= minSize)
-                    {
-                        foreach (char symbol in value)
-                        {
-                            if (char.IsWhiteSpace(symbol))
-                                throw new ArgumentException("Password should not contain whitespaces");
-                        }
-
-                        _hashPassword = GetHash(value);
-                    }
-                    else
-                    {
-                        throw new ArgumentException($"Password should have at least {minSize} characters");
-                    }
-                }
-                else
-                {
-                    throw new ArgumentNullException("Password can`t be null", nameof(value));
-                }
-            }
-        }
         private readonly DealsBase _deals;
         public DealsBase Deals 
         { 
@@ -85,7 +50,7 @@ namespace PawnShopLib
             }
         }
         public decimal Balance { get; private set; }
-        internal Customer(string firstName, string secondName, string patronymic, DateTime birthDay, string password, decimal perDayCoefficient, decimal balance = 0)
+        internal Customer(string firstName, string secondName, string patronymic, DateTime birthDay, string password, decimal perDayCoefficient, decimal balance = 0) : base(password)
         {
             if (firstName != null)
             {
@@ -131,7 +96,6 @@ namespace PawnShopLib
                 _deals = new DealsBase(perDayCoefficient);
             else
                 throw new ArgumentOutOfRangeException(nameof(perDayCoefficient), "Per day coefficient cannot be negative");
-            Password = password;
             if (balance >= 0)
                 Balance = balance;
             else
@@ -223,25 +187,6 @@ namespace PawnShopLib
                 Balance += sum;
             else
                 throw new ArgumentOutOfRangeException(nameof(sum), "Sum cannot be negative");
-        }
-        /// <summary>
-        /// Checks if toCheck is a password
-        /// </summary>
-        /// <param name="toCheck">Potential password</param>
-        /// <exception cref="ArgumentNullException">Thrown when toCheck is null</exception>
-        /// <returns>True, if toCheck is a password, false if not</returns>
-        public bool CheckPassword(string toCheck)
-        {
-            if (toCheck != null)
-                return _hashPassword == GetHash(toCheck);
-            else
-                throw new ArgumentNullException(nameof(toCheck), "Possible password can`t be null");
-        }
-        private string GetHash(string toHash)
-        {
-            SHA512 sha512 = SHA512.Create();
-            byte[] hash = sha512.ComputeHash(Encoding.UTF8.GetBytes(toHash));
-            return Convert.ToBase64String(hash);
         }
     }
 }

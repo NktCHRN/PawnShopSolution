@@ -8,19 +8,40 @@ using PawnShopLib.Things;
 
 namespace PawnShopConsoleApp
 {
-    public static class MainMenu
+    public static class AdminMenu
     {
+        public static void LoginAdmin(PawnShop pawnShop)
+        {
+            Console.Clear();
+            Program.PrintHeader();
+            Console.ForegroundColor = ConsoleColor.White;
+            string password;
+            Console.WriteLine("\nEnter your password:");
+            password = Console.ReadLine();
+            while (!pawnShop.Admin.CheckPassword(password) && password != "0")
+            {
+                Console.WriteLine("Wrong password");
+                Console.WriteLine("Enter your password once more:");
+                Console.WriteLine("Enter 0 to quit");
+                password = Console.ReadLine();
+            }
+            if (password != "0")
+                PrintMainMenu(pawnShop);
+            Console.ResetColor();
+        }
         public static void PrintMainMenu(PawnShop pawnShop)
         {
             Console.Clear();
             Program.PrintHeader();
+            Console.ForegroundColor = ConsoleColor.DarkYellow;
+            Console.WriteLine("[ADMINISTRATOR]\n");
             Console.ForegroundColor = ConsoleColor.DarkGreen;
             Console.WriteLine("What do you want to do?");
             PrintHelp();
             bool parsed;
             short choice;
             const short minPoint = 1;
-            const short maxPoint = 10;
+            const short maxPoint = 9;
             do
             {
                 Console.WriteLine($"\nEnter the number {minPoint} - {maxPoint}: ");
@@ -52,16 +73,15 @@ namespace PawnShopConsoleApp
                         PrintCustomer(pawnShop);
                         break;
                     case 7:
-                        CustomerMenu.LoginCustomer(pawnShop);
-                        break;
-                    case 8:
-                        BuyerMenu.LoginBuyer(pawnShop);
+                        ChangePassword(pawnShop.Admin);
                         break;
                 }
                 if (choice >= minPoint && choice < maxPoint)
                 {
                     Console.Clear();
                     Program.PrintHeader();
+                    Console.ForegroundColor = ConsoleColor.DarkYellow;
+                    Console.WriteLine("[ADMINISTRATOR]\n");
                     Console.ForegroundColor = ConsoleColor.DarkGreen;
                     Console.WriteLine("What do you want to do?");
                     PrintHelp();
@@ -316,6 +336,50 @@ namespace PawnShopConsoleApp
                 Console.ResetColor();
             }
         }
+        public static void ChangePassword(RegisteredUser user)
+        {
+            Console.Clear();
+            Program.PrintHeader();
+            Console.ForegroundColor = ConsoleColor.DarkGreen;
+            string password;
+            Console.WriteLine("\nEnter your old password (0 - cancel):");
+            password = Console.ReadLine();
+            while (!user.CheckPassword(password) && password != "0")
+            {
+                Console.WriteLine("Wrong password");
+                Console.WriteLine("Enter your old password once more:");
+                Console.WriteLine("Enter 0 to cancel changing");
+                password = Console.ReadLine();
+            }
+            if (password != "0")
+            {
+                string newPassword;
+                bool reenter;
+                Console.WriteLine("\nEnter your new password");
+                do
+                {
+                    newPassword = Console.ReadLine();
+                    reenter = false;
+                    try
+                    {
+                        user.Password = newPassword;
+                        Console.ForegroundColor = ConsoleColor.Green;
+                        Console.WriteLine("\nCongratulations!");
+                        Console.WriteLine("You successfully changed your password");
+                    }
+                    catch (ArgumentException exc)
+                    {
+                        Console.WriteLine(exc.Message);
+                        Console.WriteLine("Enter your new password once more");
+                        reenter = true;
+                    }
+                } while (reenter);
+            }
+            Console.ForegroundColor = ConsoleColor.DarkGreen;
+            Console.WriteLine("\nPress [ENTER] to go back to customer`s menu");
+            Console.ReadLine();
+            Console.ResetColor();
+        }
         public static void PrintHelp()
         {
             Console.ForegroundColor = ConsoleColor.Green;
@@ -325,11 +389,10 @@ namespace PawnShopConsoleApp
             Console.WriteLine("4. Print revenue, costs and net profit");
             Console.WriteLine("5. Print detailed info about a deal");
             Console.WriteLine("6. Print detailed info about a customer");
-            Console.WriteLine("7. Switch to customer`s mode");
-            Console.WriteLine("8. Switch to buyer`s mode");
-            Console.WriteLine("9. Print help");
+            Console.WriteLine("7. Change password");
+            Console.WriteLine("8. Print help");
             Console.ForegroundColor = ConsoleColor.Red;
-            Console.WriteLine("10. Quit");
+            Console.WriteLine("9. Quit");
             Console.ResetColor();
         }
     }

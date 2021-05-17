@@ -41,10 +41,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Administrator.cs" />
     <Compile Include="DateTimeConverter.cs" />
     <Compile Include="Exceptions\BusyObjectException.cs" />
     <Compile Include="Buyer.cs" />
     <Compile Include="DealsBase.cs" />
+    <Compile Include="RegisteredUser.cs" />
     <Compile Include="IBuyer.cs" />
     <Compile Include="StandardEvaluators.cs" />
     <Compile Include="Deal.cs" />
