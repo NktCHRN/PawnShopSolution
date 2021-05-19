@@ -144,6 +144,10 @@ namespace PawnShopConsoleApp
                             Console.ResetColor();
                         }
                     }
+                    else
+                    {
+                        error = true;
+                    }
                 }
                 else
                 {

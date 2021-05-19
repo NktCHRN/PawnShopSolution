@@ -126,6 +126,7 @@ namespace PawnShopLib
         /// <param name="password"></param>
         /// <param name="balance"></param>
         /// <exception cref="ArgumentNullException">Thrown inside the method if one of strings is null</exception>
+        /// <exception cref="ArgumentException">Thrown in case of wrong name format</exception>
         /// <exception cref="ArgumentOutOfRangeException">Thrown when balance is negative</exception>
         /// <exception cref="TooYoungException">Thrown when the person is younger than 18 years old</exception>
         /// <exception cref="OverflowException">Thrown when there are too many customers (unable to create a new ID)</exception>
@@ -161,16 +162,16 @@ namespace PawnShopLib
         /// Calculates a price of thing
         /// </summary>
         /// <param name="customer"></param>
-        /// <param name="myThing"></param>
+        /// <param name="thing"></param>
         /// <exception cref="ArgumentNullException">Thrown when customer of thing is null</exception>
         /// <returns>The price of thing</returns>
-        public decimal EstimateThing(Customer customer, Thing myThing)
+        public decimal EstimateThing(Customer customer, Thing thing)
         {
             if (customer == null)
                 throw new ArgumentNullException(nameof(customer), "Customer cannot be null");
-            else if (myThing == null)
-                throw new ArgumentNullException(nameof(myThing), "Thing cannot be null");
-            return (decimal)_evaluator?.Invoke(myThing, DefineTariff(customer));
+            else if (thing == null)
+                throw new ArgumentNullException(nameof(thing), "Thing cannot be null");
+            return (decimal)_evaluator?.Invoke(thing, DefineTariff(customer));
         }
         /// <summary>
         /// Calculates a redemption price
@@ -214,7 +215,7 @@ namespace PawnShopLib
         /// Bail thing
         /// </summary>
         /// <param name="customer"></param>
-        /// <param name="myThing"></param>
+        /// <param name="thing"></param>
         /// <param name="term"></param>
         /// <exception cref="ArgumentNullException">Thrown when customer of thing is null</exception>
         /// <exception cref="ArgumentOutOfRangeException">Thrown when term is negative</exception>
@@ -222,22 +223,22 @@ namespace PawnShopLib
         /// <exception cref="BusyObjectException">Thrown when customer is already on deal (IsOnDeal propetry is true)</exception>
         /// <exception cref="OverflowException">Thrown when there are too many deals (unable to create a new ID)</exception>
         /// <returns>Sum customer got from the deal</returns>
-        public decimal BailThing(Customer customer, Thing myThing, int term)
+        public decimal BailThing(Customer customer, Thing thing, int term)
         {
             _deals.Update();
             if (customer != null)
             {
                 if (!customer.IsOnDeal())
                 {
-                    if (myThing != null)
+                    if (thing != null)
                     {
                         Tariff tariff = DefineTariff(customer);
-                        decimal price = _evaluator.Invoke(myThing, tariff);
+                        decimal price = _evaluator.Invoke(thing, tariff);
                         if (Balance >= price)
                         {
                             if (term >= 0 && term <= MaxTerm)
                             {
-                                Deal newDeal = new Deal(customer, myThing, term, tariff, price, PerDayCoefficient, MinTerm, MaxTerm);
+                                Deal newDeal = new Deal(customer, thing, term, tariff, price, PerDayCoefficient, MinTerm, MaxTerm);
                                 _deals.Add(newDeal);
                                 Balance -= price;
                                 Costs += price;
@@ -255,7 +256,7 @@ namespace PawnShopLib
                     }
                     else
                     {
-                        throw new ArgumentNullException(nameof(myThing), "Thing cannot be null");
+                        throw new ArgumentNullException(nameof(thing), "Thing cannot be null");
                     }
                 }
                 else

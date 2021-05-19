@@ -61,106 +61,117 @@ namespace PawnShopConsoleApp
             string firstName, secondName, patronymic;
             Console.WriteLine("Enter the first name: ");
             firstName = Console.ReadLine();
-            while (string.IsNullOrWhiteSpace(firstName))
+            while (!Customer.IsName(firstName) && !(firstName.Length > 0 && firstName[0] == '0'))
             {
-                Console.WriteLine("First name can`t be empty");
-                Console.WriteLine("Enter the first name once more: ");
+                Console.WriteLine("Wrong first name format");
+                Console.WriteLine("Enter the first name once more: [0 - quit]");
                 firstName = Console.ReadLine();
             }
-            Console.WriteLine("Enter the second name: ");
-            secondName = Console.ReadLine();
-            while (string.IsNullOrWhiteSpace(secondName))
+            if (!(firstName.Length > 0 && firstName[0] == '0'))
             {
-                Console.WriteLine("First name can`t be empty");
-                Console.WriteLine("Enter the second name once more: ");
+                Console.WriteLine("Enter the second name: ");
                 secondName = Console.ReadLine();
+                while (!Customer.IsName(secondName) && !(firstName.Length > 0 && firstName[0] == '0'))
+                {
+                    Console.WriteLine("Wrong second name format");
+                    Console.WriteLine("Enter the second name once more: ");
+                    secondName = Console.ReadLine();
+                }
+                Console.WriteLine("Enter the patronymic: ");
+                patronymic = Console.ReadLine();
+                while (patronymic != "" && !Customer.IsName(patronymic) && !(firstName.Length > 0 && firstName[0] == '0'))
+                {
+                    Console.WriteLine("Wrong patronymic name format");
+                    Console.WriteLine("Enter the patronimic once more or press [ENTER] if you do not have it: ");
+                    patronymic = Console.ReadLine();
+                }
+                bool parsed;
+                DateTime birthday;
+                do
+                {
+                    try
+                    {
+                        Console.WriteLine("Enter the day of birth: ");
+                        parsed = short.TryParse(Console.ReadLine(), out short day);
+                        while (!parsed || day <= 0)
+                        {
+                            Console.WriteLine("Error: day can`t be negative or equal 0");
+                            Console.WriteLine("Enter the day of birth once more: ");
+                            parsed = short.TryParse(Console.ReadLine(), out day);
+                        }
+                        Console.WriteLine("Enter the month of birth: ");
+                        parsed = short.TryParse(Console.ReadLine(), out short month);
+                        while (!parsed || month <= 0)
+                        {
+                            Console.WriteLine("Error: month can`t be negative or equal 0");
+                            Console.WriteLine("Enter the month of birth once more: ");
+                            parsed = short.TryParse(Console.ReadLine(), out month);
+                        }
+                        Console.WriteLine("Enter the year of birth: ");
+                        parsed = int.TryParse(Console.ReadLine(), out int year);
+                        const int minPersonYear = 1870;
+                        while (!parsed || year < minPersonYear)
+                        {
+                            Console.WriteLine($"Error: year can`t be lower than {minPersonYear}");
+                            Console.WriteLine("Enter the year of birth once more: ");
+                            parsed = int.TryParse(Console.ReadLine(), out year);
+                        }
+                        birthday = new DateTime(year, month, day);
+                        bool reenter;
+                        string password;
+                        Console.WriteLine("Enter your password");
+                        do
+                        {
+                            password = Console.ReadLine();
+                            reenter = false;
+                            try
+                            {
+                                customer = pawnShop.AddCustomer(firstName, secondName, patronymic, birthday, password);
+                                Console.ForegroundColor = ConsoleColor.Green;
+                                Console.WriteLine("\nCongratulations!");
+                                Console.WriteLine($"Dear {customer.GetFullName()}, you successfully registered your account");
+                                Console.WriteLine($"Your ID: {customer.ID}");
+                                Console.ForegroundColor = ConsoleColor.DarkGreen;
+                                Console.WriteLine("\nPress [ENTER] to continue");
+                                Console.ReadLine();
+                            }
+                            catch (ArgumentException exc)
+                            {
+                                Console.WriteLine(exc.Message);
+                                Console.WriteLine("Enter your password once more");
+                                reenter = true;
+                            }
+                        } while (reenter);
+                        parsed = true;
+                    }
+                    catch (ArgumentOutOfRangeException)
+                    {
+                        Console.WriteLine("Error: wrong date");
+                        Console.WriteLine("Please, enter the date once more");
+                        parsed = false;
+                    }
+                    catch (TooYoungException exc)
+                    {
+                        Console.ForegroundColor = ConsoleColor.Red;
+                        Console.WriteLine("\nRegistration denied: you are not mature enough");
+                        Console.WriteLine(exc.Message);
+                        Console.ForegroundColor = ConsoleColor.DarkGreen;
+                        Console.WriteLine("\nPress [ENTER] to go back to main menu");
+                        Console.ReadLine();
+                        parsed = true;
+                    }
+                    catch (OverflowException exc)
+                    {
+                        Console.ForegroundColor = ConsoleColor.Red;
+                        Console.WriteLine("\nDenied due to technical problems");
+                        Console.WriteLine(exc.Message);
+                        Console.ForegroundColor = ConsoleColor.DarkGreen;
+                        Console.WriteLine("\nPress [ENTER] to go back to main menu");
+                        Console.ReadLine();
+                        parsed = true;
+                    }
+                } while (!parsed);
             }
-            Console.WriteLine("Enter the patronymic: ");
-            patronymic = Console.ReadLine();
-            bool parsed;
-            DateTime birthday;
-            do
-            {
-                try
-                {
-                    Console.WriteLine("Enter the day of birth: ");
-                    parsed = short.TryParse(Console.ReadLine(), out short day);
-                    while (!parsed || day < 0)
-                    {
-                        Console.WriteLine("Error: day can`t be negative");
-                        Console.WriteLine("Enter the day of birth once more: ");
-                        parsed = short.TryParse(Console.ReadLine(), out day);
-                    }
-                    Console.WriteLine("Enter the month of birth: ");
-                    parsed = short.TryParse(Console.ReadLine(), out short month);
-                    while (!parsed || month < 0)
-                    {
-                        Console.WriteLine("Error: month can`t be negative");
-                        Console.WriteLine("Enter the month of birth once more: ");
-                        parsed = short.TryParse(Console.ReadLine(), out month);
-                    }
-                    Console.WriteLine("Enter the year of birth: ");
-                    parsed = int.TryParse(Console.ReadLine(), out int year);
-                    const int minPersonYear = 1870;
-                    while (!parsed || year < minPersonYear)
-                    {
-                        Console.WriteLine($"Error: year can`t be lower than {minPersonYear}");
-                        Console.WriteLine("Enter the year of birth once more: ");
-                        parsed = int.TryParse(Console.ReadLine(), out year);
-                    }
-                    birthday = new DateTime(year, month, day);
-                    bool reenter;
-                    string password;
-                    Console.WriteLine("Enter your password");
-                    do
-                    {
-                    password = Console.ReadLine();
-                    reenter = false;
-                        try
-                        {
-                            customer = pawnShop.AddCustomer(firstName, secondName, patronymic, birthday, password);
-                            Console.ForegroundColor = ConsoleColor.Green;
-                            Console.WriteLine("\nCongratulations!");
-                            Console.WriteLine($"Dear {customer.GetFullName()}, you successfully registered your account");
-                            Console.WriteLine($"Your ID: {customer.ID}");
-                            Console.ForegroundColor = ConsoleColor.DarkGreen;
-                            Console.WriteLine("\nPress [ENTER] to continue");
-                            Console.ReadLine();
-                        }
-                        catch (ArgumentException exc)
-                        {
-                            Console.WriteLine(exc.Message);
-                            Console.WriteLine("Enter your password once more");
-                            reenter = true;
-                        }
-                    } while (reenter);
-                    parsed = true;
-                }
-                catch (ArgumentOutOfRangeException)
-                {
-                    Console.WriteLine("Error: wrong date");
-                    Console.WriteLine("Please, enter the date once more");
-                    parsed = false;
-                }
-                catch (TooYoungException exc)
-                {
-                    Console.WriteLine("Registration denied: you are not mature enough");
-                    Console.WriteLine(exc.Message);
-                    Console.ForegroundColor = ConsoleColor.DarkGreen;
-                    Console.WriteLine("\nPress [ENTER] to go back to main menu");
-                    Console.ReadLine();
-                    parsed = true;
-                }
-                catch (OverflowException exc)
-                {
-                    Console.WriteLine("Denied due to technical problems");
-                    Console.WriteLine(exc.Message);
-                    Console.ForegroundColor = ConsoleColor.DarkGreen;
-                    Console.WriteLine("\nPress [ENTER] to go back to main menu");
-                    Console.ReadLine();
-                    parsed = true;
-                }
-            } while (!parsed);
             return customer;
         }
         public static void PrintCustomerMenu(PawnShop pawnShop, Customer customer)
@@ -416,12 +427,12 @@ namespace PawnShopConsoleApp
                         }
                         decimal estimatedPrice;
                         Console.WriteLine("\nAntique things should be estimated by an expert beforehand");
-                        Console.WriteLine("Enter the expert estimated price:");
+                        Console.WriteLine("Enter the expert estimated price (hrn):");
                         parsed = decimal.TryParse(Console.ReadLine().Replace('.', ','), out estimatedPrice);
                         while (!parsed || estimatedPrice <= 0)
                         {
                             Console.WriteLine("You entered the wrong expert estimated price");
-                            Console.WriteLine("Enter the expert estimated price once more:");
+                            Console.WriteLine("Enter the expert estimated price once more (hrn):");
                             parsed = decimal.TryParse(Console.ReadLine().Replace('.', ','), out estimatedPrice);
                         }
                         try
@@ -445,12 +456,12 @@ namespace PawnShopConsoleApp
                         }
                         weight *= 1000000;
                         decimal marketPrice;
-                        Console.WriteLine("\nEnter the average price this car costs now:");
+                        Console.WriteLine("\nEnter the average price this car costs now (hrn):");
                         parsed = decimal.TryParse(Console.ReadLine().Replace('.', ','), out marketPrice);
-                        while (!parsed || marketPrice < 0)
+                        while (!parsed || marketPrice <= 0)
                         {
                             Console.WriteLine("You entered the wrong price");
-                            Console.WriteLine("Enter the average price this car costs now once more:");
+                            Console.WriteLine("Enter the average price this car costs now once more (hrn):");
                             parsed = decimal.TryParse(Console.ReadLine().Replace('.', ','), out marketPrice);
                         }
                         int mileage;
@@ -613,16 +624,16 @@ namespace PawnShopConsoleApp
                         }
                         break;
                     case 5:
-                        Console.WriteLine("\nEnter the market price of the shares:");
+                        Console.WriteLine("\nEnter the market price of the shares (hrn):");
                         parsed = decimal.TryParse(Console.ReadLine().Replace('.', ','), out marketPrice);
-                        while (!parsed || marketPrice < 0)
+                        while (!parsed || marketPrice <= 0)
                         {
                             Console.WriteLine("You entered the wrong price");
-                            Console.WriteLine("Enter the market price of the shares once more:");
+                            Console.WriteLine("Enter the market price of the shares once more (hrn):");
                             parsed = decimal.TryParse(Console.ReadLine().Replace('.', ','), out marketPrice);
                         }
                         string companyName;
-                        Console.WriteLine("Enter the company name: ");
+                        Console.WriteLine("\nEnter the company name: ");
                         companyName = Console.ReadLine();
                         while (string.IsNullOrWhiteSpace(companyName))
                         {

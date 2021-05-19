@@ -54,10 +54,10 @@ namespace PawnShopLib
         {
             if (firstName != null)
             {
-                if (!string.IsNullOrWhiteSpace(firstName))
+                if (IsName(firstName))
                     FirstName = firstName;
                 else
-                    throw new ArgumentException("First name cannot be empty or contain only spaces", nameof(firstName));
+                    throw new ArgumentException("Wrong name format", nameof(firstName));
             }
             else
             {
@@ -65,17 +65,20 @@ namespace PawnShopLib
             }
             if (secondName != null)
             {
-                if (!string.IsNullOrWhiteSpace(secondName))
+                if (IsName(secondName))
                     SecondName = secondName;
                 else
-                    throw new ArgumentException("Second name cannot be empty or contain only spaces", nameof(secondName));
+                    throw new ArgumentException("Wrong name format", nameof(secondName));
             }
             else
             {
                 throw new ArgumentNullException(nameof(secondName), "Second name cannot be null");
             }
             if (patronymic != null)
-                Patronymic = patronymic;
+                if (patronymic == "" || IsName(patronymic))
+                    Patronymic = patronymic;
+                else
+                    throw new ArgumentException("Wrong name format", nameof(patronymic));
             else
                 throw new ArgumentNullException(nameof(patronymic), "Patronymic cannot be null");
             const int minimalAge = 18;
@@ -105,6 +108,22 @@ namespace PawnShopLib
             if (_customersQuantity > maxCustomers)
                 throw new OverflowException("Too many customers. Unable to create an ID");
             ID = String.Format("C{0:00000000}", _customersQuantity);
+        }
+        /// <summary>
+        /// Checks whether the string can be a customer name
+        /// </summary>
+        /// <param name="name">Potential Name</param>
+        /// <returns></returns>
+        public static bool IsName(string name)
+        {
+            if (name != null)
+            {
+                return !string.IsNullOrWhiteSpace(name) && name.Length > 1 && char.IsUpper(name[0]) && name.All(symbol => char.IsLetter(symbol) || symbol == '\'' || symbol == '`' || symbol == '-' || symbol == ' ');
+            }
+            else
+            {
+                throw new ArgumentNullException(nameof(name), "Potential name cannot be null");
+            }
         }
         public string GetFullName() => String.Format("{0} {1} {2}", SecondName, FirstName, Patronymic);
         public int GetSuccessfulDealsQuantity()
